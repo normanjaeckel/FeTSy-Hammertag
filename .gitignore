@@ -1,0 +1,14 @@
+# Patterns of intentionally untracked files that Git should ignore
+
+# Virtual Python Environment builder
+.virtualenv/
+
+# JavaScript tools and libraries
+bower_components/
+node_modules/
+
+# Files processed by gulp
+dist/
+
+# Private development data
+private/
