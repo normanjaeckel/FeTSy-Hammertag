@@ -4,6 +4,7 @@ coffeelint = require 'gulp-coffeelint'
 concat = require 'gulp-concat'
 jshint = require 'gulp-jshint'
 mainBowerFiles = require 'main-bower-files'
+nodemon = require 'gulp-nodemon'
 rename = require 'gulp-rename'
 path = require 'path'
 
@@ -21,6 +22,14 @@ specialJSFilter = (exclude) ->
             '.js' is path.extname name
         else
             name is 'html5shiv.js' or name is 'respond.src.js'
+
+
+# Express server
+
+gulp.task 'express', ->
+    gulp.src path.join 'fetsy-hammertag', 'server.coffee'
+    .pipe coffee()
+    .pipe gulp.dest path.join output_directory
 
 
 # HTML files.
@@ -87,7 +96,7 @@ gulp.task 'fonts-libs', ->
 
 #  Gulp default task.
 
-gulp.task 'default', ['html', 'js-all', 'css-all'], ->
+gulp.task 'default', ['express', 'html', 'js-all', 'css-all'], ->
 
 
 # Helper tasks.
@@ -110,7 +119,12 @@ gulp.task 'coffeelint', ->
 gulp.task 'hint', ['jshint', 'coffeelint'], ->
 
 gulp.task 'watch', ->
+    gulp.watch path.join('fetsy-hammertag', 'server.coffee'), ['express']
     gulp.watch path.join('fetsy-hammertag', 'fetsy-hammertag.html'), ['html']
     gulp.watch path.join('fetsy-hammertag', 'scripts', '*.coffee'), ['coffee']
     gulp.watch path.join('fetsy-hammertag', 'styles', '*.css'), ['css']
     return
+
+gulp.task 'serve', ->
+    nodemon
+        script: path.join output_directory, 'server.js'

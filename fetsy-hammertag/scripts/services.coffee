@@ -1,5 +1,6 @@
 angular.module 'FeTSy-Hammertag.services', []
 
+.constant 'serverURL', '/api'
 
 .factory 'ScanInputValidationFactory', [
     () ->
