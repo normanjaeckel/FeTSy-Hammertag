@@ -128,3 +128,5 @@ gulp.task 'watch', ->
 gulp.task 'serve', ->
     nodemon
         script: path.join output_directory, 'server.js'
+        env:
+            DEBUG: 'express:*'  # TODO Add production flag, add NODE_ENV production variable

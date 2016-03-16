@@ -15,19 +15,23 @@ angular.module 'FeTSy-Hammertag.controllers', []
         @focusPerson = not @focusObject
 
         @scanObject = ->
-            data = ScanInputValidationFactory.validateObject @objectID
-            if data
-                $http.get "#{serverURL}/object/#{@objectID}/"
-                .then(
+            objectID = ScanInputValidationFactory.validateObject @objectID
+            if objectID
+                if @objectDescription
+                    httpCall = $http.patch "#{serverURL}/object/#{objectID}",
+                        objectDescription: @objectDescription
+                else
+                    httpCall = $http.get "#{serverURL}/object/#{objectID}"
+                httpCall.then(
                     (response) =>
                         @fetchObjectError = false
                         @lastObject =
-                            id: @objectID
-                            description: @objectDescription or data.objectDescription
-                        if data.personID
+                            id: objectID
+                            description: response.data.object.objectDescription
+                        if response.data.person.personID
                             @lastPerson =
-                                id: data.personID
-                                description: data.personDescription
+                                id: response.data.person.personID
+                                description: response.data.person.personDescription
                         else
                             @lastPerson = null
                         @objectID = ''
@@ -42,19 +46,27 @@ angular.module 'FeTSy-Hammertag.controllers', []
             return
 
         @scanPerson = ->
-            data = ScanInputValidationFactory.validatePerson @personID
-            if data
-                $http.get "#{serverURL}/person/#{@personID}/"
-                .then(
+            personID = ScanInputValidationFactory.validatePerson @personID
+            if personID
+                if @lastObject.id
+                    httpCall = $http.patch "#{serverURL}/object/#{@lastObject.id}",
+                        objectDescription: @objectDescription
+                        personID: personID
+                        personDescription: @personDescription
+                else
+                    httpCall = undefined  # TODO
+                httpCall.then(
                     (response) =>
                         @fetchPersonError = false
+                        @lastObject.description = response.data.object.objectDescription
                         @lastPerson =
-                            id: @personID
-                            description: @personDescription or data.personDescription
+                            id: response.data.person.personID
+                            description: response.data.person.personDescription
+                        @objectDescription = ''
                         @personID = ''
                         @personDescription = ''
                         @focusObject = true
-                        @saveData()
+                        @saved = true  # TODO: Remove it
                     (response) =>
                         @fetchPersonError = true
                         @focusPerson = true
@@ -62,9 +74,6 @@ angular.module 'FeTSy-Hammertag.controllers', []
             else
                 @focusPerson = true
             return
-
-        @saveData = ->
-            @saved = true
 
         return
 ]
