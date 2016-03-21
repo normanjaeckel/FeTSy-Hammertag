@@ -64,10 +64,10 @@
     <!-- Main container -->
     <div class="container">
 
-        <div style="padding: 2.9em 1.1em;">
+        <div style="padding: 2.9em 1.1em;" ng-controller="ScanInputCtrl as scanInput">
 
             <!-- Scan input fields -->
-            <div class="row" ng-controller="ScanInputCtrl as scanInput">
+            <div class="row">
 
                 <!-- Scan input field for objects -->
                 <div class="col-sm-5 scan-input-field">
@@ -238,15 +238,16 @@
                     </div>
                 </div><!-- / .col-sm-5 Panel for last person -->
 
-                <div class="col-sm-11">
-                    <div class="alert alert-success" role="alert" ng-show="scanInput.saved">
-                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                        <span class="sr-only">Success:</span>
-                        Input successfully saved. You can scan a new object or just click “Reset“ to clean the input form.
-                    </div>
+            </div><!-- / .row Scan input fields -->
+
+            <!-- Reset button -->
+            <div class="row" ng-show="scanInput.lastObject || scanInput.lastPerson">
+
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-danger" ng-click="scanInput.resetForm()">Reset form</button>
                 </div>
 
-            </div><!-- / .row Scan input fields -->
+            </div><!-- / .row Reset button -->
 
         </div>
 

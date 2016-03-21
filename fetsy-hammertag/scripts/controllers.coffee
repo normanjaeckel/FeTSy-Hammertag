@@ -28,7 +28,7 @@ angular.module 'FeTSy-Hammertag.controllers', []
                         @lastObject =
                             id: objectID
                             description: response.data.object.objectDescription
-                        if response.data.person.personID
+                        if response.data.person
                             @lastPerson =
                                 id: response.data.person.personID
                                 description: response.data.person.personDescription
@@ -66,13 +66,19 @@ angular.module 'FeTSy-Hammertag.controllers', []
                         @personID = ''
                         @personDescription = ''
                         @focusObject = true
-                        @saved = true  # TODO: Remove it
                     (response) =>
                         @fetchPersonError = true
                         @focusPerson = true
                 )
             else
                 @focusPerson = true
+            return
+
+        @resetForm = ->
+            @fetchObjectError = @fetchPersonError = false
+            @lastObject = @lastPerson = null
+            @objectID = @objectDescription = @personID = @personDescription = ''
+            @focusObject = true
             return
 
         return

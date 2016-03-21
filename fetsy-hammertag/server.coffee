@@ -50,16 +50,21 @@ router.use '/object/:id', (request, response, next) ->
 # Handle PATCH requests. Save data to database.
 router.patch '/object/:id', (request, response, next) ->
     operations = []
-    for property in [
-        'objectDescription'
-        'personID'
-        'personDescription'
-    ]
-        if request.body[property]
+    if request.body.objectDescription
+        operations.push
+            type: 'put'
+            key: "object:#{request.objectID}:objectDescription"
+            value: request.body.objectDescription
+    if request.body.personID
+        operations.push
+            type: 'put'
+            key: "object:#{request.objectID}:personID"
+            value: request.body.personID
+        if request.body.personDescription
             operations.push
                 type: 'put'
-                key: "object:#{request.objectID}:#{property}"
-                value: request.body[property]
+                key: "person:#{request.body.personID}"
+                value: request.body.personDescription
     database.batch operations, (err) ->
         if err
             next err
@@ -73,8 +78,8 @@ router.patch '/object/:id', (request, response, next) ->
 router.all '/object/:id', (request, response, next) ->
     fromDatabase = {}
     database.createReadStream
-        gte: "object:#{request.objectID}:"
-        lte: "object:#{request.objectID + 1}:"
+        gte: "object:#{request.objectID}:objectDescription"
+        lte: "object:#{request.objectID}:personID"
     .on 'data', (chunk) ->
         [..., property] = chunk.key.split ':'
         fromDatabase[property] = chunk.value
@@ -86,11 +91,19 @@ router.all '/object/:id', (request, response, next) ->
         _.assign response.data,
             object:
                 objectID: request.objectID
-                objectDescription: fromDatabase.objectDescription
-            person:
-                personID: fromDatabase.personID
-                personDescription: fromDatabase.personDescription
-        response.send response.data
+                objectDescription: fromDatabase.objectDescription or 'Unknown object'
+        if fromDatabase.personID
+            database.get "person:#{fromDatabase.personID}", (err, personDescription) ->
+                if err and not err.notFound
+                    next err
+                _.assign response.data,
+                    person:
+                        personID: fromDatabase.personID
+                        personDescription: personDescription or 'Unknown'
+                response.send response.data
+                return
+        else
+            response.send response.data
         return
     return
 
