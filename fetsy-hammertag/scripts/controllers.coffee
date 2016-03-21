@@ -37,9 +37,11 @@ angular.module 'FeTSy-Hammertag.controllers', []
                         @objectID = ''
                         @objectDescription = ''
                         @focusPerson = true
+                        return
                     (response) =>
                         @fetchObjectError = true
                         @focusObject = true
+                        return
                 )
             else
                 @focusObject = true
@@ -47,15 +49,12 @@ angular.module 'FeTSy-Hammertag.controllers', []
 
         @scanPerson = ->
             personID = ScanInputValidationFactory.validatePerson @personID
-            if personID
-                if @lastObject.id
-                    httpCall = $http.patch "#{serverURL}/object/#{@lastObject.id}",
-                        objectDescription: @objectDescription
-                        personID: personID
-                        personDescription: @personDescription
-                else
-                    httpCall = undefined  # TODO
-                httpCall.then(
+            if personID and @lastObject and @lastObject.id
+                $http.patch "#{serverURL}/object/#{@lastObject.id}",
+                    objectDescription: @objectDescription
+                    personID: personID
+                    personDescription: @personDescription
+                .then(
                     (response) =>
                         @fetchPersonError = false
                         @lastObject.description = response.data.object.objectDescription
@@ -66,11 +65,14 @@ angular.module 'FeTSy-Hammertag.controllers', []
                         @personID = ''
                         @personDescription = ''
                         @focusObject = true
+                        return
                     (response) =>
                         @fetchPersonError = true
                         @focusPerson = true
+                        return
                 )
             else
+                @personID = ''
                 @focusPerson = true
             return
 
