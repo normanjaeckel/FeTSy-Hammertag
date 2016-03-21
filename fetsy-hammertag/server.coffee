@@ -98,5 +98,5 @@ router.all '/object/:id', (request, response, next) ->
 # Start server
 
 app.listen 8080, ->
-  console.log 'Example app listening on port 8080!'
+  console.log 'Example app listening on http://localhost:8080/'
   return
