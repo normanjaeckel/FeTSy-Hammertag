@@ -33,6 +33,32 @@ router = express.Router
 app.use '/api', router
 
 
+## Setup route for /api/object
+
+router.get '/object', (request, response, next) ->
+    objects = {}
+    database.createReadStream()
+    .on 'data', (chunk) ->
+        [type, id, property] = chunk.key.split ':'
+        switch type
+            when 'object'
+                if not objects[id]?
+                    objects[id] = {}
+                objects[id][property] = chunk.value
+            when 'person'
+                _.forOwn objects, (value, objectID) ->
+                    if value.personID is id
+                        value.personDescription = chunk.value
+        return
+    .on 'error', (err) ->
+        next err
+        return
+    .on 'end', ->
+        response.send objects
+        return
+    return
+
+
 ## Setup route for /api/object/:id
 
 # Validate 'id' parameter

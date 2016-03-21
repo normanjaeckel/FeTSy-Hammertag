@@ -35,8 +35,7 @@ gulp.task 'express', ->
 # HTML files.
 
 gulp.task 'html', ->
-    gulp.src path.join 'fetsy-hammertag', 'fetsy-hammertag.html'
-    .pipe rename 'index.html'
+    gulp.src path.join 'fetsy-hammertag', 'templates', '*.html'
     .pipe gulp.dest path.join output_directory
 
 
@@ -120,7 +119,7 @@ gulp.task 'hint', ['jshint', 'coffeelint'], ->
 
 gulp.task 'watch', ->
     gulp.watch path.join('fetsy-hammertag', 'server.coffee'), ['express']
-    gulp.watch path.join('fetsy-hammertag', 'fetsy-hammertag.html'), ['html']
+    gulp.watch path.join('fetsy-hammertag', 'templates', '*.html'), ['html']
     gulp.watch path.join('fetsy-hammertag', 'scripts', '*.coffee'), ['coffee']
     gulp.watch path.join('fetsy-hammertag', 'styles', '*.css'), ['css']
     return

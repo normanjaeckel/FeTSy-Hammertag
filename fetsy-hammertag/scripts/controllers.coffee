@@ -85,3 +85,19 @@ angular.module 'FeTSy-Hammertag.controllers', []
 
         return
 ]
+
+
+.controller 'ListObjectsCtrl', [
+    '$http'
+    'serverURL'
+    ($http, serverURL) ->
+        $http.get "#{serverURL}/object"
+        .then(
+            (response) =>
+                @objects = response.data
+                return
+            (response) =>
+                return
+        )
+        return
+]

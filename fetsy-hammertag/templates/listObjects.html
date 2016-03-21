@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-sm-6">
+        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+    </div>
+    <div class="col-sm-6">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+    </div>
+
+</div>
+
+<div class="row" ng-repeat="(objectID, object) in listObjects.objects">
+
+    <hr>
+
+    <div class="col-sm-6">
+        <span class="label label-primary">
+            <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+            <span class="sr-only">Object</span>
+            {{ objectID }}
+        </span>
+        <span style="padding-left:0.5em;">
+            {{ object.objectDescription }}
+        </span>
+    </div>
+
+    <div class="col-sm-6">
+        <span class="label label-primary">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            <span class="sr-only">Person</span>
+            {{ object.personID }}
+        </span>
+        <span style="padding-left:0.5em;">
+            {{ object.personDescription }}
+        </span>
+    </div>
+
+</div>
