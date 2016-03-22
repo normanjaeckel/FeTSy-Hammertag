@@ -14,7 +14,8 @@ angular.module 'FeTSy-Hammertag.services', []
 ]
 
 
-# See: http://stackoverflow.com/questions/14833326/how-to-set-focus-on-input-field
+# See: http://stackoverflow.com/questions/14833326/
+#      how-to-set-focus-on-input-field
 
 .directive 'focusMe', [
     '$parse'

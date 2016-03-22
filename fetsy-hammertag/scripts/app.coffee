@@ -21,13 +21,18 @@ angular.module 'FeTSy-Hammertag', [
 
         .state  'scanInput',
             url: '/'
-            templateUrl: 'scanInput.html'
+            templateUrl: 'static/templates/scanInput.html'
             controller: 'ScanInputCtrl as scanInput'
 
         .state  'listObjects',
-            url: '/list'
-            templateUrl: 'listObjects.html'
+            url: '/list/objects'
+            templateUrl: 'static/templates/listObjects.html'
             controller: 'ListObjectsCtrl as listObjects'
+
+        .state  'listPersons',
+            url: '/list/persons'
+            templateUrl: 'static/templates/listPersons.html'
+            controller: 'ListPersonsCtrl as listPersons'
 
         return
 ]

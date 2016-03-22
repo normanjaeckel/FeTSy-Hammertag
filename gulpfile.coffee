@@ -36,7 +36,7 @@ gulp.task 'express', ->
 
 gulp.task 'html', ->
     gulp.src path.join 'fetsy-hammertag', 'templates', '*.html'
-    .pipe gulp.dest path.join output_directory
+    .pipe gulp.dest path.join output_directory, 'static', 'templates'
 
 
 # JavaScript files.
@@ -48,28 +48,28 @@ gulp.task 'coffee', ->
     .pipe coffee()
     .pipe concat 'fetsy-hammertag.js'
     # Maybe uglify it.
-    .pipe gulp.dest path.join output_directory, 'js'
+    .pipe gulp.dest path.join output_directory, 'static', 'js'
 
 gulp.task 'js-special', ->
     gulp.src path.join 'fetsy-hammertag',
         'scripts'
         'ie10-viewport-bug-workaround.js'
-    .pipe gulp.dest path.join output_directory, 'js'
+    .pipe gulp.dest path.join output_directory, 'static', 'js'
 
 gulp.task 'js-libs', ->
     gulp.src mainBowerFiles
         filter: specialJSFilter true
     .pipe concat 'fetsy-hammertag-libs.js'
     # Maybe uglify it.
-    .pipe gulp.dest path.join output_directory, 'js'
+    .pipe gulp.dest path.join output_directory, 'static', 'js'
 
 gulp.task 'js-libs-special', ->
     gulp.src mainBowerFiles
         filter: specialJSFilter false
-    .pipe gulp.dest path.join output_directory, 'js'
+    .pipe gulp.dest path.join output_directory, 'static', 'js'
 
 
-# CSS files.
+# CSS and font files.
 
 gulp.task 'css-all', ['css', 'css-libs', 'fonts-libs'], ->
 
@@ -77,20 +77,20 @@ gulp.task 'css', ->
     gulp.src path.join 'fetsy-hammertag', 'styles', '*.css'
     .pipe concat 'fetsy-hammertag.css'
     # Maybe uglify it.
-    .pipe gulp.dest path.join output_directory, 'css'
+    .pipe gulp.dest path.join output_directory, 'static', 'css'
 
 gulp.task 'css-libs', ->
     gulp.src mainBowerFiles
         filter: /\.css$/
     .pipe concat 'fetsy-hammertag-libs.css'
     # Maybe uglify it.
-    .pipe gulp.dest path.join output_directory, 'css'
+    .pipe gulp.dest path.join output_directory, 'static', 'css'
 
 gulp.task 'fonts-libs', ->
     gulp.src mainBowerFiles
         filter: /\.(eot)|(svg)|(ttf)|(woff)|(woff2)$/
 
-    .pipe gulp.dest path.join output_directory, 'fonts'
+    .pipe gulp.dest path.join output_directory, 'static', 'fonts'
 
 
 #  Gulp default task.
@@ -108,6 +108,7 @@ gulp.task 'jshint', ->
 gulp.task 'coffeelint', ->
     gulp.src [
         'gulpfile.coffee'
+        path.join 'fetsy-hammertag', 'server.coffee'
         path.join 'fetsy-hammertag', 'scripts', '*.coffee'
     ]
     .pipe coffeelint
@@ -125,7 +126,8 @@ gulp.task 'watch', ->
     return
 
 gulp.task 'serve', ->
+    # TODO Add production flag, add NODE_ENV production variable
     nodemon
         script: path.join output_directory, 'server.js'
         env:
-            DEBUG: 'express:*'  # TODO Add production flag, add NODE_ENV production variable
+            DEBUG: 'express:*'

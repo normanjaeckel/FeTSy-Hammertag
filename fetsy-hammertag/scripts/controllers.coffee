@@ -28,10 +28,11 @@ angular.module 'FeTSy-Hammertag.controllers', []
                         @lastObject =
                             id: objectID
                             description: response.data.object.objectDescription
-                        if response.data.person
+                        person = response.data.person
+                        if person
                             @lastPerson =
-                                id: response.data.person.personID
-                                description: response.data.person.personDescription
+                                id: person.personID
+                                description: person.personDescription
                         else
                             @lastPerson = null
                         @objectID = ''
@@ -49,7 +50,7 @@ angular.module 'FeTSy-Hammertag.controllers', []
 
         @scanPerson = ->
             personID = ScanInputValidationFactory.validatePerson @personID
-            if personID and @lastObject and @lastObject.id
+            if personID and @lastObject? and @lastObject.id
                 $http.patch "#{serverURL}/object/#{@lastObject.id}",
                     objectDescription: @objectDescription
                     personID: personID
@@ -57,7 +58,8 @@ angular.module 'FeTSy-Hammertag.controllers', []
                 .then(
                     (response) =>
                         @fetchPersonError = false
-                        @lastObject.description = response.data.object.objectDescription
+                        @lastObject.description = response.data.object
+                            .objectDescription
                         @lastPerson =
                             id: response.data.person.personID
                             description: response.data.person.personDescription
@@ -96,7 +98,27 @@ angular.module 'FeTSy-Hammertag.controllers', []
             (response) =>
                 @objects = response.data
                 return
+        )
+        @remove = (objectID) ->
+            $http.delete "#{serverURL}/object/#{objectID}"
+            .then(
+                (response) =>
+                    delete @objects[objectID]
+                    return
+            )
+            return
+        return
+]
+
+
+.controller 'ListPersonsCtrl', [
+    '$http'
+    'serverURL'
+    ($http, serverURL) ->
+        $http.get "#{serverURL}/person"
+        .then(
             (response) =>
+                @persons = response.data
                 return
         )
         return
