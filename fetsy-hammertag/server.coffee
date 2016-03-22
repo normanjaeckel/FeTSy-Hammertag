@@ -169,11 +169,11 @@ router.get '/person', (request, response, next) ->
     .on 'data', (chunk) ->
         [type, id, property] = chunk.key.split ':'
         switch type
-            when 'person'
-                persons[id] = chunk.value
             when 'object'
                 if property is 'personID'
                     persons[chunk.value] = 'Unknown'
+            when 'person'
+                persons[id] = chunk.value
         return
     .on 'error', (err) ->
         next err
@@ -195,17 +195,23 @@ router.use '/person/:id', (request, response, next) ->
 
 # Handle PATCH requests. Save data to database.
 router.patch '/person/:id', (request, response, next) ->
-    database.put(
-        "person:#{request.personID}"
-        request.body.personDescription
-        (err) ->
-            if err
-                next err
-            else
-               response.send
-                details: 'Data successfully saved.'
-            return
-    )
+    if request.body.personDescription
+        database.put(
+            "person:#{request.personID}"
+            request.body.personDescription
+            (err) ->
+                if err
+                    next err
+                else
+                    response.send
+                        details: 'Data successfully saved.'
+                return
+        )
+    else
+        response.status 400
+        .send
+            details: "Person description for person
+                      '#{request.personID}' is missing."
     return
 
 # Handle DELETE requests. Delete persons from database.

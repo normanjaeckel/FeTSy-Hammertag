@@ -1,4 +1,5 @@
 angular.module 'FeTSy-Hammertag', [
+    'ui.bootstrap'
     'ui.router'
     'FeTSy-Hammertag.controllers'
     'FeTSy-Hammertag.services'

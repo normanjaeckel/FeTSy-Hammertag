@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        Update person
+        <span class="label label-primary">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            <span class="sr-only">Person</span>
+            {{ personUpdate.person.personID }}
+        </span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label for="personDescription">
+            Person description
+        </label>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <span id="personDescriptionIcon" class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                <span class="sr-only">Person description</span>
+            </div>
+            <textarea id="personDescription"
+                      class="form-control"
+                      aria-describedby="personDescriptionIcon"
+                      ng-model="personUpdate.person.personDescription"
+                      focus-me="personUpdate.focus">
+            </textarea>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="personUpdate.save()">Save</button>
+    <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
+</div>

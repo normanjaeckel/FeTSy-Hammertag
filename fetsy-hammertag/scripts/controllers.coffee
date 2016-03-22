@@ -113,13 +113,60 @@ angular.module 'FeTSy-Hammertag.controllers', []
 
 .controller 'ListPersonsCtrl', [
     '$http'
+    '$uibModal'
     'serverURL'
-    ($http, serverURL) ->
+    ($http, $uibModal, serverURL) ->
         $http.get "#{serverURL}/person"
         .then(
             (response) =>
                 @persons = response.data
                 return
         )
+        @update = (personID, personDescription) ->
+            if personDescription is 'Unknown'
+                personDescription = ''
+            $uibModal.open
+                controller: 'PersonUpdateCtrl as personUpdate'
+                templateUrl: 'static/templates/personUpdate.html'
+                resolve:
+                    person: () ->
+                        personID: personID
+                        personDescription: personDescription
+            .result.then(
+                (newPersonDescription) =>
+                    @persons[personID] = newPersonDescription
+                    return
+            )
+            return
+        @delete = (personID) ->
+            $http.delete "#{serverURL}/person/#{personID}"
+            .then(
+                (response) =>
+                    delete @persons[personID]
+                    return
+            )
+            return
+        return
+]
+
+
+.controller 'PersonUpdateCtrl', [
+    '$http'
+    '$uibModalInstance'
+    'serverURL'
+    'person'
+    ($http, $uibModalInstance, serverURL, person) ->
+        @person = person
+        @focus = true
+        @save = ->
+            if @person.personDescription
+                $http.patch "#{serverURL}/person/#{@person.personID}",
+                    personDescription: @person.personDescription
+                .then(
+                    (response) =>
+                        $uibModalInstance.close @person.personDescription
+                        return
+                )
+            return
         return
 ]
