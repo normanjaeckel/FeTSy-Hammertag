@@ -1,4 +1,6 @@
-angular.module 'FeTSy-Hammertag.controllers', []
+angular.module 'FeTSy-Hammertag.controllers', [
+    'FeTSy-Hammertag.personUpdate'
+]
 
 
 .controller 'NavbarCtrl', [
@@ -10,7 +12,8 @@ angular.module 'FeTSy-Hammertag.controllers', []
     '$http'
     'serverURL'
     'ScanInputValidationFactory'
-    ($http, serverURL, ScanInputValidationFactory) ->
+    'PersonUpdateFactory'
+    ($http, serverURL, ScanInputValidationFactory, PersonUpdateFactory) ->
         @focusObject = true
         @focusPerson = not @focusObject
 
@@ -78,6 +81,17 @@ angular.module 'FeTSy-Hammertag.controllers', []
                 @focusPerson = true
             return
 
+        @updatePerson = () ->
+            PersonUpdateFactory.update
+                personID: @lastPerson.id
+                personDescription: @lastPerson.description
+            .then(
+                (newPersonDescription) =>
+                    @lastPerson.description = newPersonDescription
+                    return
+            )
+            return
+
         @resetForm = ->
             @fetchObjectError = @fetchPersonError = false
             @lastObject = @lastPerson = null
@@ -113,31 +127,27 @@ angular.module 'FeTSy-Hammertag.controllers', []
 
 .controller 'ListPersonsCtrl', [
     '$http'
-    '$uibModal'
     'serverURL'
-    ($http, $uibModal, serverURL) ->
+    'PersonUpdateFactory'
+    ($http, serverURL, PersonUpdateFactory) ->
         $http.get "#{serverURL}/person"
         .then(
             (response) =>
                 @persons = response.data
                 return
         )
-        @update = (personID, personDescription) ->
-            if personDescription is 'Unknown'
-                personDescription = ''
-            $uibModal.open
-                controller: 'PersonUpdateCtrl as personUpdate'
-                templateUrl: 'static/templates/personUpdate.html'
-                resolve:
-                    person: () ->
-                        personID: personID
-                        personDescription: personDescription
-            .result.then(
+
+        @update = (personID) ->
+            PersonUpdateFactory.update
+                personID: personID
+                personDescription: @persons[personID]
+            .then(
                 (newPersonDescription) =>
                     @persons[personID] = newPersonDescription
                     return
             )
             return
+
         @delete = (personID) ->
             $http.delete "#{serverURL}/person/#{personID}"
             .then(
@@ -145,28 +155,6 @@ angular.module 'FeTSy-Hammertag.controllers', []
                     delete @persons[personID]
                     return
             )
-            return
-        return
-]
-
-
-.controller 'PersonUpdateCtrl', [
-    '$http'
-    '$uibModalInstance'
-    'serverURL'
-    'person'
-    ($http, $uibModalInstance, serverURL, person) ->
-        @person = person
-        @focus = true
-        @save = ->
-            if @person.personDescription
-                $http.patch "#{serverURL}/person/#{@person.personID}",
-                    personDescription: @person.personDescription
-                .then(
-                    (response) =>
-                        $uibModalInstance.close @person.personDescription
-                        return
-                )
             return
         return
 ]
