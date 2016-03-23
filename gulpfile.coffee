@@ -106,7 +106,7 @@ gulp.task 'coffeelint', ->
     gulp.src [
         'gulpfile.coffee'
         path.join 'fetsy-hammertag', 'server.coffee'
-        path.join 'fetsy-hammertag', 'scripts', '*.coffee'
+        path.join 'fetsy-hammertag', 'scripts', '**', '*.coffee'
     ]
     .pipe coffeelint
         indentation:
@@ -116,10 +116,14 @@ gulp.task 'coffeelint', ->
 gulp.task 'hint', ['jshint', 'coffeelint'], ->
 
 gulp.task 'watch', ->
-    gulp.watch path.join('fetsy-hammertag', 'server.coffee'), ['express']
-    gulp.watch path.join('fetsy-hammertag', 'templates', '*.html'), ['html']
-    gulp.watch path.join('fetsy-hammertag', 'scripts', '*.coffee'), ['coffee']
-    gulp.watch path.join('fetsy-hammertag', 'styles', '*.css'), ['css']
+    gulp.watch path.join('fetsy-hammertag', 'server.coffee'),
+        ['express']
+    gulp.watch path.join('fetsy-hammertag', 'templates', '*.html'),
+        ['html']
+    gulp.watch path.join('fetsy-hammertag', 'scripts', '**', '*.coffee'),
+        ['coffee']
+    gulp.watch path.join('fetsy-hammertag', 'styles', '*.css'),
+        ['css']
     return
 
 gulp.task 'serve', ->
