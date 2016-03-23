@@ -43,7 +43,7 @@ gulp.task 'html', ->
 gulp.task 'js-all', ['coffee', 'js', 'js-libs'], ->
 
 gulp.task 'coffee', ->
-    gulp.src path.join 'fetsy-hammertag', 'scripts', '*.coffee'
+    gulp.src path.join 'fetsy-hammertag', 'scripts', '**', '*.coffee'
     .pipe coffee()
     .pipe concat 'fetsy-hammertag.js'
     .pipe gulpif productionMode, uglify()

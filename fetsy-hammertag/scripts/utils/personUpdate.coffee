@@ -1,4 +1,4 @@
-angular.module 'FeTSy-Hammertag.personUpdate', []
+angular.module 'FeTSy-Hammertag.utils.personUpdate', []
 
 .factory 'PersonUpdateFactory', [
     '$uibModal'

@@ -1,10 +1,17 @@
-angular.module 'FeTSy-Hammertag.controllers', [
-    'FeTSy-Hammertag.personUpdate'
+angular.module 'FeTSy-Hammertag.states.scanInput', [
+    'FeTSy-Hammertag.utils.personUpdate'
 ]
 
 
-.controller 'NavbarCtrl', [
+.factory 'ScanInputValidationFactory', [
     () ->
+        validateObject: (data) ->
+            if not isNaN data
+                parseInt data
+            else
+                null
+        validatePerson: (data) ->
+            data
 ]
 
 
@@ -99,75 +106,5 @@ angular.module 'FeTSy-Hammertag.controllers', [
             @focusObject = true
             return
 
-        return
-]
-
-
-.controller 'ListObjectsCtrl', [
-    '$http'
-    'serverURL'
-    'PersonUpdateFactory'
-    ($http, serverURL, PersonUpdateFactory) ->
-        $http.get "#{serverURL}/object"
-        .then(
-            (response) =>
-                @objects = response.data
-                return
-        )
-
-        @updatePerson = (objectID, personID) ->
-            PersonUpdateFactory.update
-                personID: personID
-                personDescription: @objects[objectID].personDescription
-            .then(
-                (newPersonDescription) =>
-                    @objects[objectID].personDescription = newPersonDescription
-                    return
-            )
-            return
-
-        @remove = (objectID) ->
-            $http.delete "#{serverURL}/object/#{objectID}"
-            .then(
-                (response) =>
-                    delete @objects[objectID]
-                    return
-            )
-            return
-        return
-]
-
-
-.controller 'ListPersonsCtrl', [
-    '$http'
-    'serverURL'
-    'PersonUpdateFactory'
-    ($http, serverURL, PersonUpdateFactory) ->
-        $http.get "#{serverURL}/person"
-        .then(
-            (response) =>
-                @persons = response.data
-                return
-        )
-
-        @update = (personID) ->
-            PersonUpdateFactory.update
-                personID: personID
-                personDescription: @persons[personID]
-            .then(
-                (newPersonDescription) =>
-                    @persons[personID] = newPersonDescription
-                    return
-            )
-            return
-
-        @remove = (personID) ->
-            $http.delete "#{serverURL}/person/#{personID}"
-            .then(
-                (response) =>
-                    delete @persons[personID]
-                    return
-            )
-            return
         return
 ]
