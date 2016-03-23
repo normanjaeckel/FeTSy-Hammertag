@@ -1,27 +1,26 @@
+argv = require 'yargs'
+    .argv
+cleanCSS = require 'gulp-clean-css'
 gulp = require 'gulp'
+gulpif = require 'gulp-if'
 coffee = require 'gulp-coffee'
 coffeelint = require 'gulp-coffeelint'
 concat = require 'gulp-concat'
 jshint = require 'gulp-jshint'
 mainBowerFiles = require 'main-bower-files'
 nodemon = require 'gulp-nodemon'
-rename = require 'gulp-rename'
 path = require 'path'
+rename = require 'gulp-rename'
+uglify = require 'gulp-uglify'
 
 
 # Helpers and config
 
-output_directory = path.join 'dist'
+productionMode = argv.production
 
-specialJSFilter = (exclude) ->
-    (file) ->
-        name = path.basename file
-        if exclude
-            name isnt 'html5shiv.js' and
-            name isnt 'respond.src.js' and
-            '.js' is path.extname name
-        else
-            name is 'html5shiv.js' or name is 'respond.src.js'
+outputDirectory = path.join __dirname, 'dist'
+
+webclientStaticDirectory = path.join outputDirectory, 'static'
 
 
 # Express server
@@ -29,44 +28,41 @@ specialJSFilter = (exclude) ->
 gulp.task 'express', ->
     gulp.src path.join 'fetsy-hammertag', 'server.coffee'
     .pipe coffee()
-    .pipe gulp.dest path.join output_directory
+    .pipe gulp.dest path.join outputDirectory
 
 
 # HTML files.
 
 gulp.task 'html', ->
     gulp.src path.join 'fetsy-hammertag', 'templates', '*.html'
-    .pipe gulp.dest path.join output_directory, 'static', 'templates'
+    .pipe gulp.dest path.join webclientStaticDirectory, 'templates'
 
 
 # JavaScript files.
 
-gulp.task 'js-all', ['coffee', 'js-special', 'js-libs', 'js-libs-special'], ->
+gulp.task 'js-all', ['coffee', 'js', 'js-libs'], ->
 
 gulp.task 'coffee', ->
     gulp.src path.join 'fetsy-hammertag', 'scripts', '*.coffee'
     .pipe coffee()
     .pipe concat 'fetsy-hammertag.js'
-    # Maybe uglify it.
-    .pipe gulp.dest path.join output_directory, 'static', 'js'
+    .pipe gulpif productionMode, uglify()
+    .pipe gulp.dest path.join webclientStaticDirectory, 'js'
 
-gulp.task 'js-special', ->
-    gulp.src path.join 'fetsy-hammertag',
-        'scripts'
-        'ie10-viewport-bug-workaround.js'
-    .pipe gulp.dest path.join output_directory, 'static', 'js'
+gulp.task 'js', ->
+    gulp.src path.join 'fetsy-hammertag', 'scripts', '*.js'
+    .pipe gulpif productionMode, uglify()
+    .pipe gulp.dest path.join webclientStaticDirectory, 'js'
 
 gulp.task 'js-libs', ->
+    isntSpecialFile = (file) ->
+        name = path.basename file.path
+        name isnt 'html5shiv.js' and name isnt 'respond.src.js'
     gulp.src mainBowerFiles
-        filter: specialJSFilter true
-    .pipe concat 'fetsy-hammertag-libs.js'
-    # Maybe uglify it.
-    .pipe gulp.dest path.join output_directory, 'static', 'js'
-
-gulp.task 'js-libs-special', ->
-    gulp.src mainBowerFiles
-        filter: specialJSFilter false
-    .pipe gulp.dest path.join output_directory, 'static', 'js'
+        filter: /\.js$/
+    .pipe gulpif isntSpecialFile, concat 'fetsy-hammertag-libs.js'
+    .pipe gulpif productionMode, uglify()
+    .pipe gulp.dest path.join webclientStaticDirectory, 'js'
 
 
 # CSS and font files.
@@ -76,21 +72,22 @@ gulp.task 'css-all', ['css', 'css-libs', 'fonts-libs'], ->
 gulp.task 'css', ->
     gulp.src path.join 'fetsy-hammertag', 'styles', '*.css'
     .pipe concat 'fetsy-hammertag.css'
-    # Maybe uglify it.
-    .pipe gulp.dest path.join output_directory, 'static', 'css'
+    .pipe gulpif productionMode, cleanCSS
+        compatibility: 'ie8'
+    .pipe gulp.dest path.join webclientStaticDirectory, 'css'
 
 gulp.task 'css-libs', ->
     gulp.src mainBowerFiles
         filter: /\.css$/
     .pipe concat 'fetsy-hammertag-libs.css'
-    # Maybe uglify it.
-    .pipe gulp.dest path.join output_directory, 'static', 'css'
+    .pipe gulpif productionMode, cleanCSS
+        compatibility: 'ie8'
+    .pipe gulp.dest path.join webclientStaticDirectory, 'css'
 
 gulp.task 'fonts-libs', ->
     gulp.src mainBowerFiles
         filter: /\.(eot)|(svg)|(ttf)|(woff)|(woff2)$/
-
-    .pipe gulp.dest path.join output_directory, 'static', 'fonts'
+    .pipe gulp.dest path.join webclientStaticDirectory, 'fonts'
 
 
 #  Gulp default task.
@@ -126,8 +123,9 @@ gulp.task 'watch', ->
     return
 
 gulp.task 'serve', ->
-    # TODO Add production flag, add NODE_ENV production variable
+    nodeEnv = if productionMode then 'production' else 'development'
     nodemon
-        script: path.join output_directory, 'server.js'
+        script: path.join outputDirectory, 'server.js'
         env:
             DEBUG: 'express:*'
+            NODE_ENV: nodeEnv
