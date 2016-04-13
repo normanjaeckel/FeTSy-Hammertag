@@ -1,4 +1,3 @@
-
 angular.module 'FeTSy-Hammertag.states.listPersons', [
     'FeTSy-Hammertag.utils.personUpdate'
 ]
@@ -12,26 +11,31 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
         $http.get "#{serverURL}/person"
         .then(
             (response) =>
-                @persons = response.data
+                @persons = []
+                angular.forEach response.data, (personDescription, personID) =>
+                    @persons.push
+                        ID: personID
+                        description: personDescription
+                    return
                 return
         )
 
-        @update = (personID) ->
+        @update = (person) ->
             PersonUpdateFactory.update
-                personID: personID
-                personDescription: @persons[personID]
+                personID: person.ID
+                personDescription: person.description
             .then(
                 (newPersonDescription) =>
-                    @persons[personID] = newPersonDescription
+                    person.description = newPersonDescription
                     return
             )
             return
 
-        @remove = (personID) ->
-            $http.delete "#{serverURL}/person/#{personID}"
+        @remove = (person, index) ->
+            $http.delete "#{serverURL}/person/#{person.ID}"
             .then(
                 (response) =>
-                    delete @persons[personID]
+                    @persons.splice index, 1
                     return
             )
             return

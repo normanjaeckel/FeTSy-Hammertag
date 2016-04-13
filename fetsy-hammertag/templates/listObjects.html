@@ -12,7 +12,7 @@
 
 <div class="row" ng-repeat="(objectID, object) in listObjects.objects">
 
-    <hr ng-class="$first ? 'hidden-xs' : ''">
+    <hr ng-class="{'hidden-xs': $first}">
 
     <div class="col-sm-5">
         <p>
