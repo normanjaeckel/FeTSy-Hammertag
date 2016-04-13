@@ -127,9 +127,14 @@ gulp.task 'watch', ->
     return
 
 gulp.task 'serve', ->
-    nodeEnv = if productionMode then 'production' else 'development'
+    if productionMode
+        nodeEnv = 'production'
+        debug = ''
+    else
+        nodeEnv = 'development'
+        debug = 'express:*'
     nodemon
         script: path.join outputDirectory, 'server.js'
         env:
-            DEBUG: 'express:*'
+            DEBUG: debug
             NODE_ENV: nodeEnv

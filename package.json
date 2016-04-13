@@ -1,17 +1,17 @@
 {
-  "name": "FeTSy-Hammertag",
+  "name": "fetsy-hammertag",
   "private": true,
   "scripts": {
     "prepublish": "bower install && gulp"
   },
   "devDependencies": {
     "body-parser": "~1.15.0",
-    "bower": "~1.7.7",
+    "bower": "~1.7.9",
     "coffee-script": "~1.10.0",
     "express": "~4.13.4",
     "gulp": "~3.9.1",
-    "gulp-clean-css": "~2.0.3",
-    "gulp-coffee": "~2.3.1",
+    "gulp-clean-css": "~2.0.6",
+    "gulp-coffee": "~2.3.2",
     "gulp-coffeelint": "~0.6.0",
     "gulp-concat": "~2.6.0",
     "gulp-if": "~2.0.0",
@@ -21,10 +21,10 @@
     "gulp-uglify": "~1.5.3",
     "jshint": "~2.9.1",
     "level": "~1.4.0",
-    "levelup": "~1.3.1",
     "leveldown": "~1.4.4",
-    "lodash": "~4.6.1",
+    "levelup": "~1.3.1",
+    "lodash": "~4.11.0",
     "main-bower-files": "~2.11.1",
-    "yargs": "~4.3.2"
+    "yargs": "~4.6.0"
   }
 }

@@ -1,11 +1,11 @@
 {
-  "name": "FeTSy-Hammertag",
+  "name": "fetsy-hammertag",
   "private": true,
   "dependencies": {
-    "angular": "~1.5.0",
-    "angular-bootstrap": "~1.2.5",
+    "angular": "~1.5.3",
+    "angular-bootstrap": "~1.3.1",
     "angular-ui-router": "~0.2.18",
-    "jquery": "~1.12.2",
+    "jquery": "~1.12.3",
     "bootstrap": "~3.3.6",
     "html5shiv": "~3.7.3",
     "respond": "~1.4.2"
