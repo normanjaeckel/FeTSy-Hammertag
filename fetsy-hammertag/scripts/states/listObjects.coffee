@@ -1,15 +1,13 @@
 angular.module 'FeTSy-Hammertag.states.listObjects', [
-    'FeTSy-Hammertag.utils.objectUpdate'
-    'FeTSy-Hammertag.utils.personUpdate'
+    'FeTSy-Hammertag.utils.updateDescription'
 ]
 
 
 .controller 'ListObjectsCtrl', [
     '$http'
     'serverURL'
-    'ObjectUpdateFactory'
-    'PersonUpdateFactory'
-    ($http, serverURL, ObjectUpdateFactory, PersonUpdateFactory) ->
+    'UpdateDescriptionFactory'
+    ($http, serverURL, UpdateDescriptionFactory) ->
         $http.get "#{serverURL}/object"
         .then(
             (response) =>
@@ -18,23 +16,25 @@ angular.module 'FeTSy-Hammertag.states.listObjects', [
         )
 
         @updateObject = (objectID) ->
-            ObjectUpdateFactory.update
-                objectID: objectID
-                objectDescription: @objects[objectID].objectDescription
+            UpdateDescriptionFactory.update
+                type: 'object'
+                ID: objectID
+                description: @objects[objectID].objectDescription
             .then(
-                (newObjectDescription) =>
-                    @objects[objectID].objectDescription = newObjectDescription
+                (newDescription) =>
+                    @objects[objectID].objectDescription = newDescription
                     return
             )
             return
 
         @updatePerson = (objectID, personID) ->
-            PersonUpdateFactory.update
-                personID: personID
-                personDescription: @objects[objectID].personDescription
+            UpdateDescriptionFactory.update
+                type: 'person'
+                ID: personID
+                description: @objects[objectID].personDescription
             .then(
-                (newPersonDescription) =>
-                    @objects[objectID].personDescription = newPersonDescription
+                (newDescription) =>
+                    @objects[objectID].personDescription = newDescription
                     return
             )
             return

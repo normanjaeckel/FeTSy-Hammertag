@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        Update {{ updateDescription.element.type }}
+        <span class="label label-primary">
+            <span class="glyphicon" ng-class="updateDescription.element.icon" aria-hidden="true"></span>
+            <span class="sr-only">{{ updateDescription.element.label }}</span>
+            {{ updateDescription.element.ID }}
+        </span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label for="description">
+            {{ updateDescription.element.label }} description
+        </label>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <span id="descriptionIcon" class="glyphicon" ng-class="updateDescription.element.icon" aria-hidden="true"></span>
+                <span class="sr-only">{{ updateDescription.element.label }} description</span>
+            </div>
+            <textarea id="description"
+                      class="form-control"
+                      aria-describedby="descriptionIcon"
+                      ng-model="updateDescription.element.description"
+                      focus-me="updateDescription.focus">
+            </textarea>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="updateDescription.save()">Save</button>
+    <button class="btn btn-warning" type="button" ng-click="$dismiss('cancel click')">Cancel</button>
+</div>

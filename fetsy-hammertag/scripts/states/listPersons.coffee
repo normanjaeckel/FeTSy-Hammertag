@@ -1,13 +1,13 @@
 angular.module 'FeTSy-Hammertag.states.listPersons', [
-    'FeTSy-Hammertag.utils.personUpdate'
+    'FeTSy-Hammertag.utils.updateDescription'
 ]
 
 
 .controller 'ListPersonsCtrl', [
     '$http'
     'serverURL'
-    'PersonUpdateFactory'
-    ($http, serverURL, PersonUpdateFactory) ->
+    'UpdateDescriptionFactory'
+    ($http, serverURL, UpdateDescriptionFactory) ->
         $http.get "#{serverURL}/person"
         .then(
             (response) =>
@@ -21,12 +21,13 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
         )
 
         @update = (person) ->
-            PersonUpdateFactory.update
-                personID: person.ID
-                personDescription: person.description
+            UpdateDescriptionFactory.update
+                type: 'person'
+                ID: person.ID
+                description: person.description
             .then(
-                (newPersonDescription) ->
-                    person.description = newPersonDescription
+                (newDescription) ->
+                    person.description = newDescription
                     return
             )
             return

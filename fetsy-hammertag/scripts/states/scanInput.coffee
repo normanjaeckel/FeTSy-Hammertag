@@ -1,6 +1,5 @@
 angular.module 'FeTSy-Hammertag.states.scanInput', [
-    'FeTSy-Hammertag.utils.objectUpdate'
-    'FeTSy-Hammertag.utils.personUpdate'
+    'FeTSy-Hammertag.utils.updateDescription'
 ]
 
 
@@ -20,10 +19,8 @@ angular.module 'FeTSy-Hammertag.states.scanInput', [
     '$http'
     'serverURL'
     'ScanInputValidationFactory'
-    'ObjectUpdateFactory'
-    'PersonUpdateFactory'
-    ($http, serverURL, ScanInputValidationFactory, ObjectUpdateFactory,
-     PersonUpdateFactory) ->
+    'UpdateDescriptionFactory'
+    ($http, serverURL, ScanInputValidationFactory, UpdateDescriptionFactory) ->
         @focusObject = true
         @focusPerson = not @focusObject
 
@@ -92,23 +89,25 @@ angular.module 'FeTSy-Hammertag.states.scanInput', [
             return
 
         @updateObject = () ->
-            ObjectUpdateFactory.update
-                objectID: @lastObject.id
-                objectDescription: @lastObject.description
+            UpdateDescriptionFactory.update
+                type: 'object'
+                ID: @lastObject.id
+                description: @lastObject.description
             .then(
-                (newObjectDescription) =>
-                    @lastObject.description = newObjectDescription
+                (newDescription) =>
+                    @lastObject.description = newDescription
                     return
             )
             return
 
         @updatePerson = () ->
-            PersonUpdateFactory.update
-                personID: @lastPerson.id
-                personDescription: @lastPerson.description
+            UpdateDescriptionFactory.update
+                type: 'person'
+                ID: @lastPerson.id
+                description: @lastPerson.description
             .then(
-                (newPersonDescription) =>
-                    @lastPerson.description = newPersonDescription
+                (newDescription) =>
+                    @lastPerson.description = newDescription
                     return
             )
             return
