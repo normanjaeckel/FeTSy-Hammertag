@@ -25,7 +25,7 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 personID: person.ID
                 personDescription: person.description
             .then(
-                (newPersonDescription) =>
+                (newPersonDescription) ->
                     person.description = newPersonDescription
                     return
             )

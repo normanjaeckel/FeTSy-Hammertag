@@ -22,7 +22,8 @@ angular.module 'FeTSy-Hammertag.states.scanInput', [
     'ScanInputValidationFactory'
     'ObjectUpdateFactory'
     'PersonUpdateFactory'
-    ($http, serverURL, ScanInputValidationFactory, ObjectUpdateFactory, PersonUpdateFactory) ->
+    ($http, serverURL, ScanInputValidationFactory, ObjectUpdateFactory,
+     PersonUpdateFactory) ->
         @focusObject = true
         @focusPerson = not @focusObject
 
