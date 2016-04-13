@@ -1,4 +1,5 @@
 angular.module 'FeTSy-Hammertag.states.scanInput', [
+    'FeTSy-Hammertag.utils.objectUpdate'
     'FeTSy-Hammertag.utils.personUpdate'
 ]
 
@@ -19,8 +20,9 @@ angular.module 'FeTSy-Hammertag.states.scanInput', [
     '$http'
     'serverURL'
     'ScanInputValidationFactory'
+    'ObjectUpdateFactory'
     'PersonUpdateFactory'
-    ($http, serverURL, ScanInputValidationFactory, PersonUpdateFactory) ->
+    ($http, serverURL, ScanInputValidationFactory, ObjectUpdateFactory, PersonUpdateFactory) ->
         @focusObject = true
         @focusPerson = not @focusObject
 
@@ -86,6 +88,17 @@ angular.module 'FeTSy-Hammertag.states.scanInput', [
             else
                 @personID = ''
                 @focusPerson = true
+            return
+
+        @updateObject = () ->
+            ObjectUpdateFactory.update
+                objectID: @lastObject.id
+                objectDescription: @lastObject.description
+            .then(
+                (newObjectDescription) =>
+                    @lastObject.description = newObjectDescription
+                    return
+            )
             return
 
         @updatePerson = () ->

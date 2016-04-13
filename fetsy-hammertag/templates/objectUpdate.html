@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        Update object
+        <span class="label label-primary">
+            <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+            <span class="sr-only">Object</span>
+            {{ objectUpdate.object.objectID }}
+        </span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label for="objectDescription">
+            Object description
+        </label>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <span id="objectDescriptionIcon" class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                <span class="sr-only">Object description</span>
+            </div>
+            <textarea id="objectDescription"
+                      class="form-control"
+                      aria-describedby="objectDescriptionIcon"
+                      ng-model="objectUpdate.object.objectDescription"
+                      focus-me="objectUpdate.focus">
+            </textarea>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="objectUpdate.save()">Save</button>
+    <button class="btn btn-warning" type="button" ng-click="$dismiss('cancel click')">Cancel</button>
+</div>
