@@ -27,7 +27,7 @@ app.use bodyParser.json()
 
 ## Server main entry point index.html
 
-app.get ['/', '/list/*'], (request, response) ->
+app.get ['/', '/scan/*', '/list/*'], (request, response) ->
     response.sendFile path.join __dirname, 'static', 'templates', 'index.html'
     return
 
@@ -68,16 +68,11 @@ router.get '/object', (request, response, next) ->
 
 ## Setup route for /api/object/:id
 
-# Validate 'id' parameter
+# Catch 'id' parameter
 router.use '/object/:id', (request, response, next) ->
-    if isNaN request.params.id
-        response.status 400
-        .send
-            details: "'#{request.params.id}' must be an integer."
-    else
-        request.objectID = parseInt request.params.id
-        response.data = {}
-        next()
+    request.objectID = request.params.id
+    response.data = {}
+    next()
     return
 
 # Handle PATCH requests. Save data to database.
@@ -186,7 +181,7 @@ router.get '/person', (request, response, next) ->
 
 ## Setup route for /api/person/:id
 
-# Validate 'id' parameter
+# Catch 'id' parameter
 router.use '/person/:id', (request, response, next) ->
     request.personID = request.params.id
     response.data = {}
@@ -203,8 +198,8 @@ router.patch '/person/:id', (request, response, next) ->
                 if err
                     next err
                 else
-                    response.send
-                        details: 'Data successfully saved.'
+                    response.data.details = 'Data successfully saved.'
+                    next()
                 return
         )
     else
@@ -222,6 +217,20 @@ router.delete '/person/:id', (request, response, next) ->
         else
             response.send
                 details: 'Person successfully deleted.'
+        return
+    return
+
+# Handle PATCH and GET requests. Retrieve data from database.
+router.all '/person/:id', (request, response, next) ->
+    database.get "person:#{request.personID}", (err, value) ->
+        personDescription = value or 'Unknown'
+        if err and not err.notFound
+            next err
+        _.assign response.data,
+            person:
+                personID: request.personID
+                personDescription: personDescription
+        response.send response.data
         return
     return
 

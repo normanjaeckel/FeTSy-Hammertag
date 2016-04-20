@@ -1,5 +1,6 @@
 angular.module 'FeTSy-Hammertag.utils.updateDescription', []
 
+
 .factory 'UpdateDescriptionFactory', [
     '$uibModal'
     ($uibModal) ->
@@ -22,6 +23,7 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
                         element
             .result
 ]
+
 
 .controller 'UpdateDescriptionCtrl', [
     '$http'

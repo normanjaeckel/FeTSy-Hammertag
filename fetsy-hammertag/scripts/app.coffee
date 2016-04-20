@@ -22,10 +22,17 @@ angular.module 'FeTSy-Hammertag', [
 
         # Set up the states
         $stateProvider
-        .state  'scanInput',
+        .state 'home',
             url: '/'
-            templateUrl: 'static/templates/scanInput.html'
-            controller: 'ScanInputCtrl as scanInput'
+            templateUrl: 'static/templates/home.html'
+            controller: 'HomeCtrl as home'
+
+        .state 'scanSingleObject',
+            url: '/scan/single'
+            templateUrl: 'static/templates/scanSingleObject.html'
+            controller: 'ScanSingleObjectCtrl as scanSingleObject'
+
+        #.state 'scanMassObject',
 
         .state  'listObjects',
             url: '/list/objects'
