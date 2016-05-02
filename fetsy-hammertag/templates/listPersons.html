@@ -1,14 +1,17 @@
-<div class="row">
-    <div class="col-sm-5">
+<div class="row hidden-xs">
+    <div class="col-sm-6">
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+    </div>
+    <div class="col-sm-6">
+        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
     </div>
 </div>
 
 <div class="row" ng-repeat="person in listPersons.persons | orderBy : 'personDescription'">
 
-    <hr>
+    <hr ng-class="{'hidden-xs': $first}">
 
-    <div class="col-sm-5">
+    <div class="col-sm-6">
         <p>
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
@@ -19,10 +22,38 @@
                 {{ person.description }}
             </span>
             <span class="pull-right">
-                <button type="button" class="btn btn-xs btn-default" aria-label="Update person" ng-click="listPersons.update(person)">
+                <button type="button"
+                        class="btn btn-xs btn-default"
+                        aria-label="Update person"
+                        ng-click="listPersons.updatePerson(person)"
+                        ng-hide="person.ID === 'Unknown'">
                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-xs btn-danger" aria-label="Remove person" ng-click="listPersons.remove(person, $index)">
+            </span>
+        </p>
+    </div>
+
+    <div class="col-sm-6">
+        <p ng-repeat="object in person.objects">
+            <span class="label label-primary">
+                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                <span class="sr-only">Object</span>
+                {{ object.ID }}
+            </span>
+            <span style="padding-left:0.5em;">
+                {{ object.description }}
+            </span>
+            <span class="pull-right">
+                <button type="button"
+                        class="btn btn-xs btn-default"
+                        aria-label="Update object"
+                        ng-click="listPersons.updateObject(object)">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                </button>
+                <button type="button"
+                        class="btn btn-xs btn-danger"
+                        aria-label="Remove object"
+                        ng-click="listPersons.removeObject(object, person.objects, $index)">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
             </span>

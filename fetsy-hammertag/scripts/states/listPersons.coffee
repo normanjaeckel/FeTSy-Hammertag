@@ -8,19 +8,30 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     'serverURL'
     'UpdateDescriptionFactory'
     ($http, serverURL, UpdateDescriptionFactory) ->
-        $http.get "#{serverURL}/person"
+        $http.get "#{serverURL}/object"
         .then(
             (response) =>
+                personDict = {}
+                angular.forEach response.data, (data, objectID) ->
+                    personID = data.personID or 'Unknown'
+                    if not personDict[personID]?
+                        personDict[personID] =
+                            ID: personID
+                    personDict[personID].description = data.personDescription
+                    if not personDict[personID].objects?
+                        personDict[personID].objects = []
+                    personDict[personID].objects.push
+                        ID: objectID
+                        description: data.objectDescription
+                    return
                 @persons = []
-                angular.forEach response.data, (personDescription, personID) =>
-                    @persons.push
-                        ID: personID
-                        description: personDescription
+                angular.forEach personDict, (data, personID) =>
+                    @persons.push data
                     return
                 return
         )
 
-        @update = (person) ->
+        @updatePerson = (person) ->
             UpdateDescriptionFactory.update
                 type: 'person'
                 ID: person.ID
@@ -32,13 +43,26 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             )
             return
 
-        @remove = (person, index) ->
-            $http.delete "#{serverURL}/person/#{person.ID}"
+        @updateObject = (object) ->
+            UpdateDescriptionFactory.update
+                type: 'object'
+                ID: object.ID
+                description: object.description
             .then(
-                (response) =>
-                    @persons.splice index, 1
+                (newDescription) ->
+                    object.description = newDescription
                     return
             )
             return
+
+        @removeObject = (object, objects, index) ->
+            $http.delete "#{serverURL}/object/#{object.ID}"
+            .then(
+                (response) ->
+                    objects.splice index, 1
+                    return
+            )
+            return
+
         return
 ]

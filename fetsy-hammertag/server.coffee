@@ -52,6 +52,8 @@ router.get '/object', (request, response, next) ->
                 if not objects[id]?
                     objects[id] = {}
                 objects[id][property] = chunk.value
+                if property is 'personID'
+                    objects[id].personDescription = 'Unknown'
             when 'person'
                 _.forOwn objects, (object, objectID) ->
                     if object.personID is id
@@ -152,29 +154,6 @@ router.all '/object/:id', (request, response, next) ->
                 return
         else
             response.send response.data
-        return
-    return
-
-
-## Setup route for /api/person
-
-router.get '/person', (request, response, next) ->
-    persons = {}
-    database.createReadStream()
-    .on 'data', (chunk) ->
-        [type, id, property] = chunk.key.split ':'
-        switch type
-            when 'object'
-                if property is 'personID'
-                    persons[chunk.value] = 'Unknown'
-            when 'person'
-                persons[id] = chunk.value
-        return
-    .on 'error', (err) ->
-        next err
-        return
-    .on 'end', ->
-        response.send persons
         return
     return
 
