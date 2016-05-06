@@ -34,11 +34,6 @@ angular.module 'FeTSy-Hammertag', [
 
         #.state 'scanMassObject',
 
-        .state  'listObjects',
-            url: '/list/objects'
-            templateUrl: 'static/templates/listObjects.html'
-            controller: 'ListObjectsCtrl as listObjects'
-
         .state  'listPersons',
             url: '/list/persons'
             templateUrl: 'static/templates/listPersons.html'
