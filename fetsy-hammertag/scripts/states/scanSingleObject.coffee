@@ -93,17 +93,11 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         errorHandling
                     )
             else if type is 'massObject'
-                @error = 'Invalid code. Use <THIS PAGE> instead.'
+                @error = 'Invalid code. Use <THIS PAGE TODO> instead.'
                 @focusScanInput = true
             else
                 @error = 'Invalid code. Please reset form field and try again.'
                 @focusScanInput = true
-            return
-
-        @resetInputField = ->
-            @scanInputValue = ''
-            @error = ''
-            @focusScanInput = true
             return
 
         @updateObject = ->
@@ -114,6 +108,11 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             .then(
                 (newDescription) =>
                     @lastObject.description = newDescription
+                    return
+            )
+            .finally(
+                =>
+                    @resetInputField()
                     return
             )
             return
@@ -128,6 +127,17 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                     @lastPerson.description = newDescription
                     return
             )
+            .finally(
+                =>
+                    @resetInputField()
+                    return
+            )
+            return
+
+        @resetInputField = ->
+            @scanInputValue = ''
+            @error = ''
+            @focusScanInput = true
             return
 
         @resetForm = ->
