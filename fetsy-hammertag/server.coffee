@@ -5,6 +5,7 @@ bodyParser = require 'body-parser'
 express = require 'express'
 levelup = require 'levelup'
 path = require 'path'
+uuid = require 'node-uuid'
 
 
 ## Initiate Express app
@@ -214,8 +215,72 @@ router.all '/person/:id', (request, response, next) ->
     return
 
 
-# Start server
+## Setup route for /api/supplies/:id
 
-app.listen 8080, ->
-    console.log 'Example app listening on http://localhost:8080/'
+# Catch 'id' parameter
+router.use '/supplies/:id', (request, response, next) ->
+    request.suppliesID = request.params.id
+    response.data = {}
+    next()
+    return
+
+# Handle PATCH requests. Save data to database.
+router.patch '/supplies/:id', (request, response, next) ->
+    operations = []
+    if request.body.suppliesDescription
+        operations.push
+            type: 'put'
+            key: "supplies:#{request.suppliesID}:suppliesDescription"
+            value: request.body.suppliesDescription
+    if typeof request.body.number is 'number' and request.body.number > 0
+        _.times request.body.number, ->
+            itemUUID = uuid.v4()
+            operations.push
+                type: 'put'
+                key: "supplies:#{request.suppliesID}:item:#{itemUUID}"
+                value: true
+    database.batch operations, (err) ->
+        if err
+            next err
+        else
+            response.data.details = 'Data successfully saved.'
+            #response.send response.data
+            next()
+        return
+    return
+
+# Handle DELETE requests. Delete persons from database.
+# TODO
+
+# Handle PATCH and GET requests. Retrieve data from database.
+router.all '/supplies/:id', (request, response, next) ->
+    fromDatabase =
+        suppliesID: request.suppliesID
+        suppliesDescription: 'Unknown'
+        items: []
+    database.createReadStream
+        gte: "supplies:#{request.suppliesID}:item:"
+        lte: "supplies:#{request.suppliesID}:suppliesDescription"
+    .on 'data', (chunk) ->
+        keyArray = chunk.key.split ':'
+        if keyArray.length is 3
+            fromDatabase.suppliesDescription = chunk.value
+        else
+            [..., itemUUID] = chunk.key.split ':'
+            fromDatabase.items.push itemUUID
+        return
+    .on 'error', (err) ->
+        next err
+        return
+    .on 'end', ->
+        response.data.supplies = fromDatabase
+        response.send response.data
+        return
+    return
+
+
+# Start server
+port = 8080
+app.listen port, ->
+    console.log "Example app listening on http://localhost:#{port}/"
     return

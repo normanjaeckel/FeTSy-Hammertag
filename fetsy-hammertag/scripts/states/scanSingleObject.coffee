@@ -10,6 +10,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     ($http, serverURL) ->
         fetchObject: (ID) ->
             $http.get "#{serverURL}/object/#{ID}"
+        fetchSupplies: (ID) ->
+            $http.get "#{serverURL}/supplies/#{ID}"
         fetchPerson: (ID) ->
             $http.get "#{serverURL}/person/#{ID}"
         saveObject: (ID, personID) ->
@@ -38,6 +40,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             if type is 'singleObject'
                 if @lastObject and @lastPerson
                     @lastObject = @lastPerson = null
+                if @lastSupplies and @lastPerson
+                    @lastSupplies = @lastPerson = null
                 if @lastPerson
                     DatabaseFactory.saveObject(@scanInputValue, @lastPerson.id)
                     .then(
@@ -51,6 +55,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         errorHandling
                     )
                 else
+                    @lastSupplies = null
                     DatabaseFactory.fetchObject(@scanInputValue)
                     .then(
                         (response) =>
@@ -68,6 +73,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         errorHandling
                     )
             else if type is 'person'
+                if @lastSupplies and @lastPerson
+                    @lastSupplies = @lastPerson = null
                 if @lastObject
                     DatabaseFactory.saveObject(@lastObject.id, @scanInputValue)
                     .then(
@@ -80,6 +87,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                             return
                         errorHandling
                     )
+                else if @lastSupplies
+                    console.log 'TODO Save supplies to pers'
                 else
                     DatabaseFactory.fetchPerson(@scanInputValue)
                     .then(
@@ -93,8 +102,26 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         errorHandling
                     )
             else if type is 'massObject'
-                @error = 'Invalid code. Use <THIS PAGE TODO> instead.'
-                @focusScanInput = true
+                if @lastObject and @lastPerson
+                    @lastObject = @lastPerson = null
+                if @lastSupplies and @lastPerson
+                    @lastSupplies = @lastPerson = null
+                if @lastPerson
+                    console.log 'TODO Add this obj to person'
+                else
+                    @lastObject = null
+                    DatabaseFactory.fetchSupplies(@scanInputValue)
+                    .then(
+                        (response) =>
+                            console.log response.data
+                            @lastSupplies =
+                                id: @scanInputValue
+                                description: response.data.supplies
+                                    .suppliesDescription
+                            @resetInputField()
+                            return
+                        errorHandling
+                    )
             else
                 @error = 'Invalid code. Please reset form field and try again.'
                 @focusScanInput = true
@@ -141,7 +168,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             return
 
         @resetForm = ->
-            @lastObject = @lastPerson = null
+            @lastObject = @lastPerson = @lastSupplies = null
             @resetInputField()
             return
 
