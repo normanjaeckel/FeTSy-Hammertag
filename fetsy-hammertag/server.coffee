@@ -232,19 +232,19 @@ router.patch '/supplies/:id', (request, response, next) ->
             type: 'put'
             key: "supplies:#{request.suppliesID}:suppliesDescription"
             value: request.body.suppliesDescription
-    if typeof request.body.number is 'number' and request.body.number > 0
+    if request.body.personID and typeof request.body.number is 'number' and
+            request.body.number > 0
         _.times request.body.number, ->
             itemUUID = uuid.v4()
             operations.push
                 type: 'put'
                 key: "supplies:#{request.suppliesID}:item:#{itemUUID}"
-                value: true
+                value: request.body.personID
     database.batch operations, (err) ->
         if err
             next err
         else
             response.data.details = 'Data successfully saved.'
-            #response.send response.data
             next()
         return
     return

@@ -17,6 +17,10 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
         saveObject: (ID, personID) ->
             $http.patch "#{serverURL}/object/#{ID}",
                 personID: personID
+        saveSupplies: (ID, personID) ->
+            $http.patch "#{serverURL}/supplies/#{ID}",
+                personID: personID
+                number: 1
 ]
 
 
@@ -88,7 +92,27 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         errorHandling
                     )
                 else if @lastSupplies
-                    console.log 'TODO Save supplies to pers'
+                    DatabaseFactory.saveSupplies(
+                        @lastSupplies.id
+                        @scanInputValue
+                    ).then(
+                        (response) =>
+                            @lastSupplies.count = response.data.supplies
+                                .items.length
+                            DatabaseFactory.fetchPerson(@scanInputValue)
+                            .then(
+                                (response) =>
+                                    @lastPerson =
+                                        id: @scanInputValue
+                                        description: response.data.person
+                                            .personDescription
+                                    @resetInputField()
+                                    return
+                                errorHandling
+                            )
+                            return
+                        errorHandling
+                    )
                 else
                     DatabaseFactory.fetchPerson(@scanInputValue)
                     .then(
@@ -107,17 +131,30 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 if @lastSupplies and @lastPerson
                     @lastSupplies = @lastPerson = null
                 if @lastPerson
-                    console.log 'TODO Add this obj to person'
+                    DatabaseFactory.saveSupplies(
+                        @scanInputValue
+                        @lastPerson.id
+                    ).then(
+                        (response) =>
+                            @lastSupplies =
+                                id: @scanInputValue
+                                description: response.data.supplies
+                                    .suppliesDescription
+                                count: response.data.supplies.items.length
+                            @resetInputField()
+                            return
+                        errorHandling
+                    )
                 else
                     @lastObject = null
                     DatabaseFactory.fetchSupplies(@scanInputValue)
                     .then(
                         (response) =>
-                            console.log response.data
                             @lastSupplies =
                                 id: @scanInputValue
                                 description: response.data.supplies
                                     .suppliesDescription
+                                count: response.data.supplies.items.length
                             @resetInputField()
                             return
                         errorHandling
@@ -135,6 +172,23 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             .then(
                 (newDescription) =>
                     @lastObject.description = newDescription
+                    return
+            )
+            .finally(
+                =>
+                    @resetInputField()
+                    return
+            )
+            return
+
+        @updateSupplies = ->
+            UpdateDescriptionFactory.update
+                type: 'supplies'
+                ID: @lastSupplies.id
+                description: @lastSupplies.description
+            .then(
+                (newDescription) =>
+                    @lastSupplies.description = newDescription
                     return
             )
             .finally(

@@ -10,11 +10,19 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
                     element.description = ''
                 element.icon = 'glyphicon-wrench'
                 element.label = 'Object'
-            else
+            else if element.type is 'supplies'
+                if element.description is 'Unknown'
+                    element.description = ''
+                element.icon = 'glyphicon-tint'
+                element.label = 'Supplies'
+            else if element.type is 'person'
                 if element.description is 'Unknown'
                     element.description = ''
                 element.icon = 'glyphicon-user'
                 element.label = 'Person'
+            else
+                throw 'Bad element type. Expected "object", "supplies" or
+                    "person".'
             $uibModal.open
                 controller: 'UpdateDescriptionCtrl as updateDescription'
                 templateUrl: 'static/templates/updateDescription.html'
@@ -39,7 +47,10 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
                 if element.type is 'object'
                     data =
                         objectDescription: @element.description
-                else
+                else if element.type is 'supplies'
+                    data =
+                        suppliesDescription: @element.description
+                else if element.type is 'person'
                     data =
                         personDescription: @element.description
                 $http.patch "#{serverURL}/#{element.type}/#{@element.ID}", data

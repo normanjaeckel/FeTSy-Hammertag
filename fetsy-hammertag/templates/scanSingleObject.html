@@ -73,7 +73,7 @@
         </div>
         <div class="panel panel-default" ng-show="scanSingleObject.lastSupplies">
             <div class="panel-heading">
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
                 {{ scanSingleObject.lastSupplies.id }}
                 <button type="button"
                         class="btn btn-xs btn-default pull-right"
@@ -83,6 +83,7 @@
                 </button>
             </div>
             <div class="panel-body">
+                <span class="label label-primary">{{ scanSingleObject.lastSupplies.count }}</span>
                 {{ scanSingleObject.lastSupplies.description }}
             </div>
         </div>
