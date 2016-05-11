@@ -41,30 +41,78 @@ router = express.Router
 app.use '/api', router
 
 
-## Setup route for /api/object
+## Setup route for /api/all
 
-router.get '/object', (request, response, next) ->
-    objects = {}
-    database.createReadStream()  # TODO Care about order of retrieved data.
+router.get '/all', (request, response, next) ->
+    data =
+        objects: {}
+        supplies: {}
+        persons: {}
+    database.createReadStream()
     .on 'data', (chunk) ->
         [type, id, property] = chunk.key.split ':'
         switch type
             when 'object'
-                if not objects[id]?
-                    objects[id] = {}
-                objects[id][property] = chunk.value
-                if property is 'personID'
-                    objects[id].personDescription = 'Unknown'
+                if not data.objects[id]?
+                    data.objects[id] = {}
+                data.objects[id][property] = chunk.value
+            when 'supplies'
+                if not data.supplies[id]?
+                    data.supplies[id] =
+                        items: []
+                keyArray = chunk.key.split ':'
+                if keyArray.length is 3
+                    data.supplies[id].suppliesDescription = chunk.value
+                else
+                    [..., itemUUID] = chunk.key.split ':'
+                    data.supplies[id].items.push(
+                        itemUUID: itemUUID
+                        personID: chunk.value
+                    )
             when 'person'
-                _.forOwn objects, (object, objectID) ->
-                    if object.personID is id
-                        object.personDescription = chunk.value
+                data.persons[id] =
+                    description: chunk.value
+                    objects: []
+                    supplies: []
         return
     .on 'error', (err) ->
         next err
         return
     .on 'end', ->
-        response.send objects
+        unknownPersonID = 'Unknown'
+        _.forOwn data.objects, (object, objectID) ->
+            if object.personID?
+                if not data.persons[object.personID]?
+                    data.persons[object.personID] =
+                        description: 'Unknown'
+                        objects: []
+                        supplies: []
+                data.persons[object.personID].objects.push
+                    ID: objectID
+                    description: object.objectDescription or 'Unknown object'
+            else
+                if not data.persons[unknownPersonID]?
+                    data.persons[unknownPersonID] =
+                        objects: []
+                        supplies: []
+                data.persons[unknownPersonID].objects.push
+                    ID: objectID
+                    description: object.objectDescription or 'Unknown object'
+            return
+        _.forOwn data.supplies, (supplies, suppliesID) ->
+            _.forEach supplies.items, (item) ->
+                if not data.persons[item.personID]?
+                    data.persons[item.personID] =
+                        description: 'Unknown'
+                        objects: []
+                        supplies: []
+                data.persons[item.personID].supplies.push
+                    ID: suppliesID
+                    itemUUID: item.itemUUID
+                    description: supplies.suppliesDescription or 'Unknown'
+                return
+            return
+        response.send data.persons
         return
     return
 

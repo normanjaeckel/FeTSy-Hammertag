@@ -8,24 +8,14 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     'serverURL'
     'UpdateDescriptionFactory'
     ($http, serverURL, UpdateDescriptionFactory) ->
-        $http.get "#{serverURL}/object"
+        @unknownPersonID = 'Unknown'
+
+        $http.get "#{serverURL}/all"
         .then(
             (response) =>
-                personDict = {}
-                angular.forEach response.data, (data, objectID) ->
-                    personID = data.personID or 'Unknown'
-                    if not personDict[personID]?
-                        personDict[personID] =
-                            ID: personID
-                    personDict[personID].description = data.personDescription
-                    if not personDict[personID].objects?
-                        personDict[personID].objects = []
-                    personDict[personID].objects.push
-                        ID: objectID
-                        description: data.objectDescription
-                    return
                 @persons = []
-                angular.forEach personDict, (data, personID) =>
+                angular.forEach response.data, (data, personID) =>
+                    data.ID = personID
                     @persons.push data
                     return
                 return
