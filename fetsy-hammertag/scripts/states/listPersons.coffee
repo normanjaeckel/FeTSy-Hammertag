@@ -54,5 +54,32 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             )
             return
 
+        @updateSupplies = (supplies) ->
+            UpdateDescriptionFactory.update
+                type: 'supplies'
+                ID: supplies.ID
+                description: supplies.description
+            .then(
+                (newDescription) ->
+                    supplies.description = newDescription
+                    return
+            )
+            return
+
+        @removeSupplies = (supplies, allSupplies, index) ->
+            $http
+                method: 'DELETE'
+                url: "#{serverURL}/supplies/#{supplies.ID}"
+                headers:
+                    'Content-Type': 'application/json;charset=utf-8'
+                data:
+                    itemUUID: supplies.itemUUID
+            .then(
+                (response) ->
+                    allSupplies.splice index, 1
+                    return
+            )
+            return
+
         return
 ]

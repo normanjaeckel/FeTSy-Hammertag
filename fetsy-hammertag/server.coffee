@@ -297,8 +297,22 @@ router.patch '/supplies/:id', (request, response, next) ->
         return
     return
 
-# Handle DELETE requests. Delete persons from database.
-# TODO
+# Handle DELETE requests. Delete supplies from database.
+router.delete '/supplies/:id', (request, response, next) ->
+    if request.body.itemUUID
+        url = "supplies:#{request.suppliesID}:item:#{request.body.itemUUID}"
+        database.del url, (err) ->
+            if err
+                next err
+            else
+                response.send
+                    details: 'Supplies item successfully deleted.'
+            return
+    else
+        response.status 400
+        .send
+            details: 'Missing data for itemUUID.'
+    return
 
 # Handle PATCH and GET requests. Retrieve data from database.
 router.all '/supplies/:id', (request, response, next) ->

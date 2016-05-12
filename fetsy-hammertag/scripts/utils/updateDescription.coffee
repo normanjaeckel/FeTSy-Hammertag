@@ -21,8 +21,8 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
                 element.icon = 'glyphicon-user'
                 element.label = 'Person'
             else
-                throw 'Bad element type. Expected "object", "supplies" or
-                    "person".'
+                throw new Error 'Bad element type. Expected "object",
+                    "supplies" or "person".'
             $uibModal.open
                 controller: 'UpdateDescriptionCtrl as updateDescription'
                 templateUrl: 'static/templates/updateDescription.html'
