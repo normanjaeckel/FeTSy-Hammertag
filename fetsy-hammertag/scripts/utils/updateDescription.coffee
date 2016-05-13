@@ -42,6 +42,7 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
     ($http, $uibModalInstance, serverURL, element) ->
         @element = element
         @focus = true
+        @withDelete = element.withDelete
         @save = ->
             if @element.description
                 if element.type is 'object'
@@ -56,9 +57,28 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
                 $http.patch "#{serverURL}/#{element.type}/#{@element.ID}", data
                 .then(
                     (response) =>
-                        $uibModalInstance.close @element.description
+                        $uibModalInstance.close
+                            newDescription: @element.description
                         return
                 )
+            return
+        @delete = ->
+            if element.type is 'supplies'
+                promise = $http
+                    method: 'DELETE'
+                    url: "#{serverURL}/supplies/#{element.ID}"
+                    headers:
+                        'Content-Type': 'application/json;charset=utf-8'
+                    data:
+                        itemUUID: element.itemUUID
+            else
+                promise = $http.delete "#{serverURL}/#{element.type}/#{element.ID}"
+            promise.then(
+                (response) ->
+                    $uibModalInstance.close
+                        deleted: true
+                    return
+            )
             return
         return
 ]

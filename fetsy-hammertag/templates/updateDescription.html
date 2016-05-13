@@ -28,6 +28,20 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="updateDescription.save()">Save</button>
-    <button class="btn btn-warning" type="button" ng-click="$dismiss('cancel click')">Cancel</button>
+    <button class="btn btn-primary"
+            type="button"
+            ng-click="updateDescription.save()">
+        Save
+    </button>
+    <button class="btn btn-warning"
+            type="button"
+            ng-click="$dismiss('cancel click')">
+        Cancel
+    </button>
+    <button class="btn btn-danger"
+            type="button"
+            ng-show="updateDescription.withDelete"
+            ng-click="updateDescription.delete()">
+        Delete
+    </button>
 </div>

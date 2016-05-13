@@ -26,71 +26,51 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 return
         )
 
-        @updatePerson = (person) ->
+        @updatePerson = (person , persons, index) ->
             UpdateDescriptionFactory.update
                 type: 'person'
                 ID: person.ID
                 description: person.description
+                withDelete: not person.objects.length and not person.supplies.length
             .then(
-                (newDescription) ->
-                    person.description = newDescription
+                (result) ->
+                    if result.deleted
+                        persons.splice index, 1
+                    else
+                        person.description = result.newDescription
                     return
             )
             return
 
-        @removePerson  = (person , persons, index) ->
-            $http.delete "#{serverURL}/person/#{person.ID}"
-            .then(
-                (response) ->
-                    persons.splice index, 1
-                    return
-            )
-            return
-
-        @updateObject = (object) ->
+        @updateObject = (object, objects, index) ->
             UpdateDescriptionFactory.update
                 type: 'object'
                 ID: object.ID
                 description: object.description
+                withDelete: true
             .then(
-                (newDescription) ->
-                    object.description = newDescription
+                (result) ->
+                    if result.deleted
+                        objects.splice index, 1
+                    else
+                        object.description = result.newDescription
                     return
             )
             return
 
-        @removeObject = (object, objects, index) ->
-            $http.delete "#{serverURL}/object/#{object.ID}"
-            .then(
-                (response) ->
-                    objects.splice index, 1
-                    return
-            )
-            return
-
-        @updateSupplies = (supplies) ->
+        @updateSupplies = (supplies, allSupplies, index) ->
             UpdateDescriptionFactory.update
                 type: 'supplies'
                 ID: supplies.ID
                 description: supplies.description
+                itemUUID: supplies.itemUUID
+                withDelete: true
             .then(
-                (newDescription) ->
-                    supplies.description = newDescription
-                    return
-            )
-            return
-
-        @removeSupplies = (supplies, allSupplies, index) ->
-            $http
-                method: 'DELETE'
-                url: "#{serverURL}/supplies/#{supplies.ID}"
-                headers:
-                    'Content-Type': 'application/json;charset=utf-8'
-                data:
-                    itemUUID: supplies.itemUUID
-            .then(
-                (response) ->
-                    allSupplies.splice index, 1
+                (result) ->
+                    if result.deleted
+                        allSupplies.splice index, 1
+                    else
+                        supplies.description = result.newDescription
                     return
             )
             return

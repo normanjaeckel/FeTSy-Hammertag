@@ -170,8 +170,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 ID: @lastObject.id
                 description: @lastObject.description
             .then(
-                (newDescription) =>
-                    @lastObject.description = newDescription
+                (result) =>
+                    @lastObject.description = result.newDescription
                     return
             )
             .finally(
@@ -187,8 +187,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 ID: @lastSupplies.id
                 description: @lastSupplies.description
             .then(
-                (newDescription) =>
-                    @lastSupplies.description = newDescription
+                (result) =>
+                    @lastSupplies.description = result.newDescription
                     return
             )
             .finally(
@@ -204,8 +204,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 ID: @lastPerson.id
                 description: @lastPerson.description
             .then(
-                (newDescription) =>
-                    @lastPerson.description = newDescription
+                (result) =>
+                    @lastPerson.description = result.newDescription
                     return
             )
             .finally(
