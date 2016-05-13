@@ -4,7 +4,7 @@ angular.module 'FeTSy-Hammertag.utils.validation', []
 .constant 'singleObjectRegex', /^HKES_\d{7}$/
 
 
-.constant 'massObjectRegex', /^\d{13}$/
+.constant 'massObjectRegex', /^(\d{13}|\d{6})$/
 
 
 .constant 'personRegex', /^\d{8}$/
