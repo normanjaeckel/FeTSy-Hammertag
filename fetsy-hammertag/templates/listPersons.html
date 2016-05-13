@@ -1,9 +1,24 @@
+<div class="row scan-input-field">
+    <div class="col-sm-6 col-sm-offset-6">
+        <input
+            bs-switch
+            ng-model="listPersons.showObjects"
+            type="checkbox"
+            switch-icon="glyphicon glyphicon-wrench">
+        <input
+            bs-switch
+            ng-model="listPersons.showSupplies"
+            type="checkbox"
+            switch-icon="glyphicon glyphicon-tint">
+    </div>
+</div>
+
 <div class="row hidden-xs">
     <div class="col-sm-6">
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
     </div>
     <div class="col-sm-6">
-        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> /
         <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
     </div>
 </div>
@@ -35,7 +50,7 @@
     </div>
 
     <div class="col-sm-6">
-        <p ng-repeat="object in person.objects">
+        <p ng-show="listPersons.showObjects" ng-repeat="object in person.objects">
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                 <span class="sr-only">Object</span>
@@ -59,7 +74,7 @@
                 </button>
             </span>
         </p>
-        <p ng-repeat="supplies in person.supplies">
+        <p ng-show="listPersons.showSupplies" ng-repeat="supplies in person.supplies">
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
                 <span class="sr-only">Supplies</span>

@@ -1,4 +1,5 @@
 angular.module 'FeTSy-Hammertag.states.listPersons', [
+    'frapontillo.bootstrap-switch'
     'FeTSy-Hammertag.utils.updateDescription'
 ]
 
@@ -9,6 +10,10 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     'UpdateDescriptionFactory'
     ($http, serverURL, UpdateDescriptionFactory) ->
         @unknownPersonID = 'Unknown'
+
+        @showObjects = true
+
+        @showSupplies = false
 
         $http.get "#{serverURL}/all"
         .then(
