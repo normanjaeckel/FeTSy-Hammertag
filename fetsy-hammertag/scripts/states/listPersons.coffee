@@ -38,6 +38,15 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             )
             return
 
+        @removePerson  = (person , persons, index) ->
+            $http.delete "#{serverURL}/person/#{person.ID}"
+            .then(
+                (response) ->
+                    persons.splice index, 1
+                    return
+            )
+            return
+
         @updateObject = (object) ->
             UpdateDescriptionFactory.update
                 type: 'object'
