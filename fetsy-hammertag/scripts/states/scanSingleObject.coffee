@@ -41,11 +41,21 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
 
             type = ValidationFactory.validateInput @scanInputValue
 
-            if type is 'singleObject'
-                if @lastObject and @lastPerson
-                    @lastObject = @lastPerson = null
-                if @lastSupplies and @lastPerson
-                    @lastSupplies = @lastPerson = null
+            if type is 'person'
+                @lastPerson = @lastObject = @lastSupplies = null
+                DatabaseFactory.fetchPerson(@scanInputValue)
+                    .then(
+                        (response) =>
+                            @lastPerson =
+                                id: @scanInputValue
+                                description: response.data.person
+                                    .personDescription
+                            @resetInputField()
+                            return
+                        errorHandling
+                    )
+            else if type is 'singleObject'
+                @lastSupplies = null
                 if @lastPerson
                     DatabaseFactory.saveObject(@scanInputValue, @lastPerson.id)
                     .then(
@@ -59,7 +69,6 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         errorHandling
                     )
                 else
-                    @lastSupplies = null
                     DatabaseFactory.fetchObject(@scanInputValue)
                     .then(
                         (response) =>
@@ -67,69 +76,12 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                                 id: @scanInputValue
                                 description: response.data.object
                                     .objectDescription
-                            person = response.data.person
-                            if person
-                                @lastPerson =
-                                    id: person.personID
-                                    description: person.personDescription
                             @resetInputField()
                             return
                         errorHandling
                     )
-            else if type is 'person'
-                if @lastSupplies and @lastPerson
-                    @lastSupplies = @lastPerson = null
-                if @lastObject
-                    DatabaseFactory.saveObject(@lastObject.id, @scanInputValue)
-                    .then(
-                        (response) =>
-                            @lastPerson =
-                                id: @scanInputValue
-                                description: response.data.person
-                                    .personDescription
-                            @resetInputField()
-                            return
-                        errorHandling
-                    )
-                else if @lastSupplies
-                    DatabaseFactory.saveSupplies(
-                        @lastSupplies.id
-                        @scanInputValue
-                    ).then(
-                        (response) =>
-                            @lastSupplies.count = response.data.supplies
-                                .items.length
-                            DatabaseFactory.fetchPerson(@scanInputValue)
-                            .then(
-                                (response) =>
-                                    @lastPerson =
-                                        id: @scanInputValue
-                                        description: response.data.person
-                                            .personDescription
-                                    @resetInputField()
-                                    return
-                                errorHandling
-                            )
-                            return
-                        errorHandling
-                    )
-                else
-                    DatabaseFactory.fetchPerson(@scanInputValue)
-                    .then(
-                        (response) =>
-                            @lastPerson =
-                                id: @scanInputValue
-                                description: response.data.person
-                                    .personDescription
-                            @resetInputField()
-                            return
-                        errorHandling
-                    )
-            else if type is 'massObject'
-                if @lastObject and @lastPerson
-                    @lastObject = @lastPerson = null
-                if @lastSupplies and @lastPerson
-                    @lastSupplies = @lastPerson = null
+            else if type is 'supplies'
+                @lastObject = null
                 if @lastPerson
                     DatabaseFactory.saveSupplies(
                         @scanInputValue
@@ -146,7 +98,6 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         errorHandling
                     )
                 else
-                    @lastObject = null
                     DatabaseFactory.fetchSupplies(@scanInputValue)
                     .then(
                         (response) =>
