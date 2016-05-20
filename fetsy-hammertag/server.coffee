@@ -28,7 +28,7 @@ app.use bodyParser.json()
 
 ## Server main entry point index.html
 
-app.get ['/', '/scan/*', '/list/*'], (request, response) ->
+app.get ['/', '/scan/*', '/list/*', '/export'], (request, response) ->
     response.sendFile path.join __dirname, 'static', 'templates', 'index.html'
     return
 

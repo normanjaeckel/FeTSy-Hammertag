@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h4>CSV file specifications</h3>
+        <dl class="dl-horizontal">
+            <dt>Encoding</dt>
+            <dd>UTF-8</dd>
+            <dt>Text delimiter</dt>
+            <dd>Double quotes <code>""</code></dd>
+            <dt>Field separator</dt>
+            <dd>Comma <code>,</code></dd>
+        </dl>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-download-alt"></span>
+                Download
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a ng-href="{{ export.persons }}"><span class="glyphicon glyphicon-user"></span> Persons</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-wrench"></span> Objects</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-tint"></span> Supplies</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+</div>

@@ -9,6 +9,14 @@ angular.module 'FeTSy-Hammertag', [
 
 
 .config [
+    '$compileProvider'
+    ($compileProvider) ->
+        # We extend the default which was /^\s*(https?|ftp|mailto|tel|file):/
+        $compileProvider.aHrefSanitizationWhitelist /^\s*(https?|ftp|mailto|tel|file|data):/
+]
+
+
+.config [
     '$locationProvider'
     '$stateProvider'
     '$urlRouterProvider'
@@ -32,12 +40,15 @@ angular.module 'FeTSy-Hammertag', [
             templateUrl: 'static/templates/scanSingleObject.html'
             controller: 'ScanSingleObjectCtrl as scanSingleObject'
 
-        #.state 'scanMassObject',
-
         .state  'listPersons',
             url: '/list/persons'
             templateUrl: 'static/templates/listPersons.html'
             controller: 'ListPersonsCtrl as listPersons'
+
+        .state  'export',
+            url: '/export'
+            templateUrl: 'static/templates/export.html'
+            controller: 'ExportCtrl as export'
 
         return
 ]
