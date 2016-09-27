@@ -11,8 +11,10 @@ angular.module 'FeTSy-Hammertag.states.export', []
                 @persons = []
                 @objects = []
                 @suppliesObj = {}
+                maxPersons = 0
 
-                angular.forEach response.data, (data, personID) =>
+                # Parse response.data
+                for personID, data of response.data
                     # Care of redundancy with server
                     unknownPersonID = 'Unknown'
 
@@ -23,43 +25,42 @@ angular.module 'FeTSy-Hammertag.states.export', []
                             Description: data.description
 
                     # Catch objects
-                    angular.forEach data.objects, (object) =>
+                    for object in data.objects
                         @objects.push
                             ID: object.ID
                             Description: object.description
                             PersonID: personID
                             PersonDescription: data.description
-                        return
 
                     # Catch supplies
-                    angular.forEach data.supplies, (supplies) =>
+                    for supplies in data.supplies
                         if not @suppliesObj[supplies.ID]?
                             @suppliesObj[supplies.ID] =
                                 ID: supplies.ID
                                 description: supplies.description
                                 persons: []
-                        @suppliesObj[supplies.ID].persons.push personID
-                        return
-                    return
+                        if personID isnt unknownPersonID
+                            @suppliesObj[supplies.ID].persons.push
+                                ID: personID
+                                description: data.description
+                            if maxPersons < @suppliesObj[supplies.ID].persons.length
+                                maxPersons = @suppliesObj[supplies.ID].persons.length
 
                 # Parse supplies
-                @supplies = []
-                angular.forEach @suppliesObj, (supplies, suppliesID) =>
-                    item =
-                        ID: suppliesID
-                        Description: supplies.description
-                    angular.forEach supplies.persons, (personID, index) ->
-                        item["Person#{index + 1}"] = personID
-                        return
-                    @supplies.push item
-                    return
+                @supplies =
+                    fields: ['ID', 'Description']
+                    data: []
+                @supplies.fields.push "Person#{num}" for num in [1..maxPersons]
+                for suppliesID, supplies of @suppliesObj
+                    item = [suppliesID, supplies.description]
+                    item.push "#{person.description} (#{person.ID})" for person in supplies.persons
+                    @supplies.data.push item
 
+                # Create CSV output
                 @persons = 'data:text/csv;charset=utf-8,' + Papa.unparse @persons
                 @persons = encodeURI @persons
-
                 @objects = 'data:text/csv;charset=utf-8,' + Papa.unparse @objects
                 @objects = encodeURI @objects
-
                 @supplies = 'data:text/csv;charset=utf-8,' + Papa.unparse @supplies
                 @supplies = encodeURI @supplies
 
