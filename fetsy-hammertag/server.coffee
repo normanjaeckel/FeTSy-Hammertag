@@ -79,7 +79,9 @@ router.get '/all', (request, response, next) ->
         next err
         return
     .on 'end', ->
+        # Care of redundancy with client
         unknownPersonID = 'Unknown'
+
         _.forOwn data.objects, (object, objectID) ->
             if object.personID?
                 if not data.persons[object.personID]?
@@ -99,7 +101,11 @@ router.get '/all', (request, response, next) ->
                     ID: objectID
                     description: object.objectDescription or 'Unknown object'
             return
+
         _.forOwn data.supplies, (supplies, suppliesID) ->
+            if supplies.items.length is 0
+                supplies.items.push
+                    personID: unknownPersonID
             _.forEach supplies.items, (item) ->
                 if not data.persons[item.personID]?
                     data.persons[item.personID] =
