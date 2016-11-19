@@ -26,9 +26,9 @@ webclientStaticDirectory = path.join outputDirectory, 'static'
 # Express server
 
 gulp.task 'express', ->
-    gulp.src path.join 'fetsy-hammertag', 'server.coffee'
+    gulp.src path.join 'fetsy-hammertag', 'server', '**', '*.coffee'
     .pipe coffee()
-    .pipe gulp.dest path.join outputDirectory
+    .pipe gulp.dest path.join outputDirectory, 'server'
 
 
 # HTML files.
@@ -105,7 +105,7 @@ gulp.task 'jshint', ->
 gulp.task 'coffeelint', ->
     gulp.src [
         'gulpfile.coffee'
-        path.join 'fetsy-hammertag', 'server.coffee'
+        path.join 'fetsy-hammertag', 'server', '**', '*.coffee'
         path.join 'fetsy-hammertag', 'scripts', '**', '*.coffee'
     ]
     .pipe coffeelint
@@ -115,8 +115,13 @@ gulp.task 'coffeelint', ->
 
 gulp.task 'hint', ['jshint', 'coffeelint'], ->
 
-gulp.task 'watch', ->
-    gulp.watch path.join('fetsy-hammertag', 'server.coffee'),
+gulp.task 'watch', [
+    'express'
+    'html'
+    'coffee'
+    'css'
+], ->
+    gulp.watch path.join('fetsy-hammertag', 'server', '**', '*.coffee'),
         ['express']
     gulp.watch path.join('fetsy-hammertag', 'templates', '*.html'),
         ['html']
@@ -134,7 +139,7 @@ gulp.task 'serve', ->
         nodeEnv = 'development'
         debug = 'express:*'
     nodemon
-        script: path.join outputDirectory, 'server.js'
+        script: path.join outputDirectory, 'server', 'server.js'
         env:
             DEBUG: debug
             NODE_ENV: nodeEnv
