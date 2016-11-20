@@ -1,11 +1,11 @@
 express = require 'express'
 
-module.exports = (params) ->
-    app = params.app
+app = require './app'
 
-    express.Router
-        caseSensitive: app.get 'case sensitive routing'
-        strict: app.get 'strict routing'
 
-    .get '/', (request, response) ->
-        response.sendStatus 200
+module.exports = express.Router
+    caseSensitive: app.get 'case sensitive routing'
+    strict: app.get 'strict routing'
+
+.get '/', (request, response) ->
+    response.sendStatus 200
