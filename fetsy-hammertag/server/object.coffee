@@ -1,8 +1,8 @@
 debug = require('debug') 'fetsy-hammertag:server:object'
 express = require 'express'
-_ = require 'lodash'
 
 app = require './app'
+database = require './database'
 
 
 module.exports = express.Router
@@ -14,31 +14,71 @@ module.exports = express.Router
 
 # Catch 'id' parameter
 .use '/:id', (request, response, next) ->
-    request.objectID = request.params.id
-    response.data = {}
+    request.objectId = request.params.id
     next()
     return
 
 # Handle GET requests. Retrieve data from database.
-.get '/:id', (request, response, next) ->
-    # Hard coded object here.
-    object =
-        id: request.objectID
-        description: 'Hard coded object description here.'
-        persons: [
-            id: 45645654
-            description: "Hard coded name Max"
-            timestamp: +new Date() / 1000
-        ,
-            id: 98754366
-            description: "Hard coded name Maxi"
-            timestamp: +new Date() / 1000
-        ,
-            id: 12365478
-            description: "Hard coded name Hansi"
-            timestamp: +new Date() / 1000
-        ]
-    _.assign response.data,
-        object: object
-    response.send response.data
+.get '/:id', (request, response) ->
+    database.getObject request.objectId, (error, object) ->
+        if error?
+            response.sendStatus 400
+        else
+            response.send
+                object: object
+        return
+    return
+
+# Handle PATCH requests.
+.patch '/:id', (request, response) ->
+    filter = id: request.objectId
+    update =
+        $set:
+            description: request.body.description
+    options =
+        upsert: true
+    database.object().updateOne filter, update, options, (error, result) ->
+        if error?
+            response.sendStatus 400
+        else if result.upsertedCount is 1
+            response.sendStatus 201
+        else
+            response.sendStatus 200
+        return
+    return
+
+
+## Route to apply new persons
+
+# Handle POST requests.
+.post '/:id/person', (request, response) ->
+    person =
+        id: request.body.id
+        timestamp: +new Date() / 1000
+    filter = id: request.objectId
+    update =
+        $push:
+            persons: person
+    options =
+        upsert: true
+    database.object().updateOne filter, update, options, (error, result) ->
+        if error?
+            response.sendStatus 400
+        else if result.upsertedCount is 1
+            response.status(201).send
+                object:
+                    id: request.objectId
+                    description: 'Unknown object'
+                    persons: [
+                        person
+                    ]
+        else
+            database.getObject request.objectId, (error, object) ->
+                if error?
+                    response.sendStatus 400
+                else
+                    response.send
+                        object: object
+                return
+        return
     return

@@ -88,7 +88,7 @@
             <div class="panel-body">
                 {{ scanSingleObject.lastObject.description }}
             </div>
-            <div class="panel-body">
+            <div class="panel-body" ng-show="scanSingleObject.lastObject.persons">
                 <span class="sr-only">Persons</span>
                 <ul class="list-unstyled">
                     <li ng-class="{ 'person-list': !$last }"

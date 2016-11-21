@@ -9,15 +9,15 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     '$http'
     'serverURL'
     ($http, serverURL) ->
-        fetchObject: (ID) ->
-            $http.get "#{serverURL}/object/#{ID}"
+        fetchObject: (id) ->
+            $http.get "#{serverURL}/object/#{id}"
         fetchSupplies: (ID) ->
             $http.get "#{serverURL}/supplies/#{ID}"
-        fetchPerson: (ID) ->
-            $http.get "#{serverURL}/person/#{ID}"
-        saveObject: (ID, personID) ->
-            $http.patch "#{serverURL}/object/#{ID}",
-                personID: personID
+        fetchPerson: (id) ->
+            $http.get "#{serverURL}/person/#{id}"
+        saveObject: (id, personId) ->
+            $http.post "#{serverURL}/object/#{id}/person",
+                id: personId
         saveSupplies: (ID, personID) ->
             $http.patch "#{serverURL}/supplies/#{ID}",
                 personID: personID
@@ -47,10 +47,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 DatabaseFactory.fetchPerson(@scanInputValue)
                     .then(
                         (response) =>
-                            @lastPerson =
-                                id: @scanInputValue
-                                description: response.data.person
-                                    .personDescription
+                            @lastPerson = response.data.person
                             @resetInputField()
                             return
                         errorHandling
@@ -61,10 +58,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                     DatabaseFactory.saveObject(@scanInputValue, @lastPerson.id)
                     .then(
                         (response) =>
-                            @lastObject =
-                                id: @scanInputValue
-                                description: response.data.object
-                                    .objectDescription
+                            @lastObject = response.data.object
                             @resetInputField()
                             return
                         errorHandling
@@ -116,7 +110,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
         @updateObject = ->
             UpdateDescriptionFactory.update
                 type: 'object'
-                ID: @lastObject.id
+                id: @lastObject.id
                 description: @lastObject.description
             .then(
                 (result) =>
@@ -150,7 +144,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
         @updatePerson = ->
             UpdateDescriptionFactory.update
                 type: 'person'
-                ID: @lastPerson.id
+                id: @lastPerson.id
                 description: @lastPerson.description
             .then(
                 (result) =>

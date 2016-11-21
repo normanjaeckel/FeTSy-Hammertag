@@ -1,5 +1,4 @@
 bodyParser = require 'body-parser'
-db = require './db'
 express = require 'express'
 
 
