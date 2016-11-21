@@ -3,9 +3,10 @@ express = require 'express'
 path = require 'path'
 
 
-## Load app
+## Load app and database
 
 app = require './app'
+database = require './database'
 
 
 ## Setup router for base path /api
@@ -47,9 +48,10 @@ app.get '*', (request, response) ->
     return
 
 
-## Start server
+## Connect to database and start server
 
 port = 8080
+database.connect()
 app.listen port, ->
     debug "Example app listening on http://localhost:#{port}/"
     return
