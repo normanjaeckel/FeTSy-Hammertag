@@ -1,4 +1,5 @@
 angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
+    'angularMoment'
     'FeTSy-Hammertag.utils.updateDescription'
     'FeTSy-Hammertag.utils.validation'
 ]
@@ -72,10 +73,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                     DatabaseFactory.fetchObject(@scanInputValue)
                     .then(
                         (response) =>
-                            @lastObject =
-                                id: @scanInputValue
-                                description: response.data.object
-                                    .objectDescription
+                            @lastObject = response.data.object
                             @resetInputField()
                             return
                         errorHandling

@@ -88,6 +88,24 @@
             <div class="panel-body">
                 {{ scanSingleObject.lastObject.description }}
             </div>
+            <div class="panel-body">
+                <span class="sr-only">Persons</span>
+                <ul class="list-unstyled">
+                    <li ng-class="{ 'person-list': !$last }"
+                        ng-repeat="person in scanSingleObject.lastObject.persons">
+                        <span class="label label-primary">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            <span class="sr-only">Person</span>
+                            {{ person.id }}
+                        </span>
+                        <span style="padding-left:0.5em;">
+                            {{ person.description }}
+                            &middot;
+                            {{ person.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
+                        </span>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="panel panel-default" ng-show="scanSingleObject.lastSupplies">
             <div class="panel-heading">

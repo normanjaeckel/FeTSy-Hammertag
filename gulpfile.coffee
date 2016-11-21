@@ -137,7 +137,7 @@ gulp.task 'serve', ->
         debug = ''
     else
         nodeEnv = 'development'
-        debug = 'express:*'
+        debug = 'express:*,fetsy-hammertag:*'
     nodemon
         script: path.join outputDirectory, 'server', 'server.js'
         env:

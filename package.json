@@ -8,6 +8,7 @@
     "body-parser": "~1.15.0",
     "bower": "~1.7.9",
     "coffee-script": "~1.10.0",
+    "debug": "~2.3.3",
     "express": "~4.13.4",
     "gulp": "~3.9.1",
     "gulp-clean-css": "~2.0.6",

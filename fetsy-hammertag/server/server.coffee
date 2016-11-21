@@ -1,3 +1,4 @@
+debug = require('debug') 'fetsy-hammertag:server'
 express = require 'express'
 path = require 'path'
 
@@ -50,5 +51,5 @@ app.get '*', (request, response) ->
 
 port = 8080
 app.listen port, ->
-    console.log "Example app listening on http://localhost:#{port}/"
+    debug "Example app listening on http://localhost:#{port}/"
     return
