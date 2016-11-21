@@ -50,8 +50,10 @@ app.get '*', (request, response) ->
 
 ## Connect to database and start server
 
+hostname = undefined
 port = 8080
 database.connect()
-app.listen port, ->
-    debug "Example app listening on http://localhost:#{port}/"
+app.listen port, hostname, ->
+    url = "http://#{hostname or 'localhost'}:#{port}/"
+    debug "FeTSy-Hammertag listening on #{url}"
     return
