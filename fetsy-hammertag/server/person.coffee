@@ -11,6 +11,22 @@ module.exports = express.Router
     strict: app.get 'strict routing'
 
 
+# List route
+
+# Handle get requests. Retrieve extended list of persons from database.
+.get '/', (request, response) ->
+    database.person().find().sort( id: 1 ).toArray (error, documents) ->
+        if error?
+            response.status(500).json
+                detail: error
+        else
+            # TODO: Add currently applied objects here.
+            response.send
+                persons: documents
+        return
+    return
+
+
 ## Detail route
 
 # Catch 'id' parameter
@@ -27,12 +43,13 @@ module.exports = express.Router
         if error?
             response.status(500).json
                 detail: error
-        if not result?
-            result =
-                id: request.personId
-                description: 'Unknown'
-        response.send
-            person: result
+        else
+            if not result?
+                result =
+                    id: request.personId
+                    description: 'Unknown'
+            response.send
+                person: result
         return
     return
 
