@@ -25,7 +25,8 @@ module.exports = express.Router
     options = {}
     database.person().findOne query, options, (error, result) ->
         if error?
-            response.sendStatus 400
+            response.status(500).json
+                detail: error
         if not result?
             result =
                 id: request.personId
@@ -45,10 +46,27 @@ module.exports = express.Router
         upsert: true
     database.person().updateOne filter, update, options, (error, result) ->
         if error?
-            response.sendStatus 400
+            response.status(500).json
+                detail: error
         else if result.upsertedCount is 1
-            response.sendStatus 201
+            response.status(201).json
+                details: 'Person successfully created.'
         else
-            response.sendStatus 200
+            response.send
+                details: 'Person successfully updated.'
+        return
+    return
+
+# Handle DELETE requests.
+.delete '/:id', (request, response) ->
+    selector = id: request.personId
+    option = {}
+    database.person().removeOne selector, options, (error, result) ->
+        if error?
+            response.status(500).json
+                detail: error
+        else
+            response.send
+                details: 'Person successfully deleted.'
         return
     return

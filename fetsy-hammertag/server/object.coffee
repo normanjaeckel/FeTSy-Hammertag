@@ -22,7 +22,8 @@ module.exports = express.Router
 .get '/:id', (request, response) ->
     database.getObject request.objectId, (error, object) ->
         if error?
-            response.sendStatus 400
+            response.status(500).json
+                detail: error
         else
             response.send
                 object: object
@@ -39,11 +40,28 @@ module.exports = express.Router
         upsert: true
     database.object().updateOne filter, update, options, (error, result) ->
         if error?
-            response.sendStatus 400
+            response.status(500).json
+                detail: error
         else if result.upsertedCount is 1
-            response.sendStatus 201
+            response.status(201).json
+                details: 'Object successfully created.'
         else
-            response.sendStatus 200
+            response.send
+                details: 'Object successfully updated.'
+        return
+    return
+
+# Handle DELETE requests.
+.delete '/:id', (request, response) ->
+    selector = id: request.objectId
+    option = {}
+    database.object().removeOne selector, options, (error, result) ->
+        if error?
+            response.status(500).json
+                detail: error
+        else
+            response.send
+                details: 'Object successfully deleted.'
         return
     return
 
@@ -63,9 +81,11 @@ module.exports = express.Router
         upsert: true
     database.object().updateOne filter, update, options, (error, result) ->
         if error?
-            response.sendStatus 400
+            response.status(500).json
+                detail: error
         else if result.upsertedCount is 1
             response.status(201).send
+                details: 'Object successfully created.'
                 object:
                     id: request.objectId
                     description: 'Unknown object'
@@ -75,9 +95,11 @@ module.exports = express.Router
         else
             database.getObject request.objectId, (error, object) ->
                 if error?
-                    response.sendStatus 400
+                    response.status(500).json
+                        detail: error
                 else
                     response.send
+                        details: 'Object successfully updated.'
                         object: object
                 return
         return
