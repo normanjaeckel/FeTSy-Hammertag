@@ -15,14 +15,39 @@ module.exports = express.Router
 
 # Handle get requests. Retrieve extended list of persons from database.
 .get '/', (request, response) ->
+    # Care of redundancy with client
+    unknownPersonId = 'Unknown'
+
     database.person().find().sort( id: 1 ).toArray (error, documents) ->
         if error?
             response.status(500).json
                 detail: error
         else
-            # TODO: Add currently applied objects here.
-            response.send
-                persons: documents
+            iterator = (object) ->
+                person = _.last object.persons or []
+                if not person?
+                    person =
+                        id: unknownPersonId
+                        description: 'Unknown'
+                index = _.findIndex documents, (doc) -> doc.id is person.id
+                if index is -1
+                    documents.push
+                        id: person.id
+                        description: 'Unknown'
+                        objects: [object]
+                else
+                    if not documents[index].objects?
+                        documents[index].objects = []
+                    documents[index].objects.push object
+                return
+            database.object().find().forEach iterator, (error) ->
+                if error?
+                    response.status(500).json
+                        detail: error
+                else
+                    response.send
+                        persons: documents
+                return
         return
     return
 
@@ -77,7 +102,7 @@ module.exports = express.Router
 # Handle DELETE requests.
 .delete '/:id', (request, response) ->
     selector = id: request.personId
-    option = {}
+    options = {}
     database.person().removeOne selector, options, (error, result) ->
         if error?
             response.status(500).json

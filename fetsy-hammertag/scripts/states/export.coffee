@@ -16,10 +16,10 @@ angular.module 'FeTSy-Hammertag.states.export', []
                 # Parse response.data
                 for personID, data of response.data
                     # Care of redundancy with server
-                    unknownPersonID = 'Unknown'
+                    unknownPersonId = 'Unknown'
 
                     # Catch persons
-                    if personID isnt unknownPersonID
+                    if personID isnt unknownPersonId
                         @persons.push
                             ID: personID
                             Description: data.description
@@ -39,7 +39,7 @@ angular.module 'FeTSy-Hammertag.states.export', []
                                 ID: supplies.ID
                                 description: supplies.description
                                 persons: []
-                        if personID isnt unknownPersonID
+                        if personID isnt unknownPersonId
                             @suppliesObj[supplies.ID].persons.push
                                 ID: personID
                                 description: data.description

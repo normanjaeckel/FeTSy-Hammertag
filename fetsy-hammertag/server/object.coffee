@@ -54,7 +54,7 @@ module.exports = express.Router
 # Handle DELETE requests.
 .delete '/:id', (request, response) ->
     selector = id: request.objectId
-    option = {}
+    options = {}
     database.object().removeOne selector, options, (error, result) ->
         if error?
             response.status(500).json

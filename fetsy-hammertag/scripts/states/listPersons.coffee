@@ -9,56 +9,50 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     'serverURL'
     'UpdateDescriptionFactory'
     ($http, serverURL, UpdateDescriptionFactory) ->
-        @unknownPersonID = 'Unknown'
+        @unknownPersonId = 'Unknown'
 
         @showObjects = true
 
         @showSupplies = false
 
-        $http.get "#{serverURL}/all"
-        .then(
-            (response) =>
-                @persons = []
-                angular.forEach response.data, (data, personID) =>
-                    data.ID = personID
-                    @persons.push data
-                    return
-                return
-        )
+        $http.get "#{serverURL}/person"
+        .then (response) =>
+            @persons = response.data.persons
+            return
 
-        @updatePerson = (person , persons, index) ->
+        @updatePerson = (person , persons) ->
+            index = persons.indexOf person
+            withDelete = not person.objects?.length and not person.supplies?.length
             UpdateDescriptionFactory.update
                 type: 'person'
-                ID: person.ID
+                id: person.id
                 description: person.description
-                withDelete: not person.objects.length and not person.supplies.length
-            .then(
-                (result) ->
-                    if result.deleted
-                        persons.splice index, 1
-                    else
-                        person.description = result.newDescription
-                    return
-            )
+                withDelete: withDelete
+            .then (result) ->
+                if result.deleted
+                    persons.splice index, 1
+                else
+                    person.description = result.newDescription
+                return
             return
 
-        @updateObject = (object, objects, index) ->
+        @updateObject = (object, objects) ->
+            index = objects.indexOf object
             UpdateDescriptionFactory.update
                 type: 'object'
-                ID: object.ID
+                id: object.id
                 description: object.description
                 withDelete: true
-            .then(
-                (result) ->
-                    if result.deleted
-                        objects.splice index, 1
-                    else
-                        object.description = result.newDescription
-                    return
-            )
+            .then (result) ->
+                if result.deleted
+                    objects.splice index, 1
+                else
+                    object.description = result.newDescription
+                return
             return
 
-        @updateSupplies = (supplies, allSupplies, index) ->
+        @updateSupplies = (supplies, allSupplies) ->
+            index = allSupplies.indexOf supplies
             UpdateDescriptionFactory.update
                 type: 'supplies'
                 ID: supplies.ID
