@@ -6,18 +6,12 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
     ($uibModal) ->
         update: (element) ->
             if element.type is 'object'
-                if element.description is 'Unknown object'
-                    element.description = ''
                 element.icon = 'glyphicon-wrench'
                 element.label = 'Object'
             else if element.type is 'supplies'
-                if element.description is 'Unknown'
-                    element.description = ''
                 element.icon = 'glyphicon-tint'
                 element.label = 'Supplies'
             else if element.type is 'person'
-                if element.description is 'Unknown'
-                    element.description = ''
                 element.icon = 'glyphicon-user'
                 element.label = 'Person'
             else

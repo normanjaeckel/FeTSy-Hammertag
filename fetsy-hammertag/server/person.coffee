@@ -28,12 +28,10 @@ module.exports = express.Router
                 if not person?
                     person =
                         id: unknownPersonId
-                        description: 'Unknown'
                 index = _.findIndex documents, (doc) -> doc.id is person.id
                 if index is -1
                     documents.push
                         id: person.id
-                        description: 'Unknown'
                         objects: [object]
                 else
                     if not documents[index].objects?
@@ -72,7 +70,6 @@ module.exports = express.Router
             if not result?
                 result =
                     id: request.personId
-                    description: 'Unknown'
             response.send
                 person: result
         return

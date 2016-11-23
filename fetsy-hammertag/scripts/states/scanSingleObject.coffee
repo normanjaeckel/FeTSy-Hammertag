@@ -1,5 +1,6 @@
 angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     'angularMoment'
+    'FeTSy-Hammertag.utils.contentDefaults'
     'FeTSy-Hammertag.utils.updateDescription'
     'FeTSy-Hammertag.utils.validation'
 ]
@@ -27,9 +28,12 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
 
 .controller 'ScanSingleObjectCtrl', [
     'DatabaseFactory'
+    'DefaultDescription'
     'UpdateDescriptionFactory'
     'ValidationFactory'
-    (DatabaseFactory, UpdateDescriptionFactory, ValidationFactory) ->
+    (DatabaseFactory, DefaultDescription, UpdateDescriptionFactory, ValidationFactory) ->
+        @DefaultDescription = DefaultDescription
+
         @scan = =>
             errorHandling = (response) =>
                 @scanInputValue = ''

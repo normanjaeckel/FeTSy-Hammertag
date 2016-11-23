@@ -27,10 +27,7 @@ module.exports =
             if not result?
                 callback null,
                     id: id
-                    description: 'Unknown object'
             else
-                if not result.description?
-                    result.description = 'Unknown object'
                 query =
                     id:
                         $in: (person.id for person in result.persons or [])
@@ -43,7 +40,7 @@ module.exports =
                         persons.push
                             id: person.id
                             timestamp: person.timestamp
-                            description: if found? then found.description else 'Unknown'
+                            description: found?.description
                     result.persons = persons
                     callback null, result
                     return

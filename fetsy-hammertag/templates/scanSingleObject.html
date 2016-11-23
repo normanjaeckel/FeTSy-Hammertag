@@ -67,7 +67,7 @@
                 </button>
             </div>
             <div class="panel-body">
-                {{ scanSingleObject.lastPerson.description }}
+                {{ scanSingleObject.lastPerson.description || scanSingleObject.DefaultDescription.person }}
             </div>
         </div>
     </div><!-- / .col-sm-5 Panel for last person -->
@@ -86,7 +86,7 @@
                 </button>
             </div>
             <div class="panel-body">
-                {{ scanSingleObject.lastObject.description }}
+                {{ scanSingleObject.lastObject.description || scanSingleObject.DefaultDescription.object }}
             </div>
             <div class="panel-body" ng-show="scanSingleObject.lastObject.persons.length > 0">
                 <span class="sr-only">Persons</span>
@@ -99,7 +99,7 @@
                             {{ person.id }}
                         </span>
                         <span style="padding-left:0.5em;">
-                            {{ person.description }}
+                            {{ person.description || scanSingleObject.DefaultDescription.person }}
                             &middot;
                             {{ person.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
                         </span>
@@ -120,7 +120,7 @@
             </div>
             <div class="panel-body">
                 <span class="label label-primary">{{ scanSingleObject.lastSupplies.count }}</span>
-                {{ scanSingleObject.lastSupplies.description }}
+                {{ scanSingleObject.lastSupplies.description || scanSingleObject.DefaultDescription.supplies }}
             </div>
         </div>
     </div><!-- / .col-sm-5 Panel for last object and last supplies -->

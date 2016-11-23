@@ -1,5 +1,6 @@
 angular.module 'FeTSy-Hammertag.states.listPersons', [
     'frapontillo.bootstrap-switch'
+    'FeTSy-Hammertag.utils.contentDefaults'
     'FeTSy-Hammertag.utils.updateDescription'
 ]
 
@@ -7,9 +8,13 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 .controller 'ListPersonsCtrl', [
     '$http'
     'serverURL'
+    'DefaultDescription'
+    'UnknownPersonId'
     'UpdateDescriptionFactory'
-    ($http, serverURL, UpdateDescriptionFactory) ->
-        @unknownPersonId = 'Unknown'
+    ($http, serverURL, DefaultDescription, UnknownPersonId, UpdateDescriptionFactory) ->
+        @UnknownPersonId = UnknownPersonId
+
+        @DefaultDescription = DefaultDescription
 
         @showObjects = true
 

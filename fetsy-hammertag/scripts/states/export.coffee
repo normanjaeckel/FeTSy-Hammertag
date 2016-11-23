@@ -1,10 +1,13 @@
-angular.module 'FeTSy-Hammertag.states.export', []
+angular.module 'FeTSy-Hammertag.states.export', [
+    'FeTSy-Hammertag.utils.contentDefaults'
+]
 
 
 .controller 'ExportCtrl', [
     '$http'
     'serverURL'
-    ($http, serverURL) ->
+    'UnknownPersonId'
+    ($http, serverURL, UnknownPersonId) ->
         $http.get "#{serverURL}/all"
         .then(
             (response) =>
@@ -15,11 +18,8 @@ angular.module 'FeTSy-Hammertag.states.export', []
 
                 # Parse response.data
                 for personID, data of response.data
-                    # Care of redundancy with server
-                    unknownPersonId = 'Unknown'
-
                     # Catch persons
-                    if personID isnt unknownPersonId
+                    if personID isnt UnknownPersonId
                         @persons.push
                             ID: personID
                             Description: data.description
@@ -39,7 +39,7 @@ angular.module 'FeTSy-Hammertag.states.export', []
                                 ID: supplies.ID
                                 description: supplies.description
                                 persons: []
-                        if personID isnt unknownPersonId
+                        if personID isnt UnknownPersonId
                             @suppliesObj[supplies.ID].persons.push
                                 ID: personID
                                 description: data.description
