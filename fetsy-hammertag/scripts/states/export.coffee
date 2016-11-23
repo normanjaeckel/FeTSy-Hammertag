@@ -1,21 +1,24 @@
 angular.module 'FeTSy-Hammertag.states.export', [
+    'angularMoment'
     'angularSpinner'
-    'FeTSy-Hammertag.utils.contentDefaults'
 ]
 
 
 .controller 'ExportCtrl', [
     '$http'
     '$q'
+    'moment'
     'serverURL'
-    'UnknownPersonId'
-    ($http, $q, serverURL, UnknownPersonId) ->
+    ($http, $q, moment, serverURL) ->
         # Parse persons
         personPromise = $http.get "#{serverURL}/person"
         .then (response) =>
-            persons = response.data.persons
-            angular.forEach persons, (person) ->
-                delete person['_id']
+            persons = []
+            for person in response.data.persons
+                if person.description?
+                    persons.push
+                        id: person.id
+                        description: person.description
             persons = 'data:text/csv;charset=utf-8,' + Papa.unparse persons
             @persons =
                 URI: encodeURI persons
@@ -32,7 +35,9 @@ angular.module 'FeTSy-Hammertag.states.export', [
             for object in response.data.objects
                 item = [object.id, object.description]
                 if object.persons?
-                    item.push "#{person.id} · #{person.timestamp}" for person in object.persons
+                    for person in object.persons
+                        timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
+                        item.push "#{person.id} · #{timestamp}"
                 objects.data.push item
                 if object.persons? and maxPersons < object.persons.length
                     maxPersons = object.persons.length
