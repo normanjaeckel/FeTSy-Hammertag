@@ -1,6 +1,7 @@
 angular.module 'FeTSy-Hammertag', [
     'ui.bootstrap'
     'ui.router'
+    'angularSpinner'
     'FeTSy-Hammertag.states'
 ]
 
