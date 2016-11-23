@@ -83,20 +83,15 @@ module.exports = express.Router
         if error?
             response.status(500).json
                 detail: error
-        else if result.upsertedCount is 1
-            response.status(201).send
-                details: 'Object successfully created.'
-                object:
-                    id: request.objectId
-                    description: 'Unknown object'
-                    persons: [
-                        person
-                    ]
         else
             database.getObject request.objectId, (error, object) ->
                 if error?
                     response.status(500).json
                         detail: error
+                else if result.upsertedCount is 1
+                    response.status(201).send
+                        details: 'Object successfully created.'
+                        object: object
                 else
                     response.send
                         details: 'Object successfully updated.'
