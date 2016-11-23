@@ -1,5 +1,11 @@
 <div class="row">
-    <div class="col-sm-12">
+
+    <div class="col-sm-12" ng-hide="export.ready">
+        <span class="sr-only">Loading ...</span>
+        <span us-spinner="{color: '#428bca'}"></span>
+    </div>
+
+    <div class="col-sm-12" ng-show="export.ready">
         <h4>CSV file specifications</h3>
         <dl class="dl-horizontal">
             <dt>Encoding</dt>
@@ -17,9 +23,30 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a ng-href="{{ export.persons }}"><span class="glyphicon glyphicon-user"></span> Persons</a></li>
-                <li><a ng-href="{{ export.objects }}"><span class="glyphicon glyphicon-wrench"></span> Objects</a></li>
-                <li><a ng-href="{{ export.supplies }}"><span class="glyphicon glyphicon-tint"></span> Supplies</a></li>
+                <li>
+                    <a ng-href="{{ export.persons.URI }}">
+                        <span class="glyphicon glyphicon-user"></span>
+                        Persons
+                        &middot;
+                        {{ export.persons.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
+                    </a>
+                </li>
+                <li>
+                    <a ng-href="{{ export.objects.URI }}">
+                        <span class="glyphicon glyphicon-wrench"></span>
+                        Objects
+                        &middot;
+                        {{ export.objects.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
+                    </a>
+                </li>
+                <li>
+                    <a ng-href="{{ export.supplies.URI }}">
+                        <span class="glyphicon glyphicon-tint"></span>
+                        Supplies
+                        &middot;
+                        {{ export.supplies.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
+                    </a>
+                </li>
             </ul>
         </div>
 

@@ -1,70 +1,47 @@
 angular.module 'FeTSy-Hammertag.states.export', [
+    'angularSpinner'
     'FeTSy-Hammertag.utils.contentDefaults'
 ]
 
 
 .controller 'ExportCtrl', [
     '$http'
+    '$q'
     'serverURL'
     'UnknownPersonId'
-    ($http, serverURL, UnknownPersonId) ->
-        $http.get "#{serverURL}/all"
-        .then(
-            (response) =>
-                @persons = []
-                @objects = []
-                @suppliesObj = {}
-                maxPersons = 0
+    ($http, $q, serverURL, UnknownPersonId) ->
+        # Parse persons
+        personPromise = $http.get "#{serverURL}/person"
+        .then (response) =>
+            persons = response.data.persons
+            angular.forEach persons, (person) ->
+                delete person['_id']
+            persons = 'data:text/csv;charset=utf-8,' + Papa.unparse persons
+            @persons =
+                URI: encodeURI persons
+                timestamp: +new Date() / 1000
+            return
 
-                # Parse response.data
-                for personID, data of response.data
-                    # Catch persons
-                    if personID isnt UnknownPersonId
-                        @persons.push
-                            ID: personID
-                            Description: data.description
+        # Parse objects
+        objectPromise = $http.get "#{serverURL}/object"
+        .then (response) =>
+            objects = response.data.objects
+            angular.forEach objects, (object) ->
+                delete object['_id']
+            objects = 'data:text/csv;charset=utf-8,' + Papa.unparse objects
+            @objects =
+                URI: encodeURI objects
+                timestamp: +new Date() / 1000
+            return
 
-                    # Catch objects
-                    for object in data.objects
-                        @objects.push
-                            ID: object.ID
-                            Description: object.description
-                            PersonID: personID
-                            PersonDescription: data.description
+        # Parse supplies
+        # TODO
 
-                    # Catch supplies
-                    for supplies in data.supplies
-                        if not @suppliesObj[supplies.ID]?
-                            @suppliesObj[supplies.ID] =
-                                ID: supplies.ID
-                                description: supplies.description
-                                persons: []
-                        if personID isnt UnknownPersonId
-                            @suppliesObj[supplies.ID].persons.push
-                                ID: personID
-                                description: data.description
-                            if maxPersons < @suppliesObj[supplies.ID].persons.length
-                                maxPersons = @suppliesObj[supplies.ID].persons.length
+        # Remove loading spinner
+        $q.all [personPromise, objectPromise]
+        .then =>
+            @ready = true
+            return
 
-                # Parse supplies
-                @supplies =
-                    fields: ['ID', 'Description']
-                    data: []
-                @supplies.fields.push "Person#{num}" for num in [1..maxPersons]
-                for suppliesID, supplies of @suppliesObj
-                    item = [suppliesID, supplies.description]
-                    item.push "#{person.description} (#{person.ID})" for person in supplies.persons
-                    @supplies.data.push item
-
-                # Create CSV output
-                @persons = 'data:text/csv;charset=utf-8,' + Papa.unparse @persons
-                @persons = encodeURI @persons
-                @objects = 'data:text/csv;charset=utf-8,' + Papa.unparse @objects
-                @objects = encodeURI @objects
-                @supplies = 'data:text/csv;charset=utf-8,' + Papa.unparse @supplies
-                @supplies = encodeURI @supplies
-
-                return
-        )
         return
 ]

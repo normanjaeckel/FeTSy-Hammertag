@@ -10,6 +10,15 @@ module.exports = express.Router
     strict: app.get 'strict routing'
 
 
+# List route
+
+# Handle get requests.
+.get '/', (request, response) ->
+    response.send
+        objects: []
+    return
+
+
 ## Detail route
 
 # Catch 'id' parameter

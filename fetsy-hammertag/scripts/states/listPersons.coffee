@@ -1,5 +1,6 @@
 angular.module 'FeTSy-Hammertag.states.listPersons', [
     'angularMoment'
+    'angularSpinner'
     'frapontillo.bootstrap-switch'
     'FeTSy-Hammertag.utils.contentDefaults'
     'FeTSy-Hammertag.utils.updateDescription'
