@@ -14,8 +14,14 @@ module.exports = express.Router
 
 # Handle get requests.
 .get '/', (request, response) ->
-    response.send
-        objects: []
+    database.object().find().sort( id: 1 ).toArray (error, documents) ->
+        if error?
+            response.status(500).json
+                detail: error
+        else
+            response.send
+                objects: documents
+        return
     return
 
 

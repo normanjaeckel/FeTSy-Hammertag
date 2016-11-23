@@ -25,9 +25,18 @@ angular.module 'FeTSy-Hammertag.states.export', [
         # Parse objects
         objectPromise = $http.get "#{serverURL}/object"
         .then (response) =>
-            objects = response.data.objects
-            angular.forEach objects, (object) ->
-                delete object['_id']
+            maxPersons = 0
+            objects =
+                fields: ['id', 'description']
+                data: []
+            for object in response.data.objects
+                item = [object.id, object.description]
+                if object.persons?
+                    item.push "#{person.id} · #{person.timestamp}" for person in object.persons
+                objects.data.push item
+                if object.persons? and maxPersons < object.persons.length
+                    maxPersons = object.persons.length
+            objects.fields.push "Person#{num}" for num in [1..maxPersons]
             objects = 'data:text/csv;charset=utf-8,' + Papa.unparse objects
             @objects =
                 URI: encodeURI objects
