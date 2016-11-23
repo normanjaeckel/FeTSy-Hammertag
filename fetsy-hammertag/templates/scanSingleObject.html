@@ -92,7 +92,8 @@
                 <span class="sr-only">Persons</span>
                 <ul class="list-unstyled">
                     <li ng-class="{ 'person-list': !$last }"
-                        ng-repeat="person in scanSingleObject.lastObject.persons">
+                        ng-repeat="person in scanSingleObject.lastObject.persons | orderBy : '-timestamp'"
+                        ng-show="$index < 3 || scanSingleObject.showAll">
                         <span class="label label-primary">
                             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                             <span class="sr-only">Person</span>
@@ -105,6 +106,13 @@
                         </span>
                     </li>
                 </ul>
+                <button type="button"
+                        class="btn btn-default btn-xs"
+                        aria-label="Show all"
+                        ng-hide="scanSingleObject.showAll || scanSingleObject.lastObject.persons.length <= 3"
+                        ng-click="scanSingleObject.showAll = true">
+                    <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
         <div class="panel panel-default" ng-show="scanSingleObject.lastSupplies">

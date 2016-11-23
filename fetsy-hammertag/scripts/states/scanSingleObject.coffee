@@ -165,6 +165,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
         @resetInputField = ->
             @scanInputValue = ''
             @error = ''
+            @showAll = false
             @focusScanInput = true
             return
 
