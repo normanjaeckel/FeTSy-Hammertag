@@ -44,7 +44,7 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
                         description: @element.description
                 else if element.type is 'supplies'
                     data =
-                        suppliesDescription: @element.description
+                        description: @element.description
                 else if element.type is 'person'
                     data =
                         description: @element.description
@@ -64,7 +64,7 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
                     headers:
                         'Content-Type': 'application/json;charset=utf-8'
                     data:
-                        itemUUID: element.itemUUID
+                        uuid: element.uuid
             else
                 promise = $http.delete "#{serverURL}/#{element.type}/#{element.id}"
             promise.then(

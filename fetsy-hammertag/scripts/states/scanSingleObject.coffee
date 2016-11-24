@@ -12,17 +12,17 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     ($http, serverURL) ->
         fetchObject: (id) ->
             $http.get "#{serverURL}/object/#{id}"
-        fetchSupplies: (ID) ->
-            $http.get "#{serverURL}/supplies/#{ID}"
+        fetchSupplies: (id) ->
+            $http.get "#{serverURL}/supplies/#{id}"
         fetchPerson: (id) ->
             $http.get "#{serverURL}/person/#{id}"
         saveObject: (id, personId) ->
             $http.post "#{serverURL}/object/#{id}/person",
                 id: personId
-        saveSupplies: (ID, personID) ->
-            $http.patch "#{serverURL}/supplies/#{ID}",
-                personID: personID
-                number: 1
+        saveSupplies: (id, personId) ->
+            $http.post "#{serverURL}/supplies/#{id}/person",
+                id: personId
+                number: 1  # Hard coded value about how many supplies should be applied
 ]
 
 
@@ -84,11 +84,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         @lastPerson.id
                     ).then(
                         (response) =>
-                            @lastSupplies =
-                                id: @scanInputValue
-                                description: response.data.supplies
-                                    .suppliesDescription
-                                count: response.data.supplies.items.length
+                            @lastSupplies = response.data.supplies
                             @resetInputField()
                             return
                         errorHandling
@@ -97,11 +93,9 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                     DatabaseFactory.fetchSupplies(@scanInputValue)
                     .then(
                         (response) =>
-                            @lastSupplies =
-                                id: @scanInputValue
-                                description: response.data.supplies
-                                    .suppliesDescription
-                                count: response.data.supplies.items.length
+                            if not response.data.supplies.persons?
+                                response.data.supplies.persons = []
+                            @lastSupplies = response.data.supplies
                             @resetInputField()
                             return
                         errorHandling
@@ -131,7 +125,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
         @updateSupplies = ->
             UpdateDescriptionFactory.update
                 type: 'supplies'
-                ID: @lastSupplies.id
+                id: @lastSupplies.id
                 description: @lastSupplies.description
             .then(
                 (result) =>

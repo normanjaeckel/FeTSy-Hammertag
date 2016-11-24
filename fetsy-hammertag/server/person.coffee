@@ -43,8 +43,32 @@ module.exports = express.Router
                     response.status(500).json
                         detail: error
                 else
-                    response.send
-                        persons: documents
+                    iterator = (supplies) ->
+                        persons = supplies.persons or []
+                        if persons.length is 0
+                            persons.push
+                                id: unknownPersonId
+                        for person in persons
+                            shallow = _.clone supplies
+                            shallow.uuid = person.uuid
+                            index = _.findIndex documents, (doc) -> doc.id is person.id
+                            if index is -1
+                                documents.push
+                                    id: person.id
+                                    supplies: [shallow]
+                            else
+                                if not documents[index].supplies?
+                                    documents[index].supplies = []
+                                documents[index].supplies.push shallow
+                        return
+                    database.supplies().find().forEach iterator, (error) ->
+                        if error?
+                            response.status(500).json
+                                detail: error
+                        else
+                            response.send
+                                persons: documents
+                        return
                 return
         return
     return

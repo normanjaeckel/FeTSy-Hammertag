@@ -22,7 +22,7 @@ app.use '/api', router
 # Add our routes
 router.use '/object', require './object'
 router.use '/person', require './person'
-#router.use '/supplies', require './supplies'
+router.use '/supplies', require './supplies'
 
 # Add fallback so that we do not run into index.html, see below
 router.all '*', (request, response) ->

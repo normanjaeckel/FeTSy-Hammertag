@@ -62,18 +62,16 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             index = allSupplies.indexOf supplies
             UpdateDescriptionFactory.update
                 type: 'supplies'
-                ID: supplies.ID
+                id: supplies.id
                 description: supplies.description
-                itemUUID: supplies.itemUUID
+                uuid: supplies.uuid
                 withDelete: true
-            .then(
-                (result) ->
-                    if result.deleted
-                        allSupplies.splice index, 1
-                    else
-                        supplies.description = result.newDescription
-                    return
-            )
+            .then (result) ->
+                if result.deleted
+                    allSupplies.splice index, 1
+                else
+                    supplies.description = result.newDescription
+                return
             return
 
         return

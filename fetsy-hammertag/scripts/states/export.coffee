@@ -22,7 +22,6 @@ angular.module 'FeTSy-Hammertag.states.export', [
             persons = 'data:text/csv;charset=utf-8,' + Papa.unparse persons
             @persons =
                 URI: encodeURI persons
-                timestamp: +new Date() / 1000
             return
 
         # Parse objects
@@ -45,7 +44,6 @@ angular.module 'FeTSy-Hammertag.states.export', [
             objects = 'data:text/csv;charset=utf-8,' + Papa.unparse objects
             @objects =
                 URI: encodeURI objects
-                timestamp: +new Date() / 1000
             return
 
         # Parse supplies
@@ -54,6 +52,7 @@ angular.module 'FeTSy-Hammertag.states.export', [
         # Remove loading spinner
         $q.all [personPromise, objectPromise]
         .then =>
+            @timestamp = +new Date() / 1000
             @ready = true
             return
 

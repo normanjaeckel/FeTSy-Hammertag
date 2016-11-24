@@ -47,5 +47,22 @@ module.exports =
             return
         return
 
+    supplies: ->
+        _database.collection 'supplies'
+
+    getSupplies: (id, callback) ->
+        query = id: id
+        options = {}
+        @supplies().findOne query, options, (error, result) =>
+            if error?
+                callback error
+            if not result?
+                callback null,
+                    id: id
+            else
+                callback null, result
+            return
+        return
+
     person: ->
         _database.collection 'person'
