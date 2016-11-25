@@ -1,0 +1,63 @@
+<div class="row" ng-hide="import.submitted">
+    <div class="col-xs-12">
+
+        <h4>CSV file specifications</h3>
+        <dl class="dl-horizontal">
+            <dt>Encoding</dt>
+            <dd>UTF-8</dd>
+            <dt>Text delimiter</dt>
+            <dd>Double quotes <code>""</code></dd>
+            <dt>Field separator</dt>
+            <dd>Comma <code>,</code></dd>
+            <dt>Header</dt>
+            <dd><code>id</code> and <code>description</code></dd>
+        </dl>
+
+        <form ng-submit="import.submit()">
+            <div class="form-group">
+                <label for="importTypeSelect">Type</label>
+                <select id="importTypeSelect" class="form-control" ng-model="import.type">
+                    <option value="person" >Person</option>
+                    <option value="object" >Object</option>
+                    <option value="supplies" >Supplies</option>
+                </select>
+            </div>
+            <div class="form-group" ng-class="{'has-error': import.isValid === false}">
+                <label for="importInputFile">File</label>
+                <ng-csv-import
+                    content="import.csv.content"
+                    accept="import.csv.accept"
+                    header="import.csv.header"
+                    header-visible="import.csv.headerVisible"
+                    separator="import.csv.separator"
+                    separator-visible="import.csv.separatorVisible"
+                    encoding="import.csv.encoding"
+                    encoding-visible="import.csv.encodingVisible"
+                    result="import.csv.result"
+                    callback="import.csv.callback">
+                </ng-csv-import>
+                <span id="importInputFileError" class="help-block" ng-show="import.isValid === false">
+                    Error: Check CSV file specifications.
+                </span>
+            </div>
+            <button type="submit" class="btn btn-primary" ng-show="import.isValid">
+                <span class="glyphicon glyphicon-upload"></span>
+                Import {{ import.type }}
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<div class="row" ng-show="import.submitted">
+    <div class="col-xs-12">
+
+        <div class="alert alert-success" role="alert" ng-show="import.submitted.success">
+            {{ import.submitted.success }} items successfully imported.
+        </div>
+        <div class="alert alert-danger" role="alert" ng-show="import.submitted.error">
+            Oops, something went wrong. Reload the page and check data and connection.
+        </div>
+
+    </div>
+</div>

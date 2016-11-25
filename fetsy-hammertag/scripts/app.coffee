@@ -50,6 +50,11 @@ angular.module 'FeTSy-Hammertag', [
             templateUrl: 'static/templates/export.html'
             controller: 'ExportCtrl as export'
 
+        .state  'import',
+            url: '/import'
+            templateUrl: 'static/templates/import.html'
+            controller: 'ImportCtrl as import'
+
         return
 ]
 
