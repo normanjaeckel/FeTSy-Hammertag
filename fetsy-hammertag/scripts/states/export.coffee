@@ -54,10 +54,14 @@ angular.module 'FeTSy-Hammertag.states.export', [
 
         # Remove loading spinner
         $q.all [personPromise, objectPromise]
-        .then =>
-            @timestamp = +new Date() / 1000
-            @ready = true
-            return
-
+        .then(
+            =>
+                @timestamp = +new Date() / 1000
+                @ready = true
+                return
+            (error) ->
+                alert error.data
+                return
+        )
         return
 ]

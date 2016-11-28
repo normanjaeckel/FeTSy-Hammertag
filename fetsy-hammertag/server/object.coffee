@@ -1,5 +1,8 @@
 debug = require('debug') 'fetsy-hammertag:server:object'
 express = require 'express'
+Q = require 'q'
+_ = require 'lodash'
+
 
 app = require './app'
 database = require './database'
@@ -14,14 +17,25 @@ module.exports = express.Router
 
 # Handle get requests.
 .get '/', (request, response) ->
-    database.object().find().sort( id: 1 ).toArray (error, documents) ->
-        if error?
+    Q.all [
+        database.object().find().sort( id: 1 ).toArray()
+        database.person().find().toArray()
+    ]
+    .done(
+        ([objects, persons]) ->
+            personsObj = _.keyBy persons, 'id'
+            for object in objects
+                if object.persons?
+                    for person in object.persons
+                        person.description = personsObj[person.id]?.description
+            response.send
+                objects: objects
+            return
+        (error) ->
             response.status(500).json
                 detail: error
-        else
-            response.send
-                objects: documents
-        return
+            return
+    )
     return
 
 
