@@ -1,4 +1,5 @@
 angular.module 'FeTSy-Hammertag.states.listPersons', [
+    'angular.filter'
     'angularMoment'
     'angularSpinner'
     'frapontillo.bootstrap-switch'
