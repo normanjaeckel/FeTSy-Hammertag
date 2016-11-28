@@ -1,6 +1,7 @@
 angular.module 'FeTSy-Hammertag.states.export', [
     'angularMoment'
     'angularSpinner'
+    'FeTSy-Hammertag.utils.contentDefaults'
 ]
 
 
@@ -9,7 +10,8 @@ angular.module 'FeTSy-Hammertag.states.export', [
     '$q'
     'moment'
     'serverURL'
-    ($http, $q, moment, serverURL) ->
+    'DefaultDescription'
+    ($http, $q, moment, serverURL, DefaultDescription) ->
         # Parse persons
         personPromise = $http.get "#{serverURL}/person"
         .then (response) =>
@@ -35,8 +37,9 @@ angular.module 'FeTSy-Hammertag.states.export', [
                 item = [object.id, object.description]
                 if object.persons?
                     for person in object.persons
+                        description = person.description || DefaultDescription.person
                         timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
-                        item.push "#{person.id} · #{timestamp}"
+                        item.push "#{person.id} · #{description} · #{timestamp}"
                 objects.data.push item
                 if object.persons? and maxPersons < object.persons.length
                     maxPersons = object.persons.length

@@ -1,4 +1,5 @@
 angular.module 'FeTSy-Hammertag.states.import', [
+    'angularSpinner'
     'ngCsvImport'
 ]
 
@@ -44,6 +45,8 @@ angular.module 'FeTSy-Hammertag.states.import', [
         )
 
         @submit = ->
+            @submitted =
+                pending: true
             request = (id) =>
                 $http.patch "#{serverURL}/#{@type}/#{id}",
                     description: item.description
