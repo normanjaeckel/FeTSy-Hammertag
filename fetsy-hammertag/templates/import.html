@@ -41,8 +41,8 @@
                 </span>
             </div>
             <button type="submit" class="btn btn-primary" ng-show="import.isValid">
-                <span class="glyphicon glyphicon-upload"></span>
-                Import {{ import.type }}
+                <span class="glyphicon glyphicon-export"></span>
+                Import {{ import.typeMap[import.type] }}
             </button>
         </form>
 

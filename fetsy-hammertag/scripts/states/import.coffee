@@ -9,6 +9,11 @@ angular.module 'FeTSy-Hammertag.states.import', [
     '$scope'
     'serverURL'
     ($http, $q, $scope, serverURL) ->
+        @typeMap =
+            'person': 'persons'
+            'object': 'objects'
+            'supplies': 'supplies'
+
         @type = 'person'
 
         @csv =
