@@ -1,6 +1,9 @@
 debug = require('debug') 'fetsy-hammertag:server:supplies'
 express = require 'express'
-uuid = require 'node-uuid'
+uuid = require 'uuid'
+Q = require 'q'
+_ = require 'lodash'
+
 
 app = require './app'
 database = require './database'
@@ -13,7 +16,28 @@ module.exports = express.Router
 
 # List route
 
-# TODO: for Export
+# Handle get requests.
+.get '/', (request, response) ->
+    Q.all [
+        database.supplies().find().sort( id: 1 ).toArray()
+        database.person().find().toArray()
+    ]
+    .done(
+        ([suppliesArray, persons]) ->
+            personsObj = _.keyBy persons, 'id'
+            for supplies in suppliesArray
+                if supplies.persons?
+                    for person in supplies.persons
+                        person.description = personsObj[person.id]?.description
+            response.send
+                supplies: suppliesArray
+            return
+        (error) ->
+            response.status(500).json
+                detail: error
+            return
+    )
+    return
 
 
 ## Detail route

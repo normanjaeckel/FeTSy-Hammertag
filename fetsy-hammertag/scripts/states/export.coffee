@@ -26,34 +26,42 @@ angular.module 'FeTSy-Hammertag.states.export', [
                 URI: encodeURI persons
             return
 
-        # Parse objects
-        objectPromise = $http.get "#{serverURL}/object"
-        .then (response) =>
+        # Helper to parse objects and supplies
+        parseResponseData = (data) ->
             maxPersons = 0
-            objects =
+            result =
                 fields: ['id', 'description']
                 data: []
-            for object in response.data.objects
-                item = [object.id, object.description]
-                if object.persons?
-                    for person in object.persons
+            for element in data
+                item = [element.id, element.description]
+                if element.persons?
+                    for person in element.persons
                         description = person.description || DefaultDescription.person
                         timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
                         item.push "#{person.id} · #{description} · #{timestamp}"
-                objects.data.push item
-                if object.persons? and maxPersons < object.persons.length
-                    maxPersons = object.persons.length
-            objects.fields.push "Person#{num}" for num in [1..maxPersons]
-            objects = 'data:text/csv;charset=utf-8,' + Papa.unparse objects
+                result.data.push item
+                if element.persons? and maxPersons < element.persons.length
+                    maxPersons = element.persons.length
+            result.fields.push "person_#{num}" for num in [1..maxPersons]
+            resultData = 'data:text/csv;charset=utf-8,' + Papa.unparse result
+            encodeURI resultData
+
+        # Parse objects
+        objectPromise = $http.get "#{serverURL}/object"
+        .then (response) =>
             @objects =
-                URI: encodeURI objects
+                URI: parseResponseData response.data.objects
             return
 
         # Parse supplies
-        # TODO
+        suppliesPromise = $http.get "#{serverURL}/supplies"
+        .then (response) =>
+            @supplies =
+                URI: parseResponseData response.data.supplies
+            return
 
         # Remove loading spinner
-        $q.all [personPromise, objectPromise]
+        $q.all [personPromise, objectPromise, suppliesPromise]
         .then(
             =>
                 @timestamp = +new Date() / 1000
