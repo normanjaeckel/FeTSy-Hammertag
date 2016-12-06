@@ -1,6 +1,5 @@
 angular.module 'FeTSy-Hammertag.states.import', [
     'angularSpinner'
-    'ngCsvImport'
 ]
 
 
@@ -17,48 +16,46 @@ angular.module 'FeTSy-Hammertag.states.import', [
 
         @type = 'person'
 
-        @csv =
-            content: undefined
-            accept: '.csv'
-            header: true
-            headerVisible: false
-            separator: ','
-            separatorVisible: false
-            encoding: 'utf-8'
-            encodingVisible: false
-            result: undefined
-            callback: ->
-
-        $scope.$watch(
-            =>
-                @csv.result
-            =>
-                if @csv.result?
-                    if Array.isArray @csv.result
-                        isValid = true
-                        for line in @csv.result
-                            isValid = isValid and line.id and line.description
-                        @isValid = Boolean isValid
-                    else
+        angular.element '#importInputFile'
+        .on 'change', (event) =>
+            file = event.target.files[0]
+            Papa.parse event.target.files[0],
+                header: true
+                skipEmptyLines: true
+                complete: (results, file) =>
+                    $scope.$apply =>
+                        if results.data.length > 0
+                            @isValid = _.every results.data, 'id'
+                            if @isValid
+                                @data = _.filter results.data, 'description'
+                        else
+                            @isValid = false
+                        return
+                    return
+                error: (error, file) =>
+                    $scope.$apply =>
                         @isValid = false
-                return
-        )
+                        return
+                    return
+            return
 
         @submit = ->
             @submitted =
                 pending: true
-            request = (id) =>
-                $http.patch "#{serverURL}/#{@type}/#{id}",
+            request = (item) =>
+                $http.patch "#{serverURL}/#{@type}/#{item.id}",
                     description: item.description
-            promises = (request item.id for item in @csv.result)
+            promises = (request item for item in @data)
             $q.all promises
             .then(
                 (responses) =>
                     @submitted =
                         success: responses.length
+                    return
                 (reason) =>
                     @submitted =
                         error: true
+                    return
             )
             return
 

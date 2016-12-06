@@ -24,18 +24,7 @@
             </div>
             <div class="form-group" ng-class="{'has-error': import.isValid === false}">
                 <label for="importInputFile">File</label>
-                <ng-csv-import
-                    content="import.csv.content"
-                    accept="import.csv.accept"
-                    header="import.csv.header"
-                    header-visible="import.csv.headerVisible"
-                    separator="import.csv.separator"
-                    separator-visible="import.csv.separatorVisible"
-                    encoding="import.csv.encoding"
-                    encoding-visible="import.csv.encodingVisible"
-                    result="import.csv.result"
-                    callback="import.csv.callback">
-                </ng-csv-import>
+                <input type="file" id="importInputFile">
                 <span id="importInputFileError" class="help-block" ng-show="import.isValid === false">
                     Error: Check CSV file specifications.
                 </span>
