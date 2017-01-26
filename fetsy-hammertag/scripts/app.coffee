@@ -12,7 +12,8 @@ angular.module 'FeTSy-Hammertag', [
     '$compileProvider'
     ($compileProvider) ->
         # We extend the default which was /^\s*(https?|ftp|mailto|tel|file):/
-        $compileProvider.aHrefSanitizationWhitelist /^\s*(https?|ftp|mailto|tel|file|data):/
+        regex = /^\s*(https?|ftp|mailto|tel|file|data):/
+        $compileProvider.aHrefSanitizationWhitelist regex
 ]
 
 

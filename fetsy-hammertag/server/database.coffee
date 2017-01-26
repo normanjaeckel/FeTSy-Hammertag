@@ -53,7 +53,7 @@ module.exports =
     getSupplies: (id, callback) ->
         query = id: id
         options = {}
-        @supplies().findOne query, options, (error, result) =>
+        @supplies().findOne query, options, (error, result) ->
             if error?
                 callback error
             if not result?

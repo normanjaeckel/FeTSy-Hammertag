@@ -20,9 +20,11 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             $http.post "#{serverURL}/object/#{id}/person",
                 id: personId
         saveSupplies: (id, personId) ->
+            # Hard coded value about how many supplies should be applied
+            number = 1
             $http.post "#{serverURL}/supplies/#{id}/person",
                 id: personId
-                number: 1  # Hard coded value about how many supplies should be applied
+                number: number
 ]
 
 
@@ -31,7 +33,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     'DefaultDescription'
     'UpdateDescriptionFactory'
     'ValidationFactory'
-    (DatabaseFactory, DefaultDescription, UpdateDescriptionFactory, ValidationFactory) ->
+    (DatabaseFactory, DefaultDescription, UpdateDescriptionFactory,
+     ValidationFactory) ->
         @DefaultDescription = DefaultDescription
 
         @scan = =>
