@@ -14,7 +14,8 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     'DefaultDescription'
     'UnknownPersonId'
     'UpdateDescriptionFactory'
-    ($http, serverURL, DefaultDescription, UnknownPersonId, UpdateDescriptionFactory) ->
+    ($http, serverURL, DefaultDescription, UnknownPersonId,
+     UpdateDescriptionFactory) ->
         @UnknownPersonId = UnknownPersonId
 
         @DefaultDescription = DefaultDescription
@@ -30,7 +31,8 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @updatePerson = (person , persons) ->
             index = persons.indexOf person
-            withDelete = not person.objects?.length and not person.supplies?.length
+            withDelete = not person.objects?.length and
+                         not person.supplies?.length
             UpdateDescriptionFactory.update
                 type: 'person'
                 id: person.id

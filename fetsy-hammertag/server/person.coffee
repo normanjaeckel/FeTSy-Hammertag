@@ -51,7 +51,8 @@ module.exports = express.Router
                         for person in persons
                             shallow = _.clone supplies
                             shallow.uuid = person.uuid
-                            index = _.findIndex documents, (doc) -> doc.id is person.id
+                            index = _.findIndex documents,
+                                (doc) -> doc.id is person.id
                             if index is -1
                                 documents.push
                                     id: person.id

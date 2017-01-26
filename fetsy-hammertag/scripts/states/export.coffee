@@ -36,9 +36,11 @@ angular.module 'FeTSy-Hammertag.states.export', [
                 item = [element.id, element.description]
                 if element.persons?
                     for person in element.persons
+                        # coffeelint: disable=max_line_length
                         description = person.description || DefaultDescription.person
                         timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
                         item.push "#{person.id} · #{description} · #{timestamp}"
+                        # coffeelint: enable=max_line_length
                 result.data.push item
                 if element.persons? and maxPersons < element.persons.length
                     maxPersons = element.persons.length

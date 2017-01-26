@@ -66,7 +66,8 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
                     data:
                         uuid: element.uuid
             else
-                promise = $http.delete "#{serverURL}/#{element.type}/#{element.id}"
+                url = "#{serverURL}/#{element.type}/#{element.id}"
+                promise = $http.delete url
             promise.then(
                 (response) ->
                     $uibModalInstance.close

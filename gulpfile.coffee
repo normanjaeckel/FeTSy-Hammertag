@@ -101,6 +101,7 @@ gulp.task 'jshint', ->
     gulp.src path.join 'fetsy-hammertag', 'scripts', '*.js'
     .pipe jshint()
     .pipe jshint.reporter 'default'
+    .pipe jshint.reporter 'fail'
 
 gulp.task 'coffeelint', ->
     gulp.src [
@@ -112,6 +113,7 @@ gulp.task 'coffeelint', ->
         indentation:
             value: 4
     .pipe coffeelint.reporter 'default'
+    .pipe coffeelint.reporter 'fail'
 
 gulp.task 'hint', ['jshint', 'coffeelint'], ->
 
