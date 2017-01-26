@@ -66,6 +66,7 @@ module.exports = express.Router
     update =
         $set:
             description: request.body.description
+            inventory: request.body.inventory
     options =
         upsert: true
     database.supplies().updateOne filter, update, options, (error, result) ->

@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        Update supplies inventory
+        <span class="label label-primary">
+            <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
+            <span class="sr-only">Supplies</span>
+            {{ updateInventory.element.id }}
+        </span>
+    </h3>
+</div>
+
+<div class="modal-body">
+    <form name="inventoryForm">
+        <div class="form-group" ng-class="{'has-error': !inventoryForm.$valid}">
+            <label for="inventory">
+                Supplies inventory
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span id="inventoryIcon" class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                    <span class="sr-only">Supplies inventory</span>
+                </div>
+                <input id="inventory"
+                       type="number"
+                       min="0"
+                       required
+                       class="form-control"
+                       aria-describedby="inventoryIcon"
+                       ng-model="updateInventory.element.inventory"
+                       focus-me="updateInventory.focus">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary"
+            type="button"
+            ng-click="updateInventory.save()">
+        Save
+    </button>
+    <button class="btn btn-warning"
+            type="button"
+            ng-click="$dismiss('cancel click')">
+        Cancel
+    </button>
+</div>
