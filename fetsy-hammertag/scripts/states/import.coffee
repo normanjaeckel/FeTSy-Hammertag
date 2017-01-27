@@ -27,7 +27,8 @@ angular.module 'FeTSy-Hammertag.states.import', [
                         if results.data.length > 0
                             @isValid = _.every results.data, 'id'
                             if @isValid
-                                @data = _.filter results.data, 'description'
+                                @data = _.filter results.data, (item) ->
+                                    item.description? or item.inventory?
                         else
                             @isValid = false
                         return
@@ -43,8 +44,10 @@ angular.module 'FeTSy-Hammertag.states.import', [
             @submitted =
                 pending: true
             request = (item) =>
-                $http.patch "#{serverURL}/#{@type}/#{item.id}",
-                    description: item.description
+                data = description: item.description
+                if @type is 'supplies' and parseInt item.inventory
+                    data.inventory = parseInt item.inventory
+                $http.patch "#{serverURL}/#{@type}/#{item.id}", data
             promises = (request item for item in @data)
             $q.all promises
             .then(

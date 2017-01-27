@@ -74,6 +74,8 @@
 
     <!-- Panel for last object and last supplies -->
     <div class="col-sm-5 col-sm-offset-1">
+
+        <!-- Panel for last object -->
         <div class="panel panel-default" ng-show="scanSingleObject.lastObject">
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
@@ -114,11 +116,19 @@
                     <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
                 </button>
             </div>
-        </div>
+        </div><!-- / .panel Panel for last object -->
+
+        <!-- Panel for last suplies -->
         <div class="panel panel-default" ng-show="scanSingleObject.lastSupplies">
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
                 {{ scanSingleObject.lastSupplies.id }}
+                <button type="button"
+                        class="btn btn-xs btn-default pull-right"
+                        aria-label="Update inventory"
+                        ng-click="scanSingleObject.updateInventory()">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                </button>
                 <button type="button"
                         class="btn btn-xs btn-default pull-right"
                         aria-label="Update supplies"
@@ -127,10 +137,11 @@
                 </button>
             </div>
             <div class="panel-body">
-                <span class="label label-default">{{ scanSingleObject.lastSupplies.persons.length }} x</span>
+                <span class="label label-default">{{ scanSingleObject.lastSupplies.persons.length }} / {{ scanSingleObject.lastSupplies.inventory || 0 }}</span>
                 {{ scanSingleObject.lastSupplies.description || scanSingleObject.DefaultDescription.supplies }}
             </div>
-        </div>
+        </div><!-- / .panel Panel for last suplies -->
+
     </div><!-- / .col-sm-5 Panel for last object and last supplies -->
 
 </div><!-- / .row Panels -->

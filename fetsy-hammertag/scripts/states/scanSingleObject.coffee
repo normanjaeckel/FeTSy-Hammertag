@@ -2,6 +2,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     'angularMoment'
     'FeTSy-Hammertag.utils.contentDefaults'
     'FeTSy-Hammertag.utils.updateDescription'
+    'FeTSy-Hammertag.utils.updateInventory'
     'FeTSy-Hammertag.utils.validation'
 ]
 
@@ -32,9 +33,10 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     'DatabaseFactory'
     'DefaultDescription'
     'UpdateDescriptionFactory'
+    'UpdateInventoryFactory'
     'ValidationFactory'
     (DatabaseFactory, DefaultDescription, UpdateDescriptionFactory,
-     ValidationFactory) ->
+     UpdateInventoryFactory, ValidationFactory) ->
         @DefaultDescription = DefaultDescription
 
         @scan = =>
@@ -133,6 +135,22 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             .then(
                 (result) =>
                     @lastSupplies.description = result.newDescription
+                    return
+            )
+            .finally(
+                =>
+                    @resetInputField()
+                    return
+            )
+            return
+
+        @updateInventory = ->
+            UpdateInventoryFactory.update
+                id: @lastSupplies.id
+                inventory: @lastSupplies.inventory or 0
+            .then(
+                (result) =>
+                    @lastSupplies.inventory = result.newInventory
                     return
             )
             .finally(

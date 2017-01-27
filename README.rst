@@ -5,6 +5,9 @@
 .. image:: https://david-dm.org/normanjaeckel/FeTSy-Hammertag/status.svg
    :target: https://david-dm.org/normanjaeckel/FeTSy-Hammertag
 
+.. image:: https://travis-ci.org/normanjaeckel/FeTSy-Hammertag.svg?branch=master
+    :target: https://travis-ci.org/normanjaeckel/FeTSy-Hammertag
+
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
    :target: http://opensource.org/licenses/MIT
 
