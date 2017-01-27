@@ -27,13 +27,15 @@ angular.module 'FeTSy-Hammertag.states.export', [
             return
 
         # Helper to parse objects and supplies
-        parseResponseData = (data) ->
+        parseResponseData = (data, withInventory) ->
             maxPersons = 0
             result =
                 fields: ['id', 'description']
                 data: []
+            result.fields.push 'inventory' if withInventory
             for element in data
                 item = [element.id, element.description]
+                item.push element.inventory or 0 if withInventory
                 if element.persons?
                     for person in element.persons
                         # coffeelint: disable=max_line_length
@@ -59,7 +61,7 @@ angular.module 'FeTSy-Hammertag.states.export', [
         suppliesPromise = $http.get "#{serverURL}/supplies"
         .then (response) =>
             @supplies =
-                URI: parseResponseData response.data.supplies
+                URI: parseResponseData response.data.supplies, true
             return
 
         # Remove loading spinner
