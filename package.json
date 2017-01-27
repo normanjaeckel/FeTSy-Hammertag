@@ -5,11 +5,11 @@
     "prepublish": "bower install && gulp"
   },
   "dependencies": {
-    "body-parser": "1.15.2",
-    "debug": "2.3.3",
+    "body-parser": "1.16.0",
+    "debug": "2.6.0",
     "express": "4.14.0",
-    "lodash": "4.17.2",
-    "mongodb": "2.2.12",
+    "lodash": "4.17.4",
+    "mongodb": "2.2.22",
     "q": "1.4.1",
     "uuid": "3.0.1"
   },
