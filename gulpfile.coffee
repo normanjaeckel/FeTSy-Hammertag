@@ -108,6 +108,7 @@ gulp.task 'coffeelint', ->
         'gulpfile.coffee'
         path.join 'fetsy-hammertag', 'server', '**', '*.coffee'
         path.join 'fetsy-hammertag', 'scripts', '**', '*.coffee'
+        path.join 'tests', '**', '*.coffee'
     ]
     .pipe coffeelint
         indentation:
