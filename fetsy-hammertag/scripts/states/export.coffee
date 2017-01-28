@@ -27,7 +27,7 @@ angular.module 'FeTSy-Hammertag.states.export', [
             return
 
         # Helper to parse objects and supplies
-        parseResponseData = (data, withInventory) ->
+        @parseResponseData = (data, withInventory) ->
             maxPersons = 0
             result =
                 fields: ['id', 'description']
@@ -54,14 +54,14 @@ angular.module 'FeTSy-Hammertag.states.export', [
         objectPromise = $http.get "#{serverURL}/object"
         .then (response) =>
             @objects =
-                URI: parseResponseData response.data.objects
+                URI: @parseResponseData response.data.objects
             return
 
         # Parse supplies
         suppliesPromise = $http.get "#{serverURL}/supplies"
         .then (response) =>
             @supplies =
-                URI: parseResponseData response.data.supplies, true
+                URI: @parseResponseData response.data.supplies, true
             return
 
         # Remove loading spinner

@@ -17,6 +17,7 @@ module.exports = (config) ->
     files: [
       'dist/static/js/fetsy-hammertag-libs.js'
       'dist/static/js/fetsy-hammertag.js'
+      'node_modules/angular-mocks/angular-mocks.js'
       'tests/**/*.coffee'
     ]
 
