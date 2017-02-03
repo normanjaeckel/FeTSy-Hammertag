@@ -52,7 +52,7 @@
                 <span class="sr-only">Person</span>
                 {{ person.id }}
             </span>
-            <span style="padding-left:0.5em;">
+            <span style="padding-left:0.5em" ng-class="{'text-danger': !person.description}">
                 {{ person.description || listPersons.DefaultDescription.person }}
             </span>
             <span class="pull-right">
@@ -75,7 +75,9 @@
                 {{ object.id }}
             </span>
             <span style="padding-left:0.5em;">
-                {{ object.description || listPersons.DefaultDescription.object }}
+                <span ng-class="{'text-danger': !object.description}">
+                    {{ object.description || listPersons.DefaultDescription.object }}
+                </span>
                 &middot;
                 {{ object.persons[object.persons.length-1].timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
             </span>
@@ -97,7 +99,7 @@
             <span class="label label-default" style="margin-left:0.5em;">
                 {{ suppliesArray.length }} x
             </span>
-            <span style="padding-left:0.5em;">
+            <span style="padding-left:0.5em;" ng-class="{'text-danger': !suppliesArray[0].description}">
                 {{ suppliesArray[0].description || listPersons.DefaultDescription.supplies }}
             </span>
             <span class="pull-right">
