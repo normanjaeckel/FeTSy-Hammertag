@@ -62,13 +62,16 @@ module.exports = express.Router
 
 # Handle PATCH requests.
 .patch '/:id', (request, response) ->
+    fields = {}
+    fields.description = request.body.description if request.body.description?
+    fields.inventory = request.body.inventory if request.body.inventory?
+
     filter = id: request.suppliesId
     update =
-        $set:
-            description: request.body.description
-            inventory: request.body.inventory
+        $set: fields
     options =
         upsert: true
+
     database.supplies().updateOne filter, update, options, (error, result) ->
         if error?
             response.status(500).json
@@ -80,6 +83,7 @@ module.exports = express.Router
             response.send
                 details: 'Supplies successfully updated.'
         return
+
     return
 
 # Handle DELETE requests.
