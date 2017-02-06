@@ -44,14 +44,20 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             else if type is 'singleObject'
                 @lastSupplies = null
                 if @lastPerson
-                    DatabaseFactory.saveObject(@scanInputValue, @lastPerson.id)
-                    .then(
-                        (response) =>
-                            @lastObject = response.data.object
-                            @resetInputField()
-                            return
-                        errorHandling
-                    )
+                    if @lastPerson.description?
+                        DatabaseFactory.saveObject(
+                            @scanInputValue
+                            @lastPerson.id
+                        ).then(
+                            (response) =>
+                                @lastObject = response.data.object
+                                @resetInputField()
+                                return
+                            errorHandling
+                        )
+                    else
+                        @scanInputValue = ''
+                        @error = 'Unknown person. Description is missing.'
                 else
                     DatabaseFactory.fetchObject(@scanInputValue)
                     .then(
@@ -64,16 +70,20 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             else if type is 'supplies'
                 @lastObject = null
                 if @lastPerson
-                    DatabaseFactory.saveSupplies(
-                        @scanInputValue
-                        @lastPerson.id
-                    ).then(
-                        (response) =>
-                            @lastSupplies = response.data.supplies
-                            @resetInputField()
-                            return
-                        errorHandling
-                    )
+                    if @lastPerson.description?
+                        DatabaseFactory.saveSupplies(
+                            @scanInputValue
+                            @lastPerson.id
+                        ).then(
+                            (response) =>
+                                @lastSupplies = response.data.supplies
+                                @resetInputField()
+                                return
+                            errorHandling
+                        )
+                    else
+                        @scanInputValue = ''
+                        @error = 'Unknown person. Description is missing.'
                 else
                     DatabaseFactory.fetchSupplies(@scanInputValue)
                     .then(
