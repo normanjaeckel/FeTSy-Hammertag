@@ -48,7 +48,7 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 return
             return
 
-        @objectInfo = (object) ->
+        @objectInformation = (object) ->
             ItemInformationFactory.open
                 type: 'object'
                 id: object.id
