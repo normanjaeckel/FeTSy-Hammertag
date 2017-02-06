@@ -1,4 +1,6 @@
-angular.module 'FeTSy-Hammertag.utils.updateDescription', []
+angular.module 'FeTSy-Hammertag.utils.updateDescription', [
+    'angularMoment'
+]
 
 
 .factory 'UpdateDescriptionFactory', [
@@ -20,7 +22,6 @@ angular.module 'FeTSy-Hammertag.utils.updateDescription', []
             $uibModal.open
                 controller: 'UpdateDescriptionCtrl as updateDescription'
                 templateUrl: 'static/templates/updateDescription.html'
-                keyboard: false
                 resolve:
                     element: () ->
                         element

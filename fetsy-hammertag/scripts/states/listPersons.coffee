@@ -4,6 +4,7 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     'angularSpinner'
     'frapontillo.bootstrap-switch'
     'FeTSy-Hammertag.utils.contentDefaults'
+    'FeTSy-Hammertag.utils.itemInformation'
     'FeTSy-Hammertag.utils.updateDescription'
 ]
 
@@ -12,10 +13,11 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     '$http'
     'serverURL'
     'DefaultDescription'
+    'ItemInformationFactory'
     'UnknownPersonId'
     'UpdateDescriptionFactory'
-    ($http, serverURL, DefaultDescription, UnknownPersonId,
-     UpdateDescriptionFactory) ->
+    ($http, serverURL, DefaultDescription, ItemInformationFactory,
+     UnknownPersonId, UpdateDescriptionFactory) ->
         @UnknownPersonId = UnknownPersonId
 
         @DefaultDescription = DefaultDescription
@@ -46,6 +48,12 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 return
             return
 
+        @objectInformation = (object) ->
+            ItemInformationFactory.open
+                type: 'object'
+                id: object.id
+            return
+
         @updateObject = (object, objects) ->
             index = objects.indexOf object
             UpdateDescriptionFactory.update
@@ -59,6 +67,12 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 else
                     object.description = result.newDescription
                 return
+            return
+
+        @suppliesInformation = (supplies) ->
+            ItemInformationFactory.open
+                type: 'supplies'
+                id: supplies.id
             return
 
         @updateSupplies = (supplies, allSupplies) ->

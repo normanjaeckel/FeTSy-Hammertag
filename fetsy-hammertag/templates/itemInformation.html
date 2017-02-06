@@ -1,0 +1,77 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <span class="label label-primary">
+            <span class="glyphicon" ng-class="itemInformation.element.icon" aria-hidden="true"></span>
+            <span class="sr-only">{{ itemInformation.element.label }}</span>
+            {{ itemInformation.element.id }}
+        </span>
+    </h3>
+</div>
+
+<div class="modal-body" ng-hide="itemInformation.element.error">
+    <span ng-class="{'text-danger': !itemInformation.element.description}">
+        {{ itemInformation.element.description || itemInformation.DefaultDescription[itemInformation.element.type] }}
+    </span>
+    <div style="margin-top:1em" ng-show="itemInformation.element.type === 'object' && itemInformation.element.persons.length > 0">
+        <span class="sr-only">Persons</span>
+        <ul class="list-unstyled">
+            <li ng-class="{ 'person-list': !$last }"
+                ng-repeat="person in itemInformation.element.persons | orderBy : '-timestamp'"
+                ng-show="$index < 3 || itemInformation.showAll">
+                <span class="label label-primary">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    <span class="sr-only">Person</span>
+                    {{ person.id }}
+                </span>
+                <span style="padding-left:0.5em;">
+                    <span ng-class="{'text-danger': !person.description}">
+                        {{ person.description || itemInformation.DefaultDescription.person }}
+                    </span>
+                    &middot;
+                    {{ person.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
+                </span>
+            </li>
+        </ul>
+        <button type="button"
+                class="btn btn-default btn-xs"
+                aria-label="Show all"
+                ng-hide="itemInformation.showAll || itemInformation.element.persons.length <= 3"
+                ng-click="itemInformation.showAll = true">
+            <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
+        </button>
+    </div>
+    <div style="margin-top:1em" ng-show="itemInformation.element.type === 'supplies'">
+        <span class="sr-only">Supplies count</span>
+        <div class="row">
+            <div class="col col-xs-4">
+                <p class="text-left">
+                    Out <span class="badge">{{ itemInformation.element.persons.length || 0 }}</span>
+                </p>
+            </div>
+            <div class="col col-xs-4">
+                <p class="text-center">
+                    In <span class="badge">{{ (itemInformation.element.inventory || 0) - (itemInformation.element.persons.length || 0) }}</span>
+                </p>
+            </div>
+            <div class="col col-xs-4">
+                <p class="text-right">
+                    Total <span class="badge">{{ itemInformation.element.inventory || 0 }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body" ng-show="itemInformation.element.error">
+    <span class="text-danger">
+        Error: {{ itemInformation.element.error }}
+    </span>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning"
+            type="button"
+            ng-click="$dismiss('cancel click')">
+        Close
+    </button>
+</div>
