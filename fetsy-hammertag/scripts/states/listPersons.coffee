@@ -69,6 +69,12 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 return
             return
 
+        @suppliesInformation = (supplies) ->
+            ItemInformationFactory.open
+                type: 'supplies'
+                id: supplies.id
+            return
+
         @updateSupplies = (supplies, allSupplies) ->
             index = allSupplies.indexOf supplies
             UpdateDescriptionFactory.update

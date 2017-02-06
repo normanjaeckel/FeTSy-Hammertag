@@ -111,6 +111,12 @@
             <span class="pull-right">
                 <button type="button"
                         class="btn btn-xs btn-default"
+                        aria-label="Supplies information"
+                        ng-click="listPersons.suppliesInformation(suppliesArray[0])">
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                </button>
+                <button type="button"
+                        class="btn btn-xs btn-default"
                         aria-label="Update supplies"
                         ng-click="listPersons.updateSupplies(suppliesArray[0], person.supplies)">
                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>

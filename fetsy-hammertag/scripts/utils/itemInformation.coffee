@@ -30,7 +30,18 @@ angular.module 'FeTSy-Hammertag.utils.itemInformation', [
                 element.icon = 'glyphicon-tint'
                 element.label = 'Supplies'
                 elementResolver = () ->
-                    return
+                    DatabaseFactory.fetchSupplies element.id
+                    .then(
+                        (response) ->
+                            _.assign element, response.data.supplies
+                        (response) ->
+                            if response.data
+                                element.error = response.data.details
+                            else
+                                element.error = 'Connection failed. Please ' +
+                                    'reload the page.'
+                            element
+                    )
             else
                 throw new Error 'Bad element type. Expected "object",
                     "supplies" or "person".'
