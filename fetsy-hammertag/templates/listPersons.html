@@ -1,6 +1,36 @@
 <div class="row scan-input-field">
 
-    <div class="col-sm-6 col-sm-offset-6">
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label for="searchFilter" class="sr-only">
+                Search filter
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span id="searchFilterIcon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    <span class="sr-only">Search filter</span>
+                </div>
+                <input id="searchFilter"
+                       type="text"
+                       class="form-control"
+                       placeholder="Search filter"
+                       aria-describedby="searchFilterIcon"
+                       ng-model="listPersons.searchFilter"
+                       focus-me="listPersons.searchFilterFocus">
+                <div class="input-group-btn">
+                    <span type="button"
+                          title="Reset search filter"
+                          class="btn btn-default"
+                          ng-click="listPersons.resetSearchFilter()">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="sr-only">Reset search filter</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-sm-offset-2">
         <input
             bs-switch
             ng-model="listPersons.showObjects"
@@ -41,7 +71,7 @@
 
 </div>
 
-<div class="row" ng-repeat="person in listPersons.persons | orderBy : 'description'">
+<div class="row" ng-repeat="person in listPersons.persons | orderBy : 'description' | filter : listPersons.searchFilter">
 
     <hr ng-class="{'hidden-xs': $first}">
 

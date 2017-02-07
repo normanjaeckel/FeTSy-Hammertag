@@ -26,6 +26,13 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @showSupplies = false
 
+        @resetSearchFilter = ->
+            @searchFilter = ''
+            @searchFilterFocus = true
+            return
+
+        @resetSearchFilter()
+
         $http.get "#{serverURL}/person"
         .then (response) =>
             @persons = response.data.persons
