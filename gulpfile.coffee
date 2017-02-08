@@ -1,17 +1,24 @@
 argv = require 'yargs'
     .argv
+b2v = require 'buffer-to-vinyl'
 cleanCSS = require 'gulp-clean-css'
+fs = require 'fs'
 gulp = require 'gulp'
 gulpif = require 'gulp-if'
+gulpNgConfig = require 'gulp-ng-config'
+gutil = require 'gulp-util'
 coffee = require 'gulp-coffee'
 coffeelint = require 'gulp-coffeelint'
 concat = require 'gulp-concat'
 jshint = require 'gulp-jshint'
 mainBowerFiles = require 'main-bower-files'
+merge = require 'merge-stream'
 nodemon = require 'gulp-nodemon'
 path = require 'path'
 rename = require 'gulp-rename'
 uglify = require 'gulp-uglify'
+yaml = require 'js-yaml'
+_ = require 'lodash'
 
 
 # Helpers and config
@@ -21,6 +28,9 @@ productionMode = argv.production
 outputDirectory = path.join __dirname, 'dist'
 
 webclientStaticDirectory = path.join outputDirectory, 'static'
+
+clientConfig =
+    logoURL: ''
 
 
 # Express server
@@ -42,9 +52,27 @@ gulp.task 'html', ->
 
 gulp.task 'js-all', ['coffee', 'js', 'js-libs'], ->
 
-gulp.task 'coffee', ->
-    gulp.src path.join 'fetsy-hammertag', 'scripts', '**', '*.coffee'
+gulp.task 'clientConfig', (callback) ->
+    fs.readFile 'config.yml', (err, data) ->
+        if err
+            gutil.log(
+                'Could not find or open custom'
+                gutil.colors.cyan 'config.yml'
+            )
+        else
+            userClientConfig = yaml.safeLoad data
+            _.assign clientConfig, userClientConfig
+        callback()
+
+gulp.task 'coffee', ['clientConfig'], ->
+    scripts = gulp.src path.join 'fetsy-hammertag', 'scripts', '**', '*.coffee'
     .pipe coffee()
+
+    config = b2v.stream new Buffer(JSON.stringify(clientConfig)), 'config.json'
+    .pipe gulpNgConfig 'FeTSy-Hammertag.config',
+        wrap: true
+
+    merge scripts, config
     .pipe concat 'fetsy-hammertag.js'
     .pipe gulpif productionMode, uglify()
     .pipe gulp.dest path.join webclientStaticDirectory, 'js'
