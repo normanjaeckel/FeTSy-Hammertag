@@ -1,6 +1,7 @@
 angular.module 'FeTSy-Hammertag', [
     'ui.bootstrap'
     'ui.router'
+    'FeTSy-Hammertag.config'
     'FeTSy-Hammertag.states'
 ]
 
@@ -81,5 +82,7 @@ angular.module 'FeTSy-Hammertag', [
 
 
 .controller 'NavbarCtrl', [
-    () ->
+    'logoURL'
+    (logoURL) ->
+        @logoURL = logoURL
 ]
