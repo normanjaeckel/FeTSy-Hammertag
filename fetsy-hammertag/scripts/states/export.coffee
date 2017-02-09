@@ -32,10 +32,13 @@ angular.module 'FeTSy-Hammertag.states.export', [
             result =
                 fields: ['id', 'description']
                 data: []
-            result.fields.push 'inventory' if withInventory
+            result.fields.push 'inventory', 'out', 'in' if withInventory
             for element in data
                 item = [element.id, element.description]
-                item.push element.inventory or 0 if withInventory
+                total = element.inventory or 0
+                out = element.persons?.length or 0
+                stillIn = total - out
+                item.push total, out, stillIn if withInventory
                 if element.persons?
                     for person in element.persons
                         # coffeelint: disable=max_line_length
