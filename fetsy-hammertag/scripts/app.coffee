@@ -81,6 +81,14 @@ angular.module 'FeTSy-Hammertag', [
 ]
 
 
+.filter 'splitIDs', ->
+    (ids) ->
+        if _.isArray ids
+            ids.join ' · '
+        else
+            ids
+
+
 .controller 'NavbarCtrl', [
     'logoURL'
     (logoURL) ->

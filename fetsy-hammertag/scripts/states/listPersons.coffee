@@ -4,8 +4,8 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     'angularSpinner'
     'frapontillo.bootstrap-switch'
     'FeTSy-Hammertag.utils.contentDefaults'
+    'FeTSy-Hammertag.utils.dialog'
     'FeTSy-Hammertag.utils.itemInformation'
-    'FeTSy-Hammertag.utils.updateDescription'
 ]
 
 
@@ -13,11 +13,11 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     '$http'
     'serverURL'
     'DefaultDescription'
+    'DialogFactory'
     'ItemInformationFactory'
     'UnknownPersonId'
-    'UpdateDescriptionFactory'
-    ($http, serverURL, DefaultDescription, ItemInformationFactory,
-     UnknownPersonId, UpdateDescriptionFactory) ->
+    ($http, serverURL, DefaultDescription, DialogFactory,
+     ItemInformationFactory, UnknownPersonId) ->
         @UnknownPersonId = UnknownPersonId
 
         @DefaultDescription = DefaultDescription
@@ -42,10 +42,9 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             index = persons.indexOf person
             withDelete = not person.objects?.length and
                          not person.supplies?.length
-            UpdateDescriptionFactory.update
+            DialogFactory.updateDescription
                 type: 'person'
-                id: person.id
-                description: person.description
+                item: person
                 withDelete: withDelete
             .then (result) ->
                 if result.deleted
@@ -63,10 +62,9 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @updateObject = (object, objects) ->
             index = objects.indexOf object
-            UpdateDescriptionFactory.update
+            DialogFactory.updateDescription
                 type: 'object'
-                id: object.id
-                description: object.description
+                item: object
                 withDelete: true
             .then (result) ->
                 if result.deleted
@@ -84,11 +82,9 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @updateSupplies = (supplies, allSupplies) ->
             index = allSupplies.indexOf supplies
-            UpdateDescriptionFactory.update
+            DialogFactory.updateDescription
                 type: 'supplies'
-                id: supplies.id
-                description: supplies.description
-                uuid: supplies.uuid
+                item: supplies
                 withDelete: true
             .then (result) ->
                 if result.deleted

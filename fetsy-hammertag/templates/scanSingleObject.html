@@ -7,7 +7,7 @@
               name="scanInputForm"
               ng-submit="scanSingleObject.scan()">
             <div class="form-group" ng-class="{'has-error': scanSingleObject.error}">
-                <label for="scanID" class="sr-only">
+                <label for="scanID" class="control-label sr-only">
                     ID
                 </label>
                 <div class="input-group">
@@ -20,12 +20,14 @@
                            class="form-control"
                            placeholder="Scan ID"
                            aria-describedby="scanIDIcon"
+                           aria-invalid="{{ scanSingleObject.error ? true : false }}"
                            ng-model="scanSingleObject.scanInputValue"
                            focus-me="scanSingleObject.focusScanInput">
                     <div class="input-group-btn">
                         <span type="button"
                               title="Save input"
-                              class="btn btn-primary"
+                              class="btn"
+                              ng-class="!scanSingleObject.error ? 'btn-primary' : 'btn-danger'"
                               ng-click="scanSingleObject.scan()">
                             <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                             <span class="sr-only">Save input</span>
@@ -58,11 +60,17 @@
         <div class="panel panel-default" ng-show="scanSingleObject.lastPerson">
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                {{ scanSingleObject.lastPerson.id }}
+                {{ scanSingleObject.lastPerson.id | splitIDs }}
                 <button type="button"
                         class="btn btn-xs btn-default pull-right"
-                        aria-label="Update person"
-                        ng-click="scanSingleObject.updatePerson()">
+                        aria-label="Add person ID"
+                        ng-click="scanSingleObject.addPersonID()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+                <button type="button"
+                        class="btn btn-xs btn-default pull-right"
+                        aria-label="Update person description"
+                        ng-click="scanSingleObject.updatePersonDescription()">
                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 </button>
             </div>
@@ -99,7 +107,7 @@
                         <span class="label label-primary">
                             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                             <span class="sr-only">Person</span>
-                            {{ person.id }}
+                            {{ person.id | splitIDs }}
                         </span>
                         <span style="padding-left:0.5em;">
                             <span ng-class="{'text-danger': !person.description}">

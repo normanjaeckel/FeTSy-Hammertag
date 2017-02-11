@@ -27,18 +27,24 @@ module.exports =
             if not result?
                 callback null,
                     id: id
+            else if not result.persons
+                callback null, result
             else
                 query =
                     id:
-                        $in: (person.id for person in result.persons or [])
+                        $in: (person.id for person in result.persons)
                 @person().find(query).toArray (error, documents) ->
                     if error?
                         callback error
                     persons = []
-                    for person in result.persons or []
-                        found = _.find documents, (doc) -> doc.id is person.id
+                    for person in result.persons
+                        found = _.find documents, (doc) ->
+                            if _.isArray doc.id
+                                person.id in doc.id
+                            else
+                                person.id is doc.id
                         persons.push
-                            id: person.id
+                            id: if found? then found.id else [person.id]
                             timestamp: person.timestamp
                             description: found?.description
                     result.persons = persons

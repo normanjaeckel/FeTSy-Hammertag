@@ -24,11 +24,18 @@ module.exports = express.Router
     ]
     .done(
         ([suppliesArray, persons]) ->
-            personsObj = _.keyBy persons, 'id'
+            personsObj = {}
+            for person in persons
+                person.id = [person.id] if not _.isArray person.id
+                for id in person.id
+                    personsObj[id] = person
             for supplies in suppliesArray
                 if supplies.persons?
                     for person in supplies.persons
-                        person.description = personsObj[person.id]?.description
+                        if personsObj[person.id]?
+                            person.description = personsObj[person.id]
+                                .description
+                            person.id = personsObj[person.id].id
             response.send
                 supplies: suppliesArray
             return
@@ -111,7 +118,7 @@ module.exports = express.Router
 # Handle POST requests.
 .post '/:id/person', (request, response) ->
     person =
-        id: request.body.id
+        id: String request.body.id
         timestamp: +new Date() / 1000
         uuid: uuid.v4()
     filter = id: request.suppliesId

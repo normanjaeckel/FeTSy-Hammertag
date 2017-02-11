@@ -28,7 +28,7 @@ angular.module 'FeTSy-Hammertag.states.import', [
                             @isValid = _.every results.data, 'id'
                             if @isValid
                                 @data = _.filter results.data, (item) ->
-                                    item.description? or item.inventory?
+                                    item.description or item.inventory?
                         else
                             @isValid = false
                         return

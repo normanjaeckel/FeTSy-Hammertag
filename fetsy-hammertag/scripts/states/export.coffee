@@ -15,15 +15,21 @@ angular.module 'FeTSy-Hammertag.states.export', [
         # Parse persons
         personPromise = $http.get "#{serverURL}/person"
         .then (response) =>
-            persons = []
+            maxIDs = 0
+            result =
+                fields: ['description']
+                data: []
             for person in response.data.persons
                 if person.description?
-                    persons.push
-                        id: person.id
-                        description: person.description
-            persons = 'data:text/csv;charset=utf-8,' + Papa.unparse persons
+                    result.data.push _.concat person.description, person.id
+                    if maxIDs < person.id.length
+                        maxIDs = person.id.length
+            result.fields.push "id_#{num}" for num in [1..maxIDs]
+            # Rename 'id_1' to 'id' for easier re-import of the export result.
+            result.fields[1] = 'id'
+            resultData = 'data:text/csv;charset=utf-8,' + Papa.unparse result
             @persons =
-                URI: encodeURI persons
+                URI: encodeURI resultData
             return
 
         # Helper to parse objects and supplies

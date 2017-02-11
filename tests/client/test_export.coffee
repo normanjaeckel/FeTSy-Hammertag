@@ -69,7 +69,7 @@ describe 'ExportCtrl', ->
             $httpBackend.expectGET "#{serverURL}/person"
             .respond
                 persons: [
-                    id: '42'
+                    id: ['42', '46']
                     description: 'description_Shaeg4nahm'
                 ]
             $httpBackend.expectGET "#{serverURL}/object"
@@ -97,7 +97,7 @@ describe 'ExportCtrl', ->
             .not.toBeDefined()
             $httpBackend.flush()
             expect ExportCtrl.persons.URI
-            .toContain 'data:text/csv;charset=utf-8,id,description'
+            .toContain 'data:text/csv;charset=utf-8,description,id,id_2'
             expect ExportCtrl.objects.URI
             .toContain 'data:text/csv;charset=utf-8,id,description'
             expect ExportCtrl.supplies.URI

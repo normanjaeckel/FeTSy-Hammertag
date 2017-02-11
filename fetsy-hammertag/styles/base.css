@@ -9,3 +9,9 @@ body {
 .person-list {
     padding-bottom: 0.5em
 }
+
+.has-error .input-group-btn .btn.btn-default {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #a94442;
+}

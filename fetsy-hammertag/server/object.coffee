@@ -23,11 +23,18 @@ module.exports = express.Router
     ]
     .done(
         ([objects, persons]) ->
-            personsObj = _.keyBy persons, 'id'
+            personsObj = {}
+            for person in persons
+                person.id = [person.id] if not _.isArray person.id
+                for id in person.id
+                    personsObj[id] = person
             for object in objects
                 if object.persons?
                     for person in object.persons
-                        person.description = personsObj[person.id]?.description
+                        if personsObj[person.id]?
+                            person.description = personsObj[person.id]
+                                .description
+                            person.id = personsObj[person.id].id
             response.send
                 objects: objects
             return
@@ -100,7 +107,7 @@ module.exports = express.Router
 # Handle POST requests.
 .post '/:id/person', (request, response) ->
     person =
-        id: request.body.id
+        id: String request.body.id
         timestamp: +new Date() / 1000
     filter = id: request.objectId
     update =
