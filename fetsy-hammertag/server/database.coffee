@@ -8,12 +8,17 @@ _database = undefined
 module.exports =
     connect: ->
         url = 'mongodb://localhost/fetsy-hammertag'
-        client.connect url, (error, database) ->
-            if error
+        client.connect url
+        .then(
+            (database) ->
+                _database = database
+                debug 'Connected successfully to database'
+                return
+            (error) ->
                 console.error 'Error connecting to database.'
                 process.exit 1
-            _database = database
-            debug 'Connected successfully to database'
+                return
+        )
 
     object: ->
         _database.collection 'object'
@@ -72,3 +77,6 @@ module.exports =
 
     person: ->
         _database.collection 'person'
+
+    dropDatabase: ->
+        _database.dropDatabase()

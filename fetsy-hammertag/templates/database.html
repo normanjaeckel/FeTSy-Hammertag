@@ -1,0 +1,41 @@
+<div class="row">
+
+    <div class="col-sm-6" ng-hide="database.submitted">
+        <h4>Delete all entries in the database</h3>
+        <p>Please solve the following equation: {{ database.securityQuery[0] }} + {{ database.securityQuery[1] }} + {{ database.securityQuery[2] }} = ?</p>
+        <form role="form"
+              name="securityQueryResultForm">
+            <div class="form-group">
+                <label for="securityQueryResult" class="control-label">
+                    Result
+                </label>
+                <input id="securityQueryResult"
+                       type="number"
+                       required
+                       class="form-control"
+                       aria-invalid="{{ !database.securityQuerySolved() }}"
+                       ng-model="database.securityQueryResult"
+                       focus-me="database.focus">
+            </div>
+        </form>
+        <button type="button" class="btn btn-danger" ng-click="database.dropDatabase()" ng-show="database.securityQuerySolved()">
+            <span class="glyphicon glyphicon-remove"></span>
+            Delete database {{ import.typeMap[import.type] }}
+        </button>
+    </div>
+
+    <div class="col-xs-12" ng-show="database.submitted">
+        <div ng-show="database.submitted.pending">
+            <span class="sr-only">Loading ...</span>
+            <span us-spinner="{color: '#428bca'}"></span>
+        </div>
+        <div class="alert alert-success" role="alert" ng-show="database.submitted.success">
+            Database successfully deleted.
+        </div>
+
+        <div class="alert alert-danger" role="alert" ng-show="database.submitted.error">
+            Oops, something went wrong. Reload the page and check connection.
+        </div>
+    </div>
+
+</div>
