@@ -46,12 +46,16 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 type: 'person'
                 item: person
                 withDelete: withDelete
-            .then (result) ->
-                if result.deleted
-                    persons.splice index, 1
-                else
-                    person.description = result.newDescription
-                return
+            .then(
+                (result) ->
+                    if result.deleted
+                        persons.splice index, 1
+                    else
+                        person.description = result.newDescription
+                    return
+                (error) ->
+                    return
+            )
             return
 
         @objectInformation = (object) ->
@@ -66,12 +70,16 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 type: 'object'
                 item: object
                 withDelete: true
-            .then (result) ->
-                if result.deleted
-                    objects.splice index, 1
-                else
-                    object.description = result.newDescription
-                return
+            .then(
+                (result) ->
+                    if result.deleted
+                        objects.splice index, 1
+                    else
+                        object.description = result.newDescription
+                    return
+                (error) ->
+                    return
+            )
             return
 
         @suppliesInformation = (supplies) ->
@@ -86,12 +94,16 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 type: 'supplies'
                 item: supplies
                 withDelete: true
-            .then (result) ->
-                if result.deleted
-                    allSupplies.splice index, 1
-                else
-                    supplies.description = result.newDescription
-                return
+            .then(
+                (result) ->
+                    if result.deleted
+                        allSupplies.splice index, 1
+                    else
+                        supplies.description = result.newDescription
+                    return
+                (error) ->
+                    return
+            )
             return
 
         return

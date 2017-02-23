@@ -26,35 +26,37 @@ module.exports =
     getObject: (id, callback) ->
         query = id: id
         options = {}
-        @object().findOne query, options, (error, result) =>
+        @object().findOne query, options, (error, object) =>
             if error?
                 callback error
-            if not result?
+            if not object?
                 callback null,
-                    id: id
-            else if not result.persons
-                callback null, result
+                    id: [id]
             else
-                query =
-                    id:
-                        $in: (person.id for person in result.persons)
-                @person().find(query).toArray (error, documents) ->
-                    if error?
-                        callback error
-                    persons = []
-                    for person in result.persons
-                        found = _.find documents, (doc) ->
-                            if _.isArray doc.id
-                                person.id in doc.id
-                            else
-                                person.id is doc.id
-                        persons.push
-                            id: if found? then found.id else [person.id]
-                            timestamp: person.timestamp
-                            description: found?.description
-                    result.persons = persons
-                    callback null, result
-                    return
+                object.id = [object.id] if not _.isArray object.id
+                if not object.persons
+                    callback null, object
+                else
+                    query =
+                        id:
+                            $in: (person.id for person in object.persons)
+                    @person().find(query).toArray (error, documents) ->
+                        if error?
+                            callback error
+                        persons = []
+                        for person in object.persons
+                            found = _.find documents, (doc) ->
+                                if _.isArray doc.id
+                                    person.id in doc.id
+                                else
+                                    person.id is doc.id
+                            persons.push
+                                id: if found? then found.id else [person.id]
+                                timestamp: person.timestamp
+                                description: found?.description
+                        object.persons = persons
+                        callback null, object
+                        return
             return
         return
 

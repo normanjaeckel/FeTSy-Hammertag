@@ -28,6 +28,7 @@ router.use '/drop-database', require './dropDatabase'
 # Add fallback so that we do not run into index.html, see below
 router.all '*', (request, response) ->
     response.sendStatus 404
+    return
 
 
 ## Serve static files for /static

@@ -37,7 +37,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                             return
                         errorHandling
                     )
-            else if type is 'singleObject'
+            else if type is 'object'
                 @lastSupplies = null
                 if @lastPerson
                     if @lastPerson.description?
@@ -104,6 +104,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 (result) =>
                     @lastPerson.description = result.newDescription
                     return
+                (error) ->
+                    return
             )
             .finally(
                 =>
@@ -120,6 +122,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 (result) =>
                     @lastPerson.id = result.newIDs
                     return
+                (error) ->
+                    return
             )
             .finally(
                 =>
@@ -128,13 +132,33 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             )
             return
 
-        @updateObject = ->
+        @updateObjectDescription = ->
             DialogFactory.updateDescription
                 type: 'object'
                 item: @lastObject
             .then(
                 (result) =>
                     @lastObject.description = result.newDescription
+                    return
+                (error) ->
+                    return
+            )
+            .finally(
+                =>
+                    @resetInputField()
+                    return
+            )
+            return
+
+        @addObjectID = ->
+            DialogFactory.addID
+                type: 'object'
+                item: @lastObject
+            .then(
+                (result) =>
+                    @lastObject.id = result.newIDs
+                    return
+                (error) ->
                     return
             )
             .finally(
@@ -152,6 +176,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 (result) =>
                     @lastSupplies.description = result.newDescription
                     return
+                (error) ->
+                    return
             )
             .finally(
                 =>
@@ -166,6 +192,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             .then(
                 (result) =>
                     @lastSupplies.inventory = result.newInventory
+                    return
+                (error) ->
                     return
             )
             .finally(

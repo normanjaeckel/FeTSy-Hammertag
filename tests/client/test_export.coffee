@@ -13,32 +13,61 @@ describe 'ExportCtrl', ->
             DefaultDescription = _DefaultDescription_
             serverURL = _serverURL_
 
-    describe 'parseResponseData', ->
+    describe 'calcMaxIDs', ->
+        it 'should return number of ids of the element with most ids', ->
+            elements = [
+                description: 'description_ce4eC7bait'
+                id: [
+                    '42'
+                    '43'
+                ]
+            ,
+                description: 'description_go9zig6Jo9'
+                id: [
+                    '42'
+                    '43'
+                    '44'
+                ]
+            ,
+                description: 'description_eer4cuth0Z'
+                id: [
+                    '42'
+                ]
+            ]
+            expect ExportCtrl.calcMaxIDs elements
+            .toBe 3
+
+    describe 'parseObjectResponseData', ->
+        testData = [
+            id: ['42']
+            description: 'description_Wae6Ooz6fi'
+        ]
+        it 'should return proper CSV data', ->
+            parsedData = ExportCtrl.parseObjectResponseData testData
+            expect parsedData
+            .toContain 'data:text/csv;charset=utf-8,description,id'
+            expect parsedData
+            .toContain 'description_Wae6Ooz6fi,42'
+            expect parsedData
+            .not.toContain 'inventory'
+
+    describe 'parseSuppliesResponseData', ->
         testData = [
             id: '42'
-            description: 'description_Wae6Ooz6fi'
+            description: 'description_eephoF3taM'
             inventory: 13
         ]
-        it 'should return data with inventory header and data', ->
-            parsedData = ExportCtrl.parseResponseData testData, true
+        it 'should return proper CSV data with inventory header and data', ->
+            parsedData = ExportCtrl.parseSuppliesResponseData testData
             expect parsedData
             .toContain 'data:text/csv;charset=utf-8,id,description,inventory'
             expect parsedData
-            .toContain '42,description_Wae6Ooz6fi,13'
-        it 'should return data without inventory header and data', ->
-            parsedData = ExportCtrl.parseResponseData testData, false
+            .toContain '42,description_eephoF3taM,13'
             expect parsedData
-            .toContain 'data:text/csv;charset=utf-8,id,description'
-            expect parsedData
-            .toContain '42,description_Wae6Ooz6fi'
-            expect parsedData
-            .not.toContain 'inventory'
-            expect parsedData
-            .not.toContain '13'
 
-    describe 'parseResponseData', ->
+    describe 'parseObjectResponseData', ->
         testData = [
-            id: '42'
+            id: ['42']
             description: 'description_rao1ahFa3e'
             persons: [
                 id: '13'
@@ -51,18 +80,16 @@ describe 'ExportCtrl', ->
             ]
         ]
         it 'should return CSV data with proper person cells', ->
-            parsedData = ExportCtrl.parseResponseData testData, false
+            parsedData = ExportCtrl.parseObjectResponseData testData
             date = new Date(1374321600000).toLocaleFormat '%Y-%m-%d %H:%M'
             expect parsedData
-            .toContain 'id,description,person_1,person_2'
+            .toContain 'description,id,person_1,person_2'
             expect parsedData
             .not.toContain 'person_3'
             expect parsedData
-            .toContain encodeURI '13 · desciption_xahKoo7Nuf · 1970-01-01'
+            .toContain '13 · desciption_xahKoo7Nuf · 1970-01-01'
             expect parsedData
-            .toContain encodeURI(
-                '14 · ' + DefaultDescription.person + ' · ' + date
-            )
+            .toContain '14 · ' + DefaultDescription.person + ' · ' + date
 
     describe 'promisses', ->
         beforeEach ->
@@ -75,7 +102,7 @@ describe 'ExportCtrl', ->
             $httpBackend.expectGET "#{serverURL}/object"
             .respond
                 objects: [
-                    id: '13'
+                    id: ['13', '133']
                     description: 'description_oobahGhoo5'
                 ]
             $httpBackend.expectGET "#{serverURL}/supplies"
@@ -99,6 +126,6 @@ describe 'ExportCtrl', ->
             expect ExportCtrl.persons.URI
             .toContain 'data:text/csv;charset=utf-8,description,id,id_2'
             expect ExportCtrl.objects.URI
-            .toContain 'data:text/csv;charset=utf-8,id,description'
+            .toContain 'data:text/csv;charset=utf-8,description,id,id_2'
             expect ExportCtrl.supplies.URI
             .toContain 'data:text/csv;charset=utf-8,id,description,inventory'

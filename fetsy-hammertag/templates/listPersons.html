@@ -102,7 +102,7 @@
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                 <span class="sr-only">Object</span>
-                {{ object.id }}
+                {{ object.id | splitIDs }}
             </span>
             <span style="padding-left:0.5em;">
                 <span ng-class="{'text-danger': !object.description}">

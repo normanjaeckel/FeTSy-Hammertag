@@ -3,7 +3,7 @@
         <span class="label label-primary">
             <span class="glyphicon" ng-class="itemInformation.element.icon" aria-hidden="true"></span>
             <span class="sr-only">{{ itemInformation.element.label }}</span>
-            {{ itemInformation.element.id }}
+            {{ itemInformation.element.id | splitIDs }}
         </span>
     </h3>
 </div>

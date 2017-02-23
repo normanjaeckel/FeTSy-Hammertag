@@ -6,9 +6,9 @@ angular.module 'FeTSy-Hammertag.states.import', [
 .controller 'ImportCtrl', [
     '$http'
     '$q'
-    '$scope'
+    '$timeout'
     'serverURL'
-    ($http, $q, $scope, serverURL) ->
+    ($http, $q, $timeout, serverURL) ->
         @typeMap =
             'person': 'persons'
             'object': 'objects'
@@ -23,7 +23,7 @@ angular.module 'FeTSy-Hammertag.states.import', [
                 header: true
                 skipEmptyLines: true
                 complete: (results, file) =>
-                    $scope.$apply =>
+                    $timeout =>
                         if results.data.length > 0
                             @isValid = _.every results.data, 'id'
                             if @isValid
@@ -34,7 +34,7 @@ angular.module 'FeTSy-Hammertag.states.import', [
                         return
                     return
                 error: (error, file) =>
-                    $scope.$apply =>
+                    $timeout =>
                         @isValid = false
                         return
                     return

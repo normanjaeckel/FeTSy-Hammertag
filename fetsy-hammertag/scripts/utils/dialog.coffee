@@ -20,7 +20,6 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
             $uibModal.open
                 controller: 'UpdateInventoryCtrl as updateInventory'
                 templateUrl: 'static/templates/updateInventory.html'
-                keyboard: false
                 resolve:
                     element: () ->
                         element
@@ -62,13 +61,6 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
         @element = element
         @newDescription = element.item.description
         @focus = true
-
-        # TODO: Remove this hack after server is ready for multi id objects
-        # and supplies
-        if element.type is 'object'
-            @element.item.id = [@element.item.id]
-        # End of hack
-
         @save = ->
             if @newDescription
                 if element.type is 'supplies'
@@ -147,7 +139,7 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
         @newID = ''
         @focus = true
         @save = ->
-            if 'person' is ValidationFactory.validateInput @newID
+            if @element.type is ValidationFactory.validateInput @newID
                 url = "#{serverURL}/#{element.type}/#{@element.item.id[0]}"
                 $http.post url,
                     id: @newID

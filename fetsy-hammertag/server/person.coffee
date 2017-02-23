@@ -4,7 +4,7 @@ _ = require 'lodash'
 
 app = require './app'
 database = require './database'
-
+FeTSyError = require './error'
 
 module.exports = express.Router
     caseSensitive: app.get 'case sensitive routing'
@@ -27,6 +27,7 @@ module.exports = express.Router
                 if not _.isArray doc.id
                     doc.id = [doc.id]
             iterator = (object) ->
+                object.id = [object.id] if not _.isArray object.id
                 person = _.last object.persons or []
                 if not person?
                     person =
@@ -107,11 +108,6 @@ module.exports = express.Router
 
 # Handle POST requests.
 .post '/:id', (request, response) ->
-    # TODO Outsource this.
-    FeTSyError = (message) ->
-        @message = message
-    FeTSyError.prototype = new Error()
-
     query = id: request.body.id
     options = {}
     database.person().findOne query, options
