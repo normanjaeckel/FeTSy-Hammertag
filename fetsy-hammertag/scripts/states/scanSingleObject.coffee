@@ -2,21 +2,17 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     'angularMoment'
     'FeTSy-Hammertag.utils.contentDefaults'
     'FeTSy-Hammertag.utils.database'
-    'FeTSy-Hammertag.utils.updateDescription'
-    'FeTSy-Hammertag.utils.updateInventory'
+    'FeTSy-Hammertag.utils.dialog'
     'FeTSy-Hammertag.utils.validation'
 ]
-
 
 
 .controller 'ScanSingleObjectCtrl', [
     'DatabaseFactory'
     'DefaultDescription'
-    'UpdateDescriptionFactory'
-    'UpdateInventoryFactory'
+    'DialogFactory'
     'ValidationFactory'
-    (DatabaseFactory, DefaultDescription, UpdateDescriptionFactory,
-     UpdateInventoryFactory, ValidationFactory) ->
+    (DatabaseFactory, DefaultDescription, DialogFactory, ValidationFactory) ->
         @DefaultDescription = DefaultDescription
 
         @scan = =>
@@ -41,13 +37,13 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                             return
                         errorHandling
                     )
-            else if type is 'singleObject'
+            else if type is 'object'
                 @lastSupplies = null
                 if @lastPerson
                     if @lastPerson.description?
                         DatabaseFactory.saveObject(
                             @scanInputValue
-                            @lastPerson.id
+                            _.last @lastPerson.id
                         ).then(
                             (response) =>
                                 @lastObject = response.data.object
@@ -73,7 +69,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                     if @lastPerson.description?
                         DatabaseFactory.saveSupplies(
                             @scanInputValue
-                            @lastPerson.id
+                            _.last @lastPerson.id
                         ).then(
                             (response) =>
                                 @lastSupplies = response.data.supplies
@@ -100,14 +96,69 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 @focusScanInput = true
             return
 
-        @updateObject = ->
-            UpdateDescriptionFactory.update
+        @updatePersonDescription = ->
+            DialogFactory.updateDescription
+                type: 'person'
+                item: @lastPerson
+            .then(
+                (result) =>
+                    @lastPerson.description = result.newDescription
+                    return
+                (error) ->
+                    return
+            )
+            .finally(
+                =>
+                    @resetInputField()
+                    return
+            )
+            return
+
+        @addPersonID = ->
+            DialogFactory.addID
+                type: 'person'
+                item: @lastPerson
+            .then(
+                (result) =>
+                    @lastPerson.id = result.newIDs
+                    return
+                (error) ->
+                    return
+            )
+            .finally(
+                =>
+                    @resetInputField()
+                    return
+            )
+            return
+
+        @updateObjectDescription = ->
+            DialogFactory.updateDescription
                 type: 'object'
-                id: @lastObject.id
-                description: @lastObject.description
+                item: @lastObject
             .then(
                 (result) =>
                     @lastObject.description = result.newDescription
+                    return
+                (error) ->
+                    return
+            )
+            .finally(
+                =>
+                    @resetInputField()
+                    return
+            )
+            return
+
+        @addObjectID = ->
+            DialogFactory.addID
+                type: 'object'
+                item: @lastObject
+            .then(
+                (result) =>
+                    @lastObject.id = result.newIDs
+                    return
+                (error) ->
                     return
             )
             .finally(
@@ -118,13 +169,14 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             return
 
         @updateSupplies = ->
-            UpdateDescriptionFactory.update
+            DialogFactory.updateDescription
                 type: 'supplies'
-                id: @lastSupplies.id
-                description: @lastSupplies.description
+                item: @lastSupplies
             .then(
                 (result) =>
                     @lastSupplies.description = result.newDescription
+                    return
+                (error) ->
                     return
             )
             .finally(
@@ -135,29 +187,13 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             return
 
         @updateInventory = ->
-            UpdateInventoryFactory.update
-                id: @lastSupplies.id
-                inventory: @lastSupplies.inventory or 0
+            DialogFactory.updateInventory
+                item: @lastSupplies
             .then(
                 (result) =>
                     @lastSupplies.inventory = result.newInventory
                     return
-            )
-            .finally(
-                =>
-                    @resetInputField()
-                    return
-            )
-            return
-
-        @updatePerson = ->
-            UpdateDescriptionFactory.update
-                type: 'person'
-                id: @lastPerson.id
-                description: @lastPerson.description
-            .then(
-                (result) =>
-                    @lastPerson.description = result.newDescription
+                (error) ->
                     return
             )
             .finally(

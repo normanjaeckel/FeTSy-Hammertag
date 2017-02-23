@@ -23,10 +23,12 @@ app.use '/api', router
 router.use '/object', require './object'
 router.use '/person', require './person'
 router.use '/supplies', require './supplies'
+router.use '/drop-database', require './dropDatabase'
 
 # Add fallback so that we do not run into index.html, see below
 router.all '*', (request, response) ->
     response.sendStatus 404
+    return
 
 
 ## Serve static files for /static
@@ -54,7 +56,9 @@ app.get '*', (request, response) ->
 hostname = undefined
 port = 8080
 database.connect()
-app.listen port, hostname, ->
-    url = "http://#{hostname or 'localhost'}:#{port}/"
-    debug "FeTSy-Hammertag listening on #{url}"
+.then ->
+    app.listen port, hostname, ->
+        url = "http://#{hostname or 'localhost'}:#{port}/"
+        debug "FeTSy-Hammertag listening on #{url}"
+        return
     return

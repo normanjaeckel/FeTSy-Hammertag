@@ -1,0 +1,56 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        Add {{ addID.element.type }} ID
+        <span class="label label-primary">
+            <span class="glyphicon" ng-class="addID.element.icon" aria-hidden="true"></span>
+            <span class="sr-only">{{ addID.element.label }}</span>
+            {{ addID.element.item.id | splitIDs }}
+        </span>
+    </h3>
+</div>
+
+<div class="modal-body">
+    <form role="form"
+          name="addIDForm"
+          ng-submit="addID.save()">
+        <div class="form-group" ng-class="{'has-error': addID.error }">
+            <label for="addID" class="control-label">
+                {{ addID.element.label }} ID
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span id="addIDIcon" class="glyphicon" ng-class="addID.element.icon" aria-hidden="true"></span>
+                    <span class="sr-only">{{ addID.element.label }} ID</span>
+                </div>
+                <input id="addID"
+                       class="form-control"
+                       aria-describedby="addIDIcon"
+                       aria-invalid="{{ addID.error || false }}"
+                       ng-model="addID.newID"
+                       focus-me="addID.focus">
+                <div class="input-group-btn">
+                    <span type="button"
+                          title="Reset addID field"
+                          class="btn btn-default"
+                          ng-click="addID.resetInputField()">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="sr-only">Reset addID field</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary"
+            type="button"
+            ng-click="addID.save()">
+        Save
+    </button>
+    <button class="btn btn-warning"
+            type="button"
+            ng-click="$dismiss('cancel click')">
+        Cancel
+    </button>
+</div>

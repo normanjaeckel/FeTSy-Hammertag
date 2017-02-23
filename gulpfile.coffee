@@ -93,9 +93,9 @@ gulp.task 'js-libs', ->
     .pipe gulp.dest path.join webclientStaticDirectory, 'js'
 
 
-# CSS and font files.
+# CSS, font and favicon files.
 
-gulp.task 'css-all', ['css', 'css-libs', 'fonts-libs'], ->
+gulp.task 'css-all', ['css', 'css-libs', 'fonts-libs', 'favicon'], ->
 
 gulp.task 'css', ->
     gulp.src path.join 'fetsy-hammertag', 'styles', '*.css'
@@ -116,6 +116,10 @@ gulp.task 'fonts-libs', ->
     gulp.src mainBowerFiles
         filter: /\.(eot)|(svg)|(ttf)|(woff)|(woff2)$/
     .pipe gulp.dest path.join webclientStaticDirectory, 'fonts'
+
+gulp.task 'favicon', ->
+    gulp.src path.join 'fetsy-hammertag', 'favicon.ico'
+    .pipe gulp.dest webclientStaticDirectory
 
 
 #  Gulp default task.

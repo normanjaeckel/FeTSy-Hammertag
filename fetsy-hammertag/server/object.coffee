@@ -6,6 +6,7 @@ _ = require 'lodash'
 
 app = require './app'
 database = require './database'
+FeTSyError = require './error'
 
 
 module.exports = express.Router
@@ -23,11 +24,19 @@ module.exports = express.Router
     ]
     .done(
         ([objects, persons]) ->
-            personsObj = _.keyBy persons, 'id'
+            personsObj = {}
+            for person in persons
+                person.id = [person.id] if not _.isArray person.id
+                for id in person.id
+                    personsObj[id] = person
             for object in objects
+                object.id = [object.id] if not _.isArray object.id
                 if object.persons?
                     for person in object.persons
-                        person.description = personsObj[person.id]?.description
+                        if personsObj[person.id]?
+                            person.description = personsObj[person.id]
+                                .description
+                            person.id = personsObj[person.id].id
             response.send
                 objects: objects
             return
@@ -58,6 +67,50 @@ module.exports = express.Router
                 object: object
         return
     return
+
+# Handle POST requests.
+.post '/:id', (request, response) ->
+    query = id: request.body.id
+    options = {}
+    database.object().findOne query, options
+    .then (result) ->
+        if result?
+            throw new FeTSyError 'New person id already exists.'
+        query = id: request.objectId
+        options = {}
+        database.object().findOne query, options
+    .then (result) ->
+        filter = id: request.objectId
+        if not result? or not _.isArray result.id
+            update =
+                $set:
+                    id: [request.objectId, request.body.id]
+        else
+            update =
+                $push:
+                    id: request.body.id
+        options =
+            upsert: true
+        database.object().updateOne filter, update, options
+    .then (result) ->
+        if result.upsertedCount is 1
+            response.status(201).json
+                details: 'Object with extra id successfully created.'
+        else
+            response.send
+                details: 'Object with extra id successfully updated.'
+        return
+    .catch (error) ->
+        if error instanceof FeTSyError
+            response.status(400).json
+                detail: error
+        else
+            response.status(500).json
+                detail: error
+        return
+    return
+
+
 
 # Handle PATCH requests.
 .patch '/:id', (request, response) ->
@@ -100,7 +153,7 @@ module.exports = express.Router
 # Handle POST requests.
 .post '/:id/person', (request, response) ->
     person =
-        id: request.body.id
+        id: String request.body.id
         timestamp: +new Date() / 1000
     filter = id: request.objectId
     update =

@@ -13,7 +13,9 @@
             <dd><code>id</code>, <code>description</code> and – as appropriate – <code>inventory</code></dd>
         </dl>
 
-        <form ng-submit="import.submit()">
+        <form role="form"
+              name="importForm"
+              ng-submit="import.submit()">
             <div class="form-group">
                 <label for="importTypeSelect">Type</label>
                 <select id="importTypeSelect" class="form-control" ng-model="import.type">
@@ -24,7 +26,9 @@
             </div>
             <div class="form-group" ng-class="{'has-error': import.isValid === false}">
                 <label for="importInputFile">File</label>
-                <input type="file" id="importInputFile">
+                <input id="importInputFile"
+                       type="file"
+                       aria-invalid="{{ import.isValid ? false : true }}">
                 <span id="importInputFileError" class="help-block" ng-show="import.isValid === false">
                     Error: Check CSV file specifications.
                 </span>

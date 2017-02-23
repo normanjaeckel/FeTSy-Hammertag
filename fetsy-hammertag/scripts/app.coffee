@@ -57,6 +57,11 @@ angular.module 'FeTSy-Hammertag', [
             templateUrl: 'static/templates/import.html'
             controller: 'ImportCtrl as import'
 
+        .state  'database',
+            url: '/database'
+            templateUrl: 'static/templates/database.html'
+            controller: 'DatabaseCtrl as database'
+
         return
 ]
 
@@ -79,6 +84,14 @@ angular.module 'FeTSy-Hammertag', [
                 scope.$apply model.assign scope, false
             return
 ]
+
+
+.filter 'splitIDs', ->
+    (ids) ->
+        if _.isArray ids
+            ids.join ' · '
+        else
+            ids
 
 
 .controller 'NavbarCtrl', [

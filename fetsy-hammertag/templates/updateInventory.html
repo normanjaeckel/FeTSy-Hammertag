@@ -4,15 +4,17 @@
         <span class="label label-primary">
             <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
             <span class="sr-only">Supplies</span>
-            {{ updateInventory.element.id }}
+            {{ updateInventory.element.item.id | splitIDs }}
         </span>
     </h3>
 </div>
 
 <div class="modal-body">
-    <form name="inventoryForm">
+    <form role="form"
+          name="inventoryForm"
+          ng-submit="updateInventory.save()">
         <div class="form-group" ng-class="{'has-error': !inventoryForm.$valid}">
-            <label for="inventory">
+            <label for="inventory" class="control-label">
                 Supplies inventory
             </label>
             <div class="input-group">
@@ -26,7 +28,8 @@
                        required
                        class="form-control"
                        aria-describedby="inventoryIcon"
-                       ng-model="updateInventory.element.inventory"
+                       aria-invalid="{{ !inventoryForm.$valid }}"
+                       ng-model="updateInventory.newInventory"
                        focus-me="updateInventory.focus">
             </div>
         </div>

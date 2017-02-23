@@ -4,29 +4,33 @@
         <span class="label label-primary">
             <span class="glyphicon" ng-class="updateDescription.element.icon" aria-hidden="true"></span>
             <span class="sr-only">{{ updateDescription.element.label }}</span>
-            {{ updateDescription.element.id }}
+            {{ updateDescription.element.item.id | splitIDs }}
         </span>
     </h3>
 </div>
 
 <div class="modal-body">
-    <div class="form-group">
-        <label for="description">
-            {{ updateDescription.element.label }} description
-        </label>
-        <div class="input-group">
-            <div class="input-group-addon">
-                <span id="descriptionIcon" class="glyphicon" ng-class="updateDescription.element.icon" aria-hidden="true"></span>
-                <span class="sr-only">{{ updateDescription.element.label }} description</span>
+    <form role="form"
+          name="descriptionForm"
+          ng-submit="updateDescription.save()">
+        <div class="form-group">
+            <label for="description" class="control-label">
+                {{ updateDescription.element.label }} description
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span id="descriptionIcon" class="glyphicon" ng-class="updateDescription.element.icon" aria-hidden="true"></span>
+                    <span class="sr-only">{{ updateDescription.element.label }} description</span>
+                </div>
+                <textarea id="description"
+                          class="form-control"
+                          aria-describedby="descriptionIcon"
+                          ng-model="updateDescription.newDescription"
+                          focus-me="updateDescription.focus">
+                </textarea>
             </div>
-            <textarea id="description"
-                      class="form-control"
-                      aria-describedby="descriptionIcon"
-                      ng-model="updateDescription.element.description"
-                      focus-me="updateDescription.focus">
-            </textarea>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal-footer">
@@ -42,7 +46,7 @@
     </button>
     <button class="btn btn-danger"
             type="button"
-            ng-show="updateDescription.withDelete"
+            ng-show="updateDescription.element.withDelete"
             ng-click="updateDescription.delete()">
         Delete
     </button>
