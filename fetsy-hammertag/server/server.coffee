@@ -54,7 +54,7 @@ app.get '*', (request, response) ->
 ## Connect to database and start server
 
 hostname = undefined
-port = 8080
+port = process.env.FETSY_PORT or 8080
 database.connect()
 .then ->
     app.listen port, hostname, ->

@@ -16,6 +16,7 @@ module.exports =
                 return
             (error) ->
                 console.error 'Error connecting to database.'
+                debug error
                 process.exit 1
                 return
         )

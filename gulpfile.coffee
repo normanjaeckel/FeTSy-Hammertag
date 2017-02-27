@@ -166,15 +166,21 @@ gulp.task 'watch', [
         ['css']
     return
 
-gulp.task 'serve', ->
+gulp.task 'serve', (callback) ->
     if productionMode
-        nodeEnv = 'production'
-        debug = ''
+        gutil.log 'Attention: Do not use gulp serve in production mode.'
+        gutil.log(
+            'Try'
+            gutil.colors.cyan "NODE_ENV='production' DEBUG='' FETSY_PORT=8080
+                node #{path.join outputDirectory, 'server', 'server.js'}"
+            'instead.'
+        )
+        callback()
     else
-        nodeEnv = 'development'
-        debug = 'express:*,fetsy-hammertag:*'
-    nodemon
-        script: path.join outputDirectory, 'server', 'server.js'
-        env:
-            DEBUG: debug
-            NODE_ENV: nodeEnv
+        nodemon
+            script: path.join outputDirectory, 'server', 'server.js'
+            env:
+                DEBUG: 'express:*,fetsy-hammertag:*'
+                NODE_ENV: 'development'
+                FETSY_PORT: 8080
+        .on 'end', callback
