@@ -6,8 +6,8 @@ client = mongodb.MongoClient
 _database = undefined
 
 module.exports =
-    connect: ->
-        url = 'mongodb://localhost/fetsy-hammertag'
+    connect: (mongoDBPort) ->
+        url = "mongodb://localhost:#{mongoDBPort}/fetsy-hammertag"
         client.connect url
         .then(
             (database) ->
