@@ -12,3 +12,4 @@ dist/
 
 # Private development data
 private/
+config.yml
