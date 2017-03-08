@@ -50,7 +50,7 @@ angular.module 'FeTSy-Hammertag.utils.itemInformation', [
                 templateUrl: 'static/templates/itemInformation.html'
                 resolve:
                     element: elementResolver
-            return
+            .result
 ]
 
 

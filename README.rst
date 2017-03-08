@@ -13,7 +13,49 @@
 
 Smart tool for administration of objects and supplies during mass events.
 
-Node.js ist required. Tested with version 4.x. To setup development version run::
+
+Setup
+=====
+
+Node.js (tested with 4.x) and MongoDB (tested with 2.4.x) are required. To
+setup development version start MongoDB server instance and run::
 
     $ npm install
     $ node_modules/.bin/gulp serve
+
+To run in production you should
+
+- Run Gulp once with production flag::
+
+    $ node_modules/.bin/gulp --production
+
+- Check and setup the following environment variables:
+
+  - ``NODE_ENV=production``, see `this chapter of ExpressJS docs
+    <http://expressjs.com/en/advanced/best-practice-performance.html#in-environment>`_.
+
+  - ``DEBUG=''``, see `debugging guide for ExpressJS
+    <http://expressjs.com/en/guide/debugging.html>`_.
+
+  - ``FETSY_PORT=8080`` or whatever you like.
+
+  - ``MONGODB_PORT=27017``, change this if you use something like
+    `systemd-socket-proxyd
+    <https://www.freedesktop.org/software/systemd/man/systemd-socket-proxyd.html>`_
+    to provide socket activation support for MongoDB.
+
+- Use a `process manager <http://expressjs.com/en/advanced/pm.html>`_ to
+  start ExpressJS server with something like::
+
+    /usr/bin/node dist/server/server.js
+
+- Setup a proxy server like NginX or Apache HTTP Server and point it to the
+  port of FeTSy Hammertag (default 8080).
+
+- Start all the stuff (proxy server, MongoDB, process manager).
+
+
+License
+=======
+
+MIT

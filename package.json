@@ -5,9 +5,9 @@
     "prepublish": "bower install && gulp"
   },
   "dependencies": {
-    "body-parser": "1.16.1",
+    "body-parser": "1.17.1",
     "debug": "2.6.1",
-    "express": "4.14.1",
+    "express": "4.15.2",
     "lodash": "4.17.4",
     "mongodb": "2.2.24",
     "q": "1.4.1",

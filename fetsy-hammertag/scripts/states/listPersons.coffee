@@ -61,7 +61,13 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
         @objectInformation = (object) ->
             ItemInformationFactory.open
                 type: 'object'
-                id: object.id
+                id: object.id[0]
+            .then(
+                (result) ->
+                    return
+                (error) ->
+                    return
+            )
             return
 
         @updateObject = (object, objects) ->
@@ -86,6 +92,12 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             ItemInformationFactory.open
                 type: 'supplies'
                 id: supplies.id
+            .then(
+                (result) ->
+                    return
+                (error) ->
+                    return
+            )
             return
 
         @updateSupplies = (supplies, allSupplies) ->
