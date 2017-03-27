@@ -1,4 +1,5 @@
 debug = require('debug') 'fetsy-hammertag:server'
+exec = require('child_process').exec
 express = require 'express'
 path = require 'path'
 
