@@ -49,6 +49,15 @@ To run in production you should
 
     /usr/bin/node dist/server/server.js
 
+  A systemd unit with `Type=notify
+  <https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type
+  =>`_ and `NotifyAccess=all
+  <https://www.freedesktop.org/software/systemd/man/systemd.service.html#Noti
+  fyAccess=>`_ is supported. FeTSy-Hammertag uses `python-systemd
+  <https://github.com/systemd/python-systemd>`_ to send the notify message
+  to systemd if ``NOTIFY_SOCKET`` is set. Do not forget to install this
+  module.
+
 - Setup a proxy server like NginX or Apache HTTP Server and point it to the
   port of FeTSy Hammertag (default 8080).
 

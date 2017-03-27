@@ -61,5 +61,10 @@ database.connect(mongoDBPort)
     app.listen port, hostname, ->
         url = "http://#{hostname or 'localhost'}:#{port}/"
         debug "FeTSy-Hammertag listening on #{url}"
+        if process.env.NOTIFY_SOCKET?
+            pythonSkript =
+              'python -c "import systemd.daemon, time; ' +
+              'systemd.daemon.notify(\'READY=1\'); time.sleep(5)"'
+            exec pythonSkript
         return
     return
