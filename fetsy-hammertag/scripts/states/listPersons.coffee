@@ -52,6 +52,7 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                         persons.splice index, 1
                     else
                         person.description = result.newDescription
+                        person.company = result.newCompany
                     return
                 (error) ->
                     return

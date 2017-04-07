@@ -60,6 +60,8 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
     ($http, $uibModalInstance, serverURL, element) ->
         @element = element
         @newDescription = element.item.description
+        # The company field is only for persons.
+        @newCompany = element.item.company
         @focus = true
         @save = ->
             if @newDescription
@@ -71,10 +73,12 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                     url = "#{serverURL}/#{element.type}/#{@element.item.id[0]}"
                 $http.patch url,
                     description: @newDescription
+                    company: @newCompany
                 .then(
                     (response) =>
                         $uibModalInstance.close
                             newDescription: @newDescription
+                            newCompany: @newCompany
                         return
                 )
             return
@@ -98,6 +102,9 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                         deleted: true
                     return
             )
+            return
+        @resetNewCompanyField = ->
+            #TODO ###################################################################
             return
         return
 ]
