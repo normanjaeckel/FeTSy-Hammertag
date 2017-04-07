@@ -154,6 +154,7 @@ module.exports = express.Router
     update =
         $set:
             description: request.body.description
+            company: request.body.company
     options =
         upsert: true
     database.person().updateOne filter, update, options, (error, result) ->

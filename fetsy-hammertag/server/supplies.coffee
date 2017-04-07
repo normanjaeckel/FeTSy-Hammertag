@@ -35,6 +35,7 @@ module.exports = express.Router
                         if personsObj[person.id]?
                             person.description = personsObj[person.id]
                                 .description
+                            person.company = personsObj[person.id].company
                             person.id = personsObj[person.id].id
             response.send
                 supplies: suppliesArray
