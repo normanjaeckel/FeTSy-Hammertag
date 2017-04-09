@@ -30,6 +30,30 @@
                 </textarea>
             </div>
         </div>
+        <div class="form-group" ng-show="updateDescription.element.type === 'person'">
+            <label for="company" class="control-label">
+                {{ updateDescription.element.label }} company
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span id="companyIcon" class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <span class="sr-only">{{ updateDescription.element.label }} company</span>
+                </div>
+                <input id="company"
+                       class="form-control"
+                       aria-describedby="companyIcon"
+                       ng-model="updateDescription.newCompany">
+                <div class="input-group-btn">
+                    <span type="button"
+                          title="Reset company field"
+                          class="btn btn-default"
+                          ng-click="updateDescription.clearNewCompanyField()">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="sr-only">Reset company field</span>
+                    </span>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 

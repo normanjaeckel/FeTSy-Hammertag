@@ -55,6 +55,7 @@ module.exports =
                                 id: if found? then found.id else [person.id]
                                 timestamp: person.timestamp
                                 description: found?.description
+                                company: found?.company
                         object.persons = persons
                         callback null, object
                         return
