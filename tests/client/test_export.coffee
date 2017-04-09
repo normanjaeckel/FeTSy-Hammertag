@@ -124,7 +124,7 @@ describe 'ExportCtrl', ->
             .not.toBeDefined()
             $httpBackend.flush()
             expect ExportCtrl.persons.URI
-            .toContain 'data:text/csv;charset=utf-8,description,id,id_2'
+            .toContain 'data:text/csv;charset=utf-8,description,company,id,id_2'
             expect ExportCtrl.objects.URI
             .toContain 'data:text/csv;charset=utf-8,description,id,id_2'
             expect ExportCtrl.supplies.URI

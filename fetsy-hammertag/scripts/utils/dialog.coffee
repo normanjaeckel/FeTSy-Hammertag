@@ -103,8 +103,8 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                     return
             )
             return
-        @resetNewCompanyField = ->
-            #TODO ###################################################################
+        @clearNewCompanyField = ->
+            @newCompany = ''
             return
         return
 ]

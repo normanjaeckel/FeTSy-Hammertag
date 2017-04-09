@@ -21,16 +21,20 @@ angular.module 'FeTSy-Hammertag.states.export', [
         personPromise = $http.get "#{serverURL}/person"
         .then (response) =>
             result =
-                fields: ['description']
+                fields: ['description', 'company']
                 data: []
             maxIDs = @calcMaxIDs response.data.persons
             result.fields.push "id_#{num}" for num in [1..maxIDs]
             # Rename 'id_1' to 'id' for easier re-import of the export result.
-            result.fields[1] = 'id'
+            result.fields[2] = 'id'
 
             for person in response.data.persons
                 if person.description?
-                    result.data.push _.concat person.description, person.id
+                    result.data.push _.concat(
+                        person.description
+                        person.company
+                        person.id
+                    )
 
             resultData = 'data:text/csv;charset=utf-8,' + Papa.unparse result
             @persons =
@@ -63,6 +67,7 @@ angular.module 'FeTSy-Hammertag.states.export', [
                     for person in object.persons
                         # coffeelint: disable=max_line_length
                         description = person.description || DefaultDescription.person
+                        description += " (#{person.company})" if person.company
                         timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
                         item.push "#{person.id} · #{description} · #{timestamp}"
                         # coffeelint: enable=max_line_length
@@ -100,6 +105,7 @@ angular.module 'FeTSy-Hammertag.states.export', [
                     for person in supplies.persons
                         # coffeelint: disable=max_line_length
                         description = person.description || DefaultDescription.person
+                        description += " (#{person.company})" if person.company
                         timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
                         item.push "#{person.id} · #{description} · #{timestamp}"
                         # coffeelint: enable=max_line_length

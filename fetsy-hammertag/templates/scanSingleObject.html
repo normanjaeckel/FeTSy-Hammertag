@@ -76,6 +76,7 @@
             </div>
             <div class="panel-body" ng-class="{'text-danger': !scanSingleObject.lastPerson.description}">
                 {{ scanSingleObject.lastPerson.description || scanSingleObject.DefaultDescription.person }}
+                <span ng-show="scanSingleObject.lastPerson.company">({{ scanSingleObject.lastPerson.company }})</span>
             </div>
         </div>
     </div><!-- / .col-sm-5 Panel for last person -->
@@ -118,6 +119,7 @@
                         <span style="padding-left:0.5em;">
                             <span ng-class="{'text-danger': !person.description}">
                                 {{ person.description || scanSingleObject.DefaultDescription.person }}
+                                <span ng-show="person.company">({{ person.company }})</span>
                             </span>
                             &middot;
                             {{ person.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
