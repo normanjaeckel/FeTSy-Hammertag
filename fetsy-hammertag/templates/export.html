@@ -13,7 +13,11 @@
             <dt>Text delimiter</dt>
             <dd>Double quotes <code>""</code></dd>
             <dt>Field separator</dt>
-            <dd>Comma <code>,</code></dd>
+            <dd>
+                {{ export.useMSExcelStyle ? export.fieldSeparatorDescription[1] : export.fieldSeparatorDescription[0] }}
+                <code>{{ export.useMSExcelStyle ? export.fieldSeparator[1] : export.fieldSeparator[0] }}</code></dd>
+            <dt>MS Excel style</dt>
+            <dd><input type="checkbox" ng-model="export.useMSExcelStyle" ng-click="export.boot()"></dd>
         </dl>
 
         <div class="btn-group">
