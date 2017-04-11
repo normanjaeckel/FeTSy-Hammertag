@@ -12,50 +12,65 @@ angular.module 'FeTSy-Hammertag.states.export', [
     'serverURL'
     'DefaultDescription'
     ($http, $q, moment, serverURL, DefaultDescription) ->
+        # CSV field separator
+        @fieldSeparator = [',', ';']
+        @fieldSeparatorDescription = ['Comma', 'Semicolon']
+        @useMSExcelStyle = false
+
         # Helper to calculate the maximum number of ids
         @calcMaxIDs = (elements) ->
             maxElement = _.maxBy elements, 'id.length'
             maxElement?.id.length
 
         # Parse persons
-        personPromise = $http.get "#{serverURL}/person"
-        .then (response) =>
-            result =
-                fields: ['description', 'company']
-                data: []
-            maxIDs = @calcMaxIDs response.data.persons
-            result.fields.push "id_#{num}" for num in [1..maxIDs]
-            # Rename 'id_1' to 'id' for easier re-import of the export result.
-            result.fields[2] = 'id'
+        @getPersonPromise = (config) =>
+            $http.get "#{serverURL}/person"
+            .then (response) =>
+                result =
+                    fields: ['description', 'company']
+                    data: []
+                maxIDs = @calcMaxIDs response.data.persons
+                result.fields.push "id_#{num}" for num in [1..maxIDs]
+                # Rename 'id_1' to 'id' for easier re-import of the result of
+                # this export.
+                result.fields[2] = 'id'
 
-            for person in response.data.persons
-                if person.description?
-                    result.data.push _.concat(
-                        person.description
-                        person.company
-                        person.id
-                    )
+                for person in response.data.persons
+                    if person.description?
+                        result.data.push _.concat(
+                            person.description
+                            person.company
+                            person.id
+                        )
 
-            resultData = 'data:text/csv;charset=utf-8,' + Papa.unparse result
-            @persons =
-                URI: encodeURI resultData
-            return
+                resultData = 'data:text/csv;charset=utf-8,' + Papa.unparse(
+                    result
+                    config
+                )
+                @persons =
+                    URI: encodeURI resultData
+                return
 
         # Parse objects
-        objectPromise = $http.get "#{serverURL}/object"
-        .then (response) =>
-            @objects =
-                URI: encodeURI @parseObjectResponseData response.data.objects
-            return
+        @getObjectPromise = (config) =>
+            $http.get "#{serverURL}/object"
+            .then (response) =>
+                @objects =
+                    URI: encodeURI @parseObjectResponseData(
+                        response.data.objects
+                        config
+                    )
+                return
 
         # Helper to parse objects
-        @parseObjectResponseData = (objects) =>
+        @parseObjectResponseData = (objects, config) =>
             result =
                 fields: ['description']
                 data: []
             maxIDs = @calcMaxIDs objects
             result.fields.push "id_#{num}" for num in [1..maxIDs]
-            # Rename 'id_1' to 'id' for easier re-import of the export result.
+            # Rename 'id_1' to 'id' for easier re-import of the result of
+            # this export.
             result.fields[1] = 'id'
 
             maxPersons = 1
@@ -76,18 +91,21 @@ angular.module 'FeTSy-Hammertag.states.export', [
                     maxPersons = object.persons.length
             result.fields.push "person_#{num}" for num in [1..maxPersons]
 
-            'data:text/csv;charset=utf-8,' + Papa.unparse result
-
+            'data:text/csv;charset=utf-8,' + Papa.unparse result, config
 
         # Parse supplies
-        suppliesPromise = $http.get "#{serverURL}/supplies"
-        .then (response) =>
-            @supplies =
-                URI: encodeURI @parseSuppliesResponseData response.data.supplies
-            return
+        @getSuppliesPromise = (config) =>
+            $http.get "#{serverURL}/supplies"
+            .then (response) =>
+                @supplies =
+                    URI: encodeURI @parseSuppliesResponseData(
+                        response.data.supplies
+                        config
+                    )
+                return
 
         # Helper to parse supplies
-        @parseSuppliesResponseData = (allSupplies) ->
+        @parseSuppliesResponseData = (allSupplies, config) ->
             result =
                 fields: ['id', 'description', 'inventory', 'out', 'in']
                 data: []
@@ -114,18 +132,33 @@ angular.module 'FeTSy-Hammertag.states.export', [
                     maxPersons = supplies.persons.length
             result.fields.push "person_#{num}" for num in [1..maxPersons]
 
-            'data:text/csv;charset=utf-8,' + Papa.unparse result
+            'data:text/csv;charset=utf-8,' + Papa.unparse result, config
 
-        # Remove loading spinner
-        $q.all [personPromise, objectPromise, suppliesPromise]
-        .then(
-            =>
-                @timestamp = +new Date() / 1000
-                @ready = true
-                return
-            (error) ->
-                alert error.data
-                return
-        )
+        @boot = =>
+            # A loading spinner is active.
+            @ready = false
+            config =
+                delimiter: @fieldSeparator[0]
+            config.delimiter = @fieldSeparator[1] if @useMSExcelStyle
+            $q.all [
+                @getPersonPromise config
+                @getObjectPromise config
+                @getSuppliesPromise config
+            ]
+            .then(
+                =>
+                    # Set timestamp and remove loading spinner.
+                    @timestamp = +new Date() / 1000
+                    @ready = true
+                    return
+                (error) ->
+                    alert error.data
+                    return
+            )
+            return
+
+        # Now start export
+        @boot()
+
         return
 ]
