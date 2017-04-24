@@ -84,12 +84,17 @@ angular.module 'FeTSy-Hammertag.states.export', [
                         description = person.description || DefaultDescription.person
                         description += " (#{person.company})" if person.company
                         timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
-                        item.push "#{person.id} · #{description} · #{timestamp}"
+                        item.push person.id, description, timestamp
                         # coffeelint: enable=max_line_length
                 result.data.push item
                 if object.persons? and maxPersons < object.persons.length
                     maxPersons = object.persons.length
-            result.fields.push "person_#{num}" for num in [1..maxPersons]
+            for num in [1..maxPersons]
+                result.fields.push(
+                    "person_#{num}_id"
+                    "person_#{num}_description"
+                    "person_#{num}_timestamp"
+                )
 
             'data:text/csv;charset=utf-8,' + Papa.unparse result, config
 
@@ -125,12 +130,17 @@ angular.module 'FeTSy-Hammertag.states.export', [
                         description = person.description || DefaultDescription.person
                         description += " (#{person.company})" if person.company
                         timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
-                        item.push "#{person.id} · #{description} · #{timestamp}"
+                        item.push person.id, description, timestamp
                         # coffeelint: enable=max_line_length
                 result.data.push item
                 if supplies.persons? and maxPersons < supplies.persons.length
                     maxPersons = supplies.persons.length
-            result.fields.push "person_#{num}" for num in [1..maxPersons]
+            for num in [1..maxPersons]
+                result.fields.push(
+                    "person_#{num}_id"
+                    "person_#{num}_description"
+                    "person_#{num}_timestamp"
+                )
 
             'data:text/csv;charset=utf-8,' + Papa.unparse result, config
 
