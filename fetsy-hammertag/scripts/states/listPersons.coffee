@@ -40,7 +40,9 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
         @searchFilterObjectsSuppliesEnabled = false
 
         @toogleSearchFilterObjectsSupplies = ->
+            # coffeelint: disable=max_line_length
             @searchFilterObjectsSuppliesEnabled = not @searchFilterObjectsSuppliesEnabled
+            # coffeelint: enable=max_line_length
 
         @resetSearchFilter = ->
             @searchFilter = ''
