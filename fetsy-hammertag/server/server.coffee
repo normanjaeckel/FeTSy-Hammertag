@@ -57,7 +57,8 @@ app.get '*', (request, response) ->
 hostname = undefined
 port = process.env.FETSY_PORT or 8080
 mongoDBPort = process.env.MONGODB_PORT or 27017
-database.connect(mongoDBPort)
+mongoDBDatabase = process.env.MONGODB_DATABASE or 'fetsy-hammertag'
+database.connect(mongoDBPort, mongoDBDatabase)
 .then ->
     app.listen port, hostname, ->
         url = "http://#{hostname or 'localhost'}:#{port}/"
