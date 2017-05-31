@@ -172,7 +172,8 @@ gulp.task 'serve', (callback) ->
         gutil.log(
             'Try'
             gutil.colors.cyan "NODE_ENV='production' DEBUG='' FETSY_PORT=8080
-                node #{path.join outputDirectory, 'server', 'server.js'}"
+                MONGODB_DATABASE='fetsy-hammertag' node
+                #{path.join outputDirectory, 'server', 'server.js'}"
             'instead.'
         )
         callback()
@@ -183,4 +184,5 @@ gulp.task 'serve', (callback) ->
                 DEBUG: 'express:*,fetsy-hammertag:*'
                 NODE_ENV: 'development'
                 FETSY_PORT: 8080
+                MONGODB_DATABASE: 'fetsy-hammertag'
         .on 'end', callback

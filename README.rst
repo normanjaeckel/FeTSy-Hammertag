@@ -14,8 +14,8 @@
 Smart tool for administration of objects and supplies during mass events.
 
 
-Setup
-=====
+Development
+===========
 
 Node.js (tested with 4.x) and MongoDB (tested with 2.4.x) are required. To
 setup development version start MongoDB server instance and run::
@@ -23,7 +23,22 @@ setup development version start MongoDB server instance and run::
     $ npm install
     $ node_modules/.bin/gulp serve
 
-To run in production you should
+
+Production
+==========
+
+To run in production you should do the following.
+
+- Install dependencies::
+
+    $ npm install
+
+- Optionally create a ``config.yml`` file next to ``gulpfile.js`` with the
+  following content::
+
+    logoURL: static/path/to/logo.png
+
+  This will let the client look for a logo at `dist/static/path/to/logo.png`.
 
 - Run Gulp once with production flag::
 
@@ -38,7 +53,7 @@ To run in production you should
     <http://expressjs.com/en/guide/debugging.html>`_.
 
   - ``FETSY_PORT=8080`` or whatever you like. FeTSy-Hammertag will listen on
-    localhost on this port.
+    ``localhost`` on this port.
 
   - ``MONGODB_DATABASE=fetsy-hammertag`` or whatever you like.
 

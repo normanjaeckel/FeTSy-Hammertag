@@ -6,9 +6,15 @@
                 Search filter
             </label>
             <div class="input-group">
-                <div class="input-group-addon">
-                    <span id="searchFilterIcon" class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    <span class="sr-only">Search filter</span>
+                <div class="input-group-btn">
+                    <span type="button"
+                          title="Toggle objects and supplies search filter"
+                          class="btn btn-primary"
+                          ng-click="listPersons.toogleSearchFilterObjectsSupplies()">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-user" ng-hide="listPersons.searchFilterObjectsSuppliesEnabled" aria-hidden="true"></span>
+                        <span class="sr-only">Toggle objects and supplies search filter</span>
+                    </span>
                 </div>
                 <input id="searchFilter"
                        type="text"
@@ -99,7 +105,8 @@
     </div>
 
     <div class="col-sm-6">
-        <p ng-show="listPersons.showObjects" ng-repeat="object in person.objects">
+        <p ng-show="listPersons.showObjects"
+           ng-repeat="object in person.objects | objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled}">
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                 <span class="sr-only">Object</span>
