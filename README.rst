@@ -27,7 +27,7 @@ setup development version start MongoDB server instance and run::
 Production
 ==========
 
-To run in production you should do the following.
+To run in production you should do the following:
 
 - Install dependencies::
 
@@ -38,7 +38,7 @@ To run in production you should do the following.
 
     logoURL: static/path/to/logo.png
 
-  This will let the client look for a logo at `dist/static/path/to/logo.png`.
+  This will let the client look for a logo at ``dist/static/path/to/logo.png``.
 
 - Run Gulp once with production flag::
 
@@ -77,7 +77,7 @@ To run in production you should do the following.
   python-systemd in this case.
 
 - Setup a proxy server like NginX or Apache HTTP Server and point it to the
-  port of FeTSy Hammertag (default 8080).
+  port of FeTSy-Hammertag (default 8080).
 
 - Start all the stuff (proxy server, MongoDB, process manager).
 
