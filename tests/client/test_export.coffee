@@ -79,17 +79,19 @@ describe 'ExportCtrl', ->
 
             ]
         ]
-        it 'should return CSV data with proper person cells', ->
+        it 'should return CSV data with proper person columns', ->
             parsedData = ExportCtrl.parseObjectResponseData testData
             date = new Date(1374321600000).toLocaleFormat '%Y-%m-%d %H:%M'
+            person_1 = 'person_1_id,person_1_description,person_1_timestamp'
+            person_2 = 'person_2_id,person_2_description,person_2_timestamp'
             expect parsedData
-            .toContain 'description,id,person_1,person_2'
+            .toContain "description,id,#{person_1},#{person_2}"
             expect parsedData
             .not.toContain 'person_3'
             expect parsedData
-            .toContain '13 · desciption_xahKoo7Nuf · 1970-01-01'
+            .toContain '13,desciption_xahKoo7Nuf,1970-01-01'
             expect parsedData
-            .toContain '14 · ' + DefaultDescription.person + ' · ' + date
+            .toContain '14,' + DefaultDescription.person + ',' + date
 
     describe 'promisses', ->
         beforeEach ->
