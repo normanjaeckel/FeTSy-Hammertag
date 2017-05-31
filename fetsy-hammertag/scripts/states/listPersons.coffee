@@ -9,6 +9,17 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 ]
 
 
+.filter 'objectsSuppliesFilter', [
+    '$filter'
+    ($filter) ->
+        (value, params) ->
+            if params.enabled
+                $filter('filter') value, params.expression
+            else
+                value
+]
+
+
 .controller 'ListPersonsCtrl', [
     '$http'
     'serverURL'
@@ -25,6 +36,11 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
         @showObjects = true
 
         @showSupplies = false
+
+        @searchFilterObjectsSuppliesEnabled = false
+
+        @toogleSearchFilterObjectsSupplies = ->
+            @searchFilterObjectsSuppliesEnabled = not @searchFilterObjectsSuppliesEnabled
 
         @resetSearchFilter = ->
             @searchFilter = ''
