@@ -6,16 +6,16 @@ client = mongodb.MongoClient
 _database = undefined
 
 module.exports =
-    connect: (mongoDBPort) ->
-        url = "mongodb://localhost:#{mongoDBPort}/fetsy-hammertag"
+    connect: (mongoDBPort, mongoDBDatabase) ->
+        url = "mongodb://localhost:#{mongoDBPort}/#{mongoDBDatabase}"
         client.connect url
         .then(
             (database) ->
                 _database = database
-                debug 'Connected successfully to database'
+                debug "Connected successfully to database (#{url})."
                 return
             (error) ->
-                console.error 'Error connecting to database.'
+                console.error 'Error connecting to database (#{url}).'
                 debug error
                 process.exit 1
                 return

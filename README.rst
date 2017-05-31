@@ -37,7 +37,10 @@ To run in production you should
   - ``DEBUG=''``, see `debugging guide for ExpressJS
     <http://expressjs.com/en/guide/debugging.html>`_.
 
-  - ``FETSY_PORT=8080`` or whatever you like.
+  - ``FETSY_PORT=8080`` or whatever you like. FeTSy-Hammertag will listen on
+    localhost on this port.
+
+  - ``MONGODB_DATABASE=fetsy-hammertag`` or whatever you like.
 
   - ``MONGODB_PORT=27017``, change this if you use something like
     `systemd-socket-proxyd
@@ -55,8 +58,8 @@ To run in production you should
   <https://www.freedesktop.org/software/systemd/man/systemd.service.html#Noti
   fyAccess=>`_ is supported. FeTSy-Hammertag uses `python-systemd
   <https://github.com/systemd/python-systemd>`_ to send the notify message
-  to systemd if ``NOTIFY_SOCKET`` is set. Do not forget to install this
-  module.
+  to systemd if ``NOTIFY_SOCKET`` is set. Do not forget to install
+  python-systemd in this case.
 
 - Setup a proxy server like NginX or Apache HTTP Server and point it to the
   port of FeTSy Hammertag (default 8080).
