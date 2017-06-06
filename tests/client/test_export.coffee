@@ -95,6 +95,10 @@ describe 'ExportCtrl', ->
 
     describe 'promisses', ->
         beforeEach ->
+            $httpBackend.expectGET "#{serverURL}/config"
+            .respond
+                header: 'Example header daiQuize5uizuuShu7ig'
+                welcomeText: 'Example welcome text IeS4yahKofitac3veic0'
             $httpBackend.expectGET "#{serverURL}/person"
             .respond
                 persons: [

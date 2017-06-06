@@ -66,6 +66,19 @@ angular.module 'FeTSy-Hammertag', [
 ]
 
 
+.run [
+    '$http'
+    '$rootScope'
+    'serverURL'
+    ($http, $rootScope, serverURL) ->
+        $http.get "#{serverURL}/config"
+        .then (response) ->
+            $rootScope.config = response.data
+            return
+        return
+]
+
+
 # See: http://stackoverflow.com/questions/14833326/
 .directive 'focusMe', [
     '$parse'
@@ -98,4 +111,5 @@ angular.module 'FeTSy-Hammertag', [
     'logoURL'
     (logoURL) ->
         @logoURL = logoURL
+        return
 ]

@@ -26,6 +26,14 @@ router.use '/person', require './person'
 router.use '/supplies', require './supplies'
 router.use '/drop-database', require './dropDatabase'
 
+# Add single configuration endpoint
+router.get '/config', (request, response) ->
+    welcomeText = 'Welcome to FeTSy-Hammertag'
+    response.json
+        header: process.env.FETSY_HEADER or 'FeTSy-Hammertag'
+        welcomeText: process.env.FETSY_WELCOMETEXT or welcomeText
+    return
+
 # Add fallback so that we do not run into index.html, see below
 router.all '*', (request, response) ->
     response.sendStatus 404

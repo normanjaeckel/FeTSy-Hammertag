@@ -10,7 +10,7 @@
 
     <link rel="icon" href="static/favicon.ico">
 
-    <title>FeTSy Hammertag</title>
+    <title>FeTSy-Hammertag</title>
 
     <!-- Libraries styles -->
     <link rel="stylesheet" href="static/css/fetsy-hammertag-libs.css">
@@ -53,7 +53,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <img class="navbar-brand" ng-src="{{ navbarCtrl.logoURL }}">
-                <a class="navbar-brand" ui-sref="home">FeTSy Hammertag</a>
+                <a class="navbar-brand" ui-sref="home">{{ config.header || 'FeTSy-Hammertag' }}</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
