@@ -184,5 +184,7 @@ gulp.task 'serve', (callback) ->
                 DEBUG: 'express:*,fetsy-hammertag:*'
                 NODE_ENV: 'development'
                 FETSY_PORT: 8080
+                FETSY_HEADER: 'FeTSy-Hammertag'
+                FETSY_WELCOMETEXT: 'Welcome to FeTSy-Hammertag'
                 MONGODB_DATABASE: 'fetsy-hammertag'
         .on 'end', callback

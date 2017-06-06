@@ -55,6 +55,12 @@ To run in production you should do the following:
   - ``FETSY_PORT=8080`` or whatever you like. FeTSy-Hammertag will listen on
     ``localhost`` on this port.
 
+  - ``FETSY_HEADER=FeTSy-Hammertag`` or whatever you like. You will see this
+    text in the navigation bar.
+
+  - ``FETSY_WELCOMETEXT="Welcome to FeTSy-Hammertag"`` or whatever you like.
+    You will see this text on the front page.
+
   - ``MONGODB_DATABASE=fetsy-hammertag`` or whatever you like.
 
   - ``MONGODB_PORT=27017``, change this if you use something like
