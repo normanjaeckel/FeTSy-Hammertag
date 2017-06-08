@@ -204,6 +204,11 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             )
             return
 
+        @suppliesLabel = ->
+            if @lastSupplies?
+                out = @lastSupplies.persons.length
+                (@lastSupplies.inventory or 0) - out <= 0
+
         @resetInputField = ->
             @scanInputValue = ''
             @error = ''
