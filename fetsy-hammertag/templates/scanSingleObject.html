@@ -155,7 +155,9 @@
                 </button>
             </div>
             <div class="panel-body">
-                <span class="label label-default">{{ scanSingleObject.lastSupplies.persons.length }} / {{ scanSingleObject.lastSupplies.inventory || 0 }}</span>
+                <span class="label"
+                      ng-class="scanSingleObject.suppliesLabel() ? 'label-danger' : 'label-default'"
+                >{{ scanSingleObject.lastSupplies.persons.length }} / {{ scanSingleObject.lastSupplies.inventory || 0 }}</span>
                 <span ng-class="{'text-danger': !scanSingleObject.lastSupplies.description}">
                     {{ scanSingleObject.lastSupplies.description || scanSingleObject.DefaultDescription.supplies }}
                 </span>
