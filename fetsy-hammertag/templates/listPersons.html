@@ -106,7 +106,8 @@
 
     <div class="col-sm-6">
         <p ng-show="listPersons.showObjects"
-           ng-repeat="object in person.objects | objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled}">
+           ng-repeat="object in person.objects |
+                      objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled}">
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                 <span class="sr-only">Object</span>
@@ -134,7 +135,10 @@
                 </button>
             </span>
         </p>
-        <p ng-show="listPersons.showSupplies" ng-repeat="(id, suppliesArray) in person.supplies | groupBy: 'id'">
+        <p ng-show="listPersons.showSupplies"
+           ng-repeat="(id, suppliesArray) in person.supplies |
+                      objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled} |
+                      groupBy: 'id'">
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
                 <span class="sr-only">Supplies</span>
