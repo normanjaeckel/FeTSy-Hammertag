@@ -51,6 +51,11 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @resetSearchFilter()
 
+        @limit = 50
+
+        @increaseLimit = ->
+            @limit += 50
+
         $http.get "#{serverURL}/person"
         .then (response) =>
             @persons = response.data.persons
