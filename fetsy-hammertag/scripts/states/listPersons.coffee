@@ -53,8 +53,15 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @limit = 50
 
+        @limitStep = 50
+
+        @decreaseLimit = ->
+            if @limit > @limitStep
+                @limit -= @limitStep
+
         @increaseLimit = ->
-            @limit += 50
+            @limit += @limitStep
+
 
         $http.get "#{serverURL}/person"
         .then (response) =>

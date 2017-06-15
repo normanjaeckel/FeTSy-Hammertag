@@ -8,6 +8,7 @@
             <div class="input-group">
                 <div class="input-group-btn">
                     <span type="button"
+                          id="searchFilterIcon"
                           title="Toggle objects and supplies search filter"
                           class="btn btn-primary"
                           ng-click="listPersons.toogleSearchFilterObjectsSupplies()">
@@ -36,20 +37,55 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-sm-offset-2">
-        <input
-            bs-switch
-            ng-model="listPersons.showObjects"
-            type="checkbox"
-            switch-icon="glyphicon glyphicon-wrench">
-        <input
-            bs-switch
-            ng-model="listPersons.showSupplies"
-            type="checkbox"
-            switch-icon="glyphicon glyphicon-tint">
-        <button class="btn btn-default" ng-click="listPersons.increaseLimit()">
-            More
-        </button>
+    <div class="col-sm-3 col-sm-offset-2">
+        <div class="form-group">
+            <input
+                bs-switch
+                ng-model="listPersons.showObjects"
+                type="checkbox"
+                switch-icon="glyphicon glyphicon-wrench"
+                aria-label="Switch box to show or hide objects">
+            <input
+                bs-switch
+                ng-model="listPersons.showSupplies"
+                type="checkbox"
+                switch-icon="glyphicon glyphicon-tint"
+                aria-label="Switch box to show or hide supplies">
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label for="limitControl" class="sr-only">
+                Control limit of shown items
+            </label>
+            <div class="input-group">
+                <div class="input-group-btn">
+                     <span type="button"
+                          title="Descrease limit by {{ listPersons.limitStep }}"
+                          class="btn btn-default"
+                          ng-click="listPersons.decreaseLimit()">
+                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                        <span class="sr-only">Descrease limit by {{ listPersons.limitStep }}</span>
+                    </span>
+                </div>
+                <input id="limitControl"
+                       type="number"
+                       min="1"
+                       class="form-control"
+                       placeholder="Enter limit"
+                       ng-model="listPersons.limit">
+                <div class="input-group-btn">
+                     <span type="button"
+                          title="Inscrease limit by {{ listPersons.limitStep }}"
+                          class="btn btn-default"
+                          ng-click="listPersons.increaseLimit()">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span class="sr-only">Increase limit by {{ listPersons.limitStep }}</span>
+                    </span>
+                </div>
+           </div>
+        </div>
     </div>
 
 </div>
@@ -80,7 +116,7 @@
 
 </div>
 
-<div class="row" ng-repeat="person in listPersons.persons | orderBy : 'description' | filter : listPersons.searchFilter | limitTo: listPersons.limit">
+<div class="row" ng-repeat="person in listPersons.persons | orderBy : 'description' | filter : listPersons.searchFilter | limitTo: (listPersons.limit || 0 )">
 
     <hr ng-class="{'hidden-xs': $first}">
 
@@ -111,7 +147,7 @@
         <p ng-show="listPersons.showObjects"
            ng-repeat="object in person.objects |
                       objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled} |
-                      limitTo: listPersons.limit">
+                      limitTo: (listPersons.limit || 0 )">
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                 <span class="sr-only">Object</span>
@@ -142,7 +178,7 @@
         <p ng-show="listPersons.showSupplies"
            ng-repeat="(id, suppliesArray) in person.supplies |
                       objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled} |
-                      limitTo: listPersons.limit |
+                      limitTo: (listPersons.limit || 0 ) |
                       groupBy: 'id'">
             <span class="label label-primary">
                 <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
