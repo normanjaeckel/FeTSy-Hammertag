@@ -20,14 +20,27 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 ]
 
 
+.filter 'suppliesLimitTo', [
+    ->
+        (value, params) ->
+            result = []
+            if value?
+                for i in _.keys value
+                    result.push value[i]
+                result = result.slice 0, params
+            result
+]
+
+
 .controller 'ListPersonsCtrl', [
+    '$filter'
     '$http'
     'serverURL'
     'DefaultDescription'
     'DialogFactory'
     'ItemInformationFactory'
     'UnknownPersonId'
-    ($http, serverURL, DefaultDescription, DialogFactory,
+    ($filter, $http, serverURL, DefaultDescription, DialogFactory,
      ItemInformationFactory, UnknownPersonId) ->
         @UnknownPersonId = UnknownPersonId
 
@@ -149,5 +162,15 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             )
             return
 
+        @numberOfSuppliesItems = (person) ->
+            if person.supplies?
+                filterInitialized = $filter 'objectsSuppliesFilter'
+                filteredSupplies = filterInitialized(person.supplies,
+                    expression: @searchFilter
+                    enabled: @searchFilterObjectsSuppliesEnabled
+                )
+                _.size _.groupBy filteredSupplies, 'id'
+            else
+                0
         return
 ]
