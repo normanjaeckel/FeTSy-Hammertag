@@ -7,7 +7,7 @@ angular.module 'FeTSy-Hammertag.utils.validation', []
 .constant 'suppliesRegex', /^\d{13}$/
 
 
-.constant 'personRegex', /^(\d{8}|\d{11})$/
+.constant 'personRegex', /^(\d{8}|\d{11}|\d{12})$/
 
 
 .factory 'ValidationFactory', [
