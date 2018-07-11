@@ -140,6 +140,7 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                     else
                         person.description = result.newDescription
                         person.company = result.newCompany
+                        person.instruction = result.newInstruction
                     return
                 (error) ->
                     return

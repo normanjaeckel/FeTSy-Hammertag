@@ -106,6 +106,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 (result) =>
                     @lastPerson.description = result.newDescription
                     @lastPerson.company = result.newCompany
+                    @lastPerson.instruction = result.newInstruction
                     return
                 (error) ->
                     return

@@ -59,6 +59,7 @@ module.exports =
                                 timestamp: person.timestamp
                                 description: found?.description
                                 company: found?.company
+                                instruction: found?.instruction
                         object.persons = persons
                         callback null, object
                         return

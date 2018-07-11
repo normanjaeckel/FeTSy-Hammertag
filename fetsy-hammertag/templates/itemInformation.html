@@ -27,6 +27,7 @@
                     <span ng-class="{'text-danger': !person.description}">
                         {{ person.description || itemInformation.DefaultDescription.person }}
                         <span ng-show="person.company">({{ person.company }})</span>
+                        <span ng-show="person.instruction">(instructed)</span>
                     </span>
                     &middot;
                     {{ person.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}

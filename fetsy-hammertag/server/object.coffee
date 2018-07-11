@@ -38,6 +38,8 @@ module.exports = express.Router
                             person.description = personsObj[person.id]
                                 .description
                             person.company = personsObj[person.id].company
+                            person.instruction = personsObj[person.id]
+                                .instruction
                             person.id = personsObj[person.id].id
             response.send
                 objects: objects

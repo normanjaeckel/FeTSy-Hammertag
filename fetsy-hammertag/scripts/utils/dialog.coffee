@@ -90,8 +90,9 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
     ($http, $uibModalInstance, serverURL, element) ->
         @element = element
         @newDescription = element.item.description
-        # The company field is only for persons.
+        # The company field and the instruction field are only for persons.
         @newCompany = element.item.company
+        @newInstruction = element.item.instruction
         @focus = true
 
         @save = ->
@@ -105,11 +106,13 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                 $http.patch url,
                     description: @newDescription
                     company: @newCompany
+                    instruction: @newInstruction
                 .then(
                     (response) =>
                         $uibModalInstance.close
                             newDescription: @newDescription
                             newCompany: @newCompany
+                            newInstruction: @newInstruction
                         return
                     (error) =>
                         if error.data
