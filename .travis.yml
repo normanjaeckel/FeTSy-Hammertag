@@ -5,9 +5,9 @@ cache:
     - bower_components
     - node_modules
 node_js:
-  - 4
+  - 8
 install:
-  - "npm install"
+  - "yarn"
   - "gulp --production"
 before_script:
   - "export DISPLAY=:99.0"

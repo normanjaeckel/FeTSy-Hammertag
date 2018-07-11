@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "angular-mocks": "1.6.3",
-    "bower": "1.8.0",
+    "bower": "1.8.4",
     "buffer-to-vinyl": "1.1.0",
-    "coffee-script": "1.12.4",
+    "coffeescript": "2.3.1",
     "gulp": "3.9.1",
     "gulp-clean-css": "3.0.4",
     "gulp-coffee": "2.3.4",

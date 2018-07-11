@@ -17,10 +17,10 @@ Smart tool for administration of objects and supplies during mass events.
 Development
 ===========
 
-Node.js (tested with 4.x) and MongoDB (tested with 2.4.x) are required. To
-setup development version start MongoDB server instance and run::
+Node.js (tested with 8.x), Yarn and MongoDB (tested with 3.6.x) are required.
+To setup development version start MongoDB server instance and run::
 
-    $ npm install
+    $ yarn
     $ node_modules/.bin/gulp serve
 
 
@@ -31,7 +31,7 @@ To run in production you should do the following:
 
 - Install dependencies::
 
-    $ npm install
+    $ yarn
 
 - Optionally create a ``config.yml`` file next to ``gulpfile.js`` with the
   following content::
