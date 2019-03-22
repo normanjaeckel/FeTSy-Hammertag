@@ -55,9 +55,9 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @showObjects = if cookie.showObjects? then cookie.showObjects else true
 
-        @showSupplies = Boolean cookie.showSupplies
-
         # coffeelint: disable=max_line_length
+        @showSupplies = if cookie.showSupplies? then cookie.showSupplies else true
+
         @searchFilterObjectsSuppliesEnabled = Boolean cookie.searchFilterObjectsSuppliesEnabled
         # coffeelint: enable=max_line_length
 
