@@ -82,17 +82,16 @@ To run in production you should do the following:
   to systemd if ``NOTIFY_SOCKET`` is set. Do not forget to install
   python-systemd in this case.
 
-- Setup a proxy server like NginX or Apache HTTP Server.
+- Setup a proxy server like NginX or Apache HTTP Server:
 
-    - Point the webserver to the port of FeTSy-Hammertag (default 8080).
+  - Point the webserver to the port of FeTSy-Hammertag (default 8080).
 
-    - Optionally: Configure the webserver to set the HTTP header ``Auth-User``.
-      Setup the environment variable ``FETSY_ADMIN`` with a colon separated
-      list of usernames (e. g. ``FETSY_SUPPORTER=john-doe:jane-roe:jimmy-foo``).
-      If the username given by the webserver is in this list, the user has full
-      access to FeTSy Hammertag, else he has only read access. If the
-      environment variable is empty, all users have full access (means this
-      feature is disabled).
+  - Optionally: Configure the webserver to set the HTTP header ``Auth-User``.
+    Setup the environment variable ``FETSY_ADMIN`` with a colon separated list
+    of usernames (e. g. ``FETSY_ADMIN=john-doe:jane-roe:jimmy-foo``). If the
+    username given by the webserver is in this list, the user has full access to
+    FeTSy Hammertag, else he has only read access. If the environment variable
+    is empty, all users have full access (i. e. this feature is disabled).
 
 - Start all the stuff (proxy server, MongoDB, process manager).
 
