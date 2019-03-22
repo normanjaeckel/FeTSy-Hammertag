@@ -10,8 +10,8 @@ module.exports =
         url = "mongodb://localhost:#{mongoDBPort}/#{mongoDBDatabase}"
         client.connect url
         .then(
-            (database) ->
-                _database = database
+            (client) ->
+                _database = client.db()
                 debug "Connected successfully to database (#{url})."
                 return
             (error) ->

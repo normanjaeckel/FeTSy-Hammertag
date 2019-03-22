@@ -6,7 +6,8 @@ fs = require 'fs'
 gulp = require 'gulp'
 gulpif = require 'gulp-if'
 gulpNgConfig = require 'gulp-ng-config'
-gutil = require 'gulp-util'
+log = require 'fancy-log'
+colors = require 'ansi-colors'
 coffee = require 'gulp-coffee'
 coffeelint = require 'gulp-coffeelint'
 concat = require 'gulp-concat'
@@ -50,21 +51,19 @@ gulp.task 'html', ->
 
 # JavaScript files.
 
-gulp.task 'js-all', ['coffee', 'js', 'js-libs'], ->
-
 gulp.task 'clientConfig', (callback) ->
     fs.readFile 'config.yml', (err, data) ->
         if err
-            gutil.log(
+            log(
                 'Could not find or open custom'
-                gutil.colors.cyan 'config.yml'
+                colors.cyan 'config.yml'
             )
         else
             userClientConfig = yaml.safeLoad data
             _.assign clientConfig, userClientConfig
         callback()
 
-gulp.task 'coffee', ['clientConfig'], ->
+gulp.task 'coffee', gulp.series('clientConfig', ->
     scripts = gulp.src path.join 'fetsy-hammertag', 'scripts', '**', '*.coffee'
     .pipe coffee()
 
@@ -76,6 +75,7 @@ gulp.task 'coffee', ['clientConfig'], ->
     .pipe concat 'fetsy-hammertag.js'
     .pipe gulpif productionMode, uglify()
     .pipe gulp.dest path.join webclientStaticDirectory, 'js'
+)
 
 gulp.task 'js', ->
     gulp.src path.join 'fetsy-hammertag', 'scripts', '*.js'
@@ -92,10 +92,10 @@ gulp.task 'js-libs', ->
     .pipe gulpif productionMode, uglify()
     .pipe gulp.dest path.join webclientStaticDirectory, 'js'
 
+gulp.task 'js-all', gulp.parallel('coffee', 'js', 'js-libs')
+
 
 # CSS, font and favicon files.
-
-gulp.task 'css-all', ['css', 'css-libs', 'fonts-libs', 'favicon'], ->
 
 gulp.task 'css', ->
     gulp.src path.join 'fetsy-hammertag', 'styles', '*.css'
@@ -121,10 +121,12 @@ gulp.task 'favicon', ->
     gulp.src path.join 'fetsy-hammertag', 'favicon.ico'
     .pipe gulp.dest webclientStaticDirectory
 
+gulp.task 'css-all', gulp.parallel('css', 'css-libs', 'fonts-libs', 'favicon')
+
 
 #  Gulp default task.
 
-gulp.task 'default', ['express', 'html', 'js-all', 'css-all'], ->
+gulp.task 'default', gulp.parallel('express', 'html', 'js-all', 'css-all')
 
 
 # Helper tasks.
@@ -148,30 +150,29 @@ gulp.task 'coffeelint', ->
     .pipe coffeelint.reporter 'default'
     .pipe coffeelint.reporter 'fail'
 
-gulp.task 'hint', ['jshint', 'coffeelint'], ->
+gulp.task 'hint', gulp.parallel('jshint', 'coffeelint')
 
-gulp.task 'watch', [
-    'express'
-    'html'
-    'coffee'
-    'css'
-], ->
+gulp.task 'watching', ->
     gulp.watch path.join('fetsy-hammertag', 'server', '**', '*.coffee'),
-        ['express']
+        gulp.series 'express'
     gulp.watch path.join('fetsy-hammertag', 'templates', '*.html'),
-        ['html']
+        gulp.series 'html'
     gulp.watch path.join('fetsy-hammertag', 'scripts', '**', '*.coffee'),
-        ['coffee']
+        gulp.series 'coffee'
     gulp.watch path.join('fetsy-hammertag', 'styles', '*.css'),
-        ['css']
+        gulp.series 'css'
     return
+
+gulp.task 'watch', gulp.series(
+    gulp.parallel('express', 'html', 'coffee', 'css'), 'watching')
+
 
 gulp.task 'serve', (callback) ->
     if productionMode
-        gutil.log 'Attention: Do not use gulp serve in production mode.'
-        gutil.log(
+        log 'Attention: Do not use gulp serve in production mode.'
+        log(
             'Try'
-            gutil.colors.cyan "NODE_ENV='production' DEBUG='' FETSY_PORT=8080
+            colors.cyan "NODE_ENV='production' DEBUG='' FETSY_PORT=8080
                 MONGODB_DATABASE='fetsy-hammertag' node
                 #{path.join outputDirectory, 'server', 'server.js'}"
             'instead.'
