@@ -41,6 +41,8 @@ angular.module 'FeTSy-Hammertag', [
             url: '/scan/single'
             templateUrl: 'static/templates/scanSingleObject.html'
             controller: 'ScanSingleObjectCtrl as scanSingleObject'
+            params:
+                scanInputValue: ''
 
         .state  'listPersons',
             url: '/list/persons'

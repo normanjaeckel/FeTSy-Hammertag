@@ -8,11 +8,13 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
 
 
 .controller 'ScanSingleObjectCtrl', [
+    '$stateParams'
     'DatabaseFactory'
     'DefaultDescription'
     'DialogFactory'
     'ValidationFactory'
-    (DatabaseFactory, DefaultDescription, DialogFactory, ValidationFactory) ->
+    ($stateParams, DatabaseFactory, DefaultDescription, DialogFactory, ValidationFactory) ->
+
         @DefaultDescription = DefaultDescription
 
         @scan = =>
@@ -222,6 +224,10 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             return
 
         @resetForm()
+
+        if $stateParams.scanInputValue
+          @scanInputValue = $stateParams.scanInputValue
+          @scan()
 
         return
 ]

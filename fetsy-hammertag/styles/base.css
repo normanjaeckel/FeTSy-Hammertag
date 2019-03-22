@@ -15,3 +15,7 @@ body {
   background-color: #f2dede;
   border-color: #a94442;
 }
+
+.id-label-link:hover {
+    text-decoration: none;
+}
