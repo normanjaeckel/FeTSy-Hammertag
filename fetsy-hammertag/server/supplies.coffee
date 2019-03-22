@@ -7,6 +7,7 @@ _ = require 'lodash'
 
 app = require './app'
 database = require './database'
+permission = require './permission'
 
 
 module.exports = express.Router
@@ -14,7 +15,7 @@ module.exports = express.Router
     strict: app.get 'strict routing'
 
 
-# List route
+## List route
 
 # Handle get requests.
 .get '/', (request, response) ->
@@ -68,6 +69,13 @@ module.exports = express.Router
         return
     return
 
+# Check permissions for the following write paths
+.use (request, response, next) ->
+    if not permission.writePermissionGranted request.get('Auth-User')
+        permission.permissionDenied()
+    next()
+    return
+
 # Handle PATCH requests.
 .patch '/:id', (request, response) ->
     fields = {}
@@ -117,6 +125,7 @@ module.exports = express.Router
 ## Route to apply new persons
 
 # Handle POST requests.
+# ATTENTION: The permission check from above is also active here.
 .post '/:id/person', (request, response) ->
     person =
         id: String request.body.id

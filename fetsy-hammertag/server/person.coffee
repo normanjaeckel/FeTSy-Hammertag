@@ -2,9 +2,12 @@ debug = require('debug') 'fetsy-hammertag:server:person'
 express = require 'express'
 _ = require 'lodash'
 
+
 app = require './app'
 database = require './database'
+permission = require './permission'
 FeTSyError = require './error'
+
 
 module.exports = express.Router
     caseSensitive: app.get 'case sensitive routing'
@@ -106,6 +109,15 @@ module.exports = express.Router
         return
     return
 
+
+# Check permissions for the following write paths
+.use (request, response, next) ->
+    if not permission.writePermissionGranted request.get('Auth-User')
+        permission.permissionDenied()
+    next()
+    return
+
+
 # Handle POST requests.
 .post '/:id', (request, response) ->
     query = id: request.body.id
@@ -113,7 +125,7 @@ module.exports = express.Router
     database.person().findOne query, options
     .then (result) ->
         if result?
-            throw new FeTSyError 'New person id already exists.'
+            throw new FeTSyError 'New person id already exists.', 400
         query = id: request.personId
         options = {}
         database.person().findOne query, options
@@ -140,10 +152,12 @@ module.exports = express.Router
         return
     .catch (error) ->
         if error instanceof FeTSyError
-            response.status(400).json
+            response.status error.status
+            .json
                 detail: error
         else
-            response.status(500).json
+            response.status 500
+            .json
                 detail: error
         return
     return

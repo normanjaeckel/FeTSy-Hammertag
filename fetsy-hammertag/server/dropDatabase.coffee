@@ -4,6 +4,7 @@ express = require 'express'
 
 app = require './app'
 database = require './database'
+permission = require './permission'
 
 
 module.exports = express.Router
@@ -11,6 +12,8 @@ module.exports = express.Router
     strict: app.get 'strict routing'
 
 .post '/', (request, response) ->
+    if not permission.writePermissionGranted request.get('Auth-User')
+        permission.permissionDenied()
     database.dropDatabase()
     .then(
         (result) ->

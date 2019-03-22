@@ -6,6 +6,7 @@ _ = require 'lodash'
 
 app = require './app'
 database = require './database'
+permission = require './permission'
 FeTSyError = require './error'
 
 
@@ -14,7 +15,7 @@ module.exports = express.Router
     strict: app.get 'strict routing'
 
 
-# List route
+## List route
 
 # Handle get requests.
 .get '/', (request, response) ->
@@ -69,6 +70,13 @@ module.exports = express.Router
         return
     return
 
+# Check permissions for the following write paths
+.use (request, response, next) ->
+    if not permission.writePermissionGranted request.get('Auth-User')
+        permission.permissionDenied()
+    next()
+    return
+
 # Handle POST requests.
 .post '/:id', (request, response) ->
     query = id: request.body.id
@@ -76,7 +84,7 @@ module.exports = express.Router
     database.object().findOne query, options
     .then (result) ->
         if result?
-            throw new FeTSyError 'New person id already exists.'
+            throw new FeTSyError 'New object id already exists.', 400
         query = id: request.objectId
         options = {}
         database.object().findOne query, options
@@ -103,15 +111,15 @@ module.exports = express.Router
         return
     .catch (error) ->
         if error instanceof FeTSyError
-            response.status(400).json
+            response.status error.status
+            .json
                 detail: error
         else
-            response.status(500).json
+            response.status 500
+            .json
                 detail: error
         return
     return
-
-
 
 # Handle PATCH requests.
 .patch '/:id', (request, response) ->
@@ -152,6 +160,7 @@ module.exports = express.Router
 ## Route to apply new persons
 
 # Handle POST requests.
+# ATTENTION: The permission check from above is also active here.
 .post '/:id/person', (request, response) ->
     person =
         id: String request.body.id

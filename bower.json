@@ -6,6 +6,7 @@
     "angular": "1.6.3",
     "angular-bootstrap": "2.5.0",
     "angular-bootstrap-switch": "0.5.1",
+    "angular-cookies": "1.6.3",
     "angular-filter": "0.5.15",
     "angular-moment": "1.0.1",
     "angular-spinner": "1.0.1",

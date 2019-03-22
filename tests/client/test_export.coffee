@@ -81,7 +81,7 @@ describe 'ExportCtrl', ->
         ]
         it 'should return CSV data with proper person columns', ->
             parsedData = ExportCtrl.parseObjectResponseData testData
-            date = new Date(1374321600000).toLocaleFormat '%Y-%m-%d %H:%M'
+            date = moment(1374321600000).format('YYYY-MM-DD HH:mm')
             person_1 = 'person_1_id,person_1_description,person_1_timestamp'
             person_2 = 'person_2_id,person_2_description,person_2_timestamp'
             expect parsedData

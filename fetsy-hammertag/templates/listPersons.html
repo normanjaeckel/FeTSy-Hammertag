@@ -44,12 +44,14 @@
                 ng-model="listPersons.showObjects"
                 type="checkbox"
                 switch-icon="glyphicon glyphicon-wrench"
+                switch-change="listPersons.updateCookie()"
                 aria-label="Switch box to show or hide objects">
             <input
                 bs-switch
                 ng-model="listPersons.showSupplies"
                 type="checkbox"
                 switch-icon="glyphicon glyphicon-tint"
+                switch-change="listPersons.updateCookie()"
                 aria-label="Switch box to show or hide supplies">
         </div>
     </div>
@@ -74,7 +76,8 @@
                        min="1"
                        class="form-control"
                        placeholder="Enter limit"
-                       ng-model="listPersons.limit">
+                       ng-model="listPersons.limit"
+                       ng-change="listPersons.updateCookie()">
                 <div class="input-group-btn">
                      <span type="button"
                           title="Inscrease limit by {{ listPersons.limitStep }}"
@@ -122,16 +125,18 @@
 
     <div class="col-sm-6">
         <p>
-            <span class="label label-primary">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                <span class="sr-only">Person</span>
-                {{ person.id | splitIDs }}
-            </span>
+            <a class="id-label-link" ui-sref="scanSingleObject({scanInputValue: person.id[0]})">
+                <span class="label label-primary">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    <span class="sr-only">Person</span>
+                    {{ person.id | splitIDs }}
+                </span>
+            </a>
             <span style="padding-left:0.5em" ng-class="{'text-danger': !person.description}">
                 {{ person.description || listPersons.DefaultDescription.person }}
                 <span ng-show="person.company">({{ person.company }})</span>
             </span>
-            <span class="pull-right">
+            <span class="pull-right" ng-show="config.writePermissionGranted">
                 <button type="button"
                         class="btn btn-xs btn-default"
                         aria-label="Update person"
@@ -148,11 +153,13 @@
             <p ng-repeat="object in person.objects |
                           objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled} |
                           limitTo: (listPersons.limit || 0 )">
-                <span class="label label-primary">
-                    <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-                    <span class="sr-only">Object</span>
-                    {{ object.id | splitIDs }}
-                </span>
+                <a class="id-label-link" ui-sref="scanSingleObject({scanInputValue: object.id[0]})">
+                    <span class="label label-primary">
+                        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                        <span class="sr-only">Object</span>
+                        {{ object.id | splitIDs }}
+                    </span>
+                </a>
                 <span style="padding-left:0.5em;">
                     <span ng-class="{'text-danger': !object.description}">
                         {{ object.description || listPersons.DefaultDescription.object }}
@@ -167,7 +174,8 @@
                             ng-click="listPersons.objectInformation(object)">
                         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                     </button>
-                    <button type="button"
+                    <button ng-show="config.writePermissionGranted"
+                            type="button"
                             class="btn btn-xs btn-default"
                             aria-label="Update object"
                             ng-click="listPersons.updateObject(object, person.objects)">
@@ -207,7 +215,8 @@
                             ng-click="listPersons.suppliesInformation(suppliesArray[0])">
                         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                     </button>
-                    <button type="button"
+                    <button ng-show="config.writePermissionGranted"
+                            type="button"
                             class="btn btn-xs btn-default"
                             aria-label="Update supplies"
                             ng-click="listPersons.updateSupplies(suppliesArray[0], person.supplies)">
