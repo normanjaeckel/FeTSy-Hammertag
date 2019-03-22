@@ -17,7 +17,7 @@ merge = require 'merge-stream'
 nodemon = require 'gulp-nodemon'
 path = require 'path'
 rename = require 'gulp-rename'
-uglify = require 'gulp-uglify'
+uglify = require('gulp-uglify-es').default
 yaml = require 'js-yaml'
 _ = require 'lodash'
 

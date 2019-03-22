@@ -131,7 +131,7 @@
                 {{ person.description || listPersons.DefaultDescription.person }}
                 <span ng-show="person.company">({{ person.company }})</span>
             </span>
-            <span class="pull-right">
+            <span class="pull-right" ng-show="config.writePermissionGranted">
                 <button type="button"
                         class="btn btn-xs btn-default"
                         aria-label="Update person"
@@ -167,7 +167,8 @@
                             ng-click="listPersons.objectInformation(object)">
                         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                     </button>
-                    <button type="button"
+                    <button ng-show="config.writePermissionGranted"
+                            type="button"
                             class="btn btn-xs btn-default"
                             aria-label="Update object"
                             ng-click="listPersons.updateObject(object, person.objects)">
@@ -207,7 +208,8 @@
                             ng-click="listPersons.suppliesInformation(suppliesArray[0])">
                         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                     </button>
-                    <button type="button"
+                    <button ng-show="config.writePermissionGranted"
+                            type="button"
                             class="btn btn-xs btn-default"
                             aria-label="Update supplies"
                             ng-click="listPersons.updateSupplies(suppliesArray[0], person.supplies)">

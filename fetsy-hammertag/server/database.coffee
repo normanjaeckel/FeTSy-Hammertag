@@ -2,8 +2,10 @@ debug = require('debug') 'fetsy-hammertag:database'
 mongodb = require 'mongodb'
 _ = require 'lodash'
 
+
 client = mongodb.MongoClient
 _database = undefined
+
 
 module.exports =
     connect: (mongoDBPort, mongoDBDatabase) ->

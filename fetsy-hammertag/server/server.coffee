@@ -8,6 +8,8 @@ path = require 'path'
 
 app = require './app'
 database = require './database'
+permission = require './permission'
+FeTSyError = require './error'
 
 
 ## Setup router for base path /api
@@ -26,12 +28,23 @@ router.use '/person', require './person'
 router.use '/supplies', require './supplies'
 router.use '/drop-database', require './dropDatabase'
 
+# Add error handlung for custom exceptions (like 403 permission denied)
+router.use (error, request, response, next) ->
+    if error instanceof FeTSyError
+        response.status error.status
+        .json
+            detail: error.message
+    else
+        next()
+    return
+
 # Add single configuration endpoint
 router.get '/config', (request, response) ->
     welcomeText = 'Welcome to FeTSy-Hammertag'
     response.json
         header: process.env.FETSY_HEADER or 'FeTSy-Hammertag'
         welcomeText: process.env.FETSY_WELCOMETEXT or welcomeText
+        writePermissionGranted: permission.writePermissionGranted()
     return
 
 # Add fallback so that we do not run into index.html, see below
@@ -58,6 +71,14 @@ app.get '*', (request, response) ->
         'index.html'
     )
     return
+
+
+## Retrieve admin usernames or set permission level
+
+if process.env.FETSY_ADMIN?
+    app.set 'admins', process.env.FETSY_ADMIN.split(':')
+else
+    app.enable 'write permission granted'
 
 
 ## Connect to database and start server
