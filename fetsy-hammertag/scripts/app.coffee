@@ -6,6 +6,9 @@ angular.module 'FeTSy-Hammertag', [
 ]
 
 
+.constant 'cookieName', 'FeTSyHammertagClientConfig'
+
+
 .constant 'serverURL', '/api'
 
 

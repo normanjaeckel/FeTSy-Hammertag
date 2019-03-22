@@ -44,12 +44,14 @@
                 ng-model="listPersons.showObjects"
                 type="checkbox"
                 switch-icon="glyphicon glyphicon-wrench"
+                switch-change="listPersons.updateCookie()"
                 aria-label="Switch box to show or hide objects">
             <input
                 bs-switch
                 ng-model="listPersons.showSupplies"
                 type="checkbox"
                 switch-icon="glyphicon glyphicon-tint"
+                switch-change="listPersons.updateCookie()"
                 aria-label="Switch box to show or hide supplies">
         </div>
     </div>
@@ -74,7 +76,8 @@
                        min="1"
                        class="form-control"
                        placeholder="Enter limit"
-                       ng-model="listPersons.limit">
+                       ng-model="listPersons.limit"
+                       ng-change="listPersons.updateCookie()">
                 <div class="input-group-btn">
                      <span type="button"
                           title="Inscrease limit by {{ listPersons.limitStep }}"

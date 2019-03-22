@@ -13,8 +13,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
     'DefaultDescription'
     'DialogFactory'
     'ValidationFactory'
-    ($stateParams, DatabaseFactory, DefaultDescription, DialogFactory, ValidationFactory) ->
-
+    ($stateParams, DatabaseFactory, DefaultDescription, DialogFactory,
+     ValidationFactory) ->
         @DefaultDescription = DefaultDescription
 
         @scan = =>

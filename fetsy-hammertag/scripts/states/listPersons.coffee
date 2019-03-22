@@ -3,6 +3,7 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     'angularMoment'
     'angularSpinner'
     'frapontillo.bootstrap-switch'
+    'ngCookies'
     'FeTSy-Hammertag.utils.contentDefaults'
     'FeTSy-Hammertag.utils.dialog'
     'FeTSy-Hammertag.utils.itemInformation'
@@ -33,29 +34,44 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
 
 .controller 'ListPersonsCtrl', [
+    '$cookies'
     '$filter'
     '$http'
+    'cookieName'
     'serverURL'
     'DefaultDescription'
     'DialogFactory'
     'ItemInformationFactory'
     'UnknownPersonId'
-    ($filter, $http, serverURL, DefaultDescription, DialogFactory,
-     ItemInformationFactory, UnknownPersonId) ->
+    ($cookies, $filter, $http, cookieName, serverURL, DefaultDescription,
+     DialogFactory, ItemInformationFactory, UnknownPersonId) ->
         @UnknownPersonId = UnknownPersonId
 
         @DefaultDescription = DefaultDescription
 
-        @showObjects = true
+        # Load UI config from cookie
 
-        @showSupplies = false
+        cookie = $cookies.getObject(cookieName) or {}
 
-        @searchFilterObjectsSuppliesEnabled = false
+        @showObjects = if cookie.showObjects? then cookie.showObjects else true
+
+        @showSupplies = Boolean cookie.showSupplies
+
+        # coffeelint: disable=max_line_length
+        @searchFilterObjectsSuppliesEnabled = Boolean cookie.searchFilterObjectsSuppliesEnabled
+        # coffeelint: enable=max_line_length
+
+        @limit = cookie.limit or 50
+
+
+        # Setup controller methods
 
         @toogleSearchFilterObjectsSupplies = ->
             # coffeelint: disable=max_line_length
             @searchFilterObjectsSuppliesEnabled = not @searchFilterObjectsSuppliesEnabled
             # coffeelint: enable=max_line_length
+            @updateCookie()
+            return
 
         @resetSearchFilter = ->
             @searchFilter = ''
@@ -64,17 +80,31 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @resetSearchFilter()
 
-        @limit = 50
-
         @limitStep = 50
 
         @decreaseLimit = ->
             if @limit > @limitStep
                 @limit -= @limitStep
+                @updateCookie()
+            return
 
         @increaseLimit = ->
             @limit += @limitStep
+            @updateCookie()
+            return
 
+        @updateCookie = ->
+            $cookies.putObject cookieName,
+                showObjects: @showObjects
+                showSupplies: @showSupplies
+                limit: @limit
+                # coffeelint: disable=max_line_length
+                searchFilterObjectsSuppliesEnabled: @searchFilterObjectsSuppliesEnabled
+                # coffeelint: enable=max_line_length
+            return
+
+
+        # Fetch and handle data
 
         $http.get "#{serverURL}/person"
         .then (response) =>
@@ -172,5 +202,6 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 _.size _.groupBy filteredSupplies, 'id'
             else
                 0
+
         return
 ]
