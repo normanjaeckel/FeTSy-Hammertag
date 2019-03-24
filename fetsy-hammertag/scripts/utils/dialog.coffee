@@ -63,6 +63,7 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
         # The company field is only for persons.
         @newCompany = element.item.company
         @focus = true
+
         @save = ->
             if @newDescription
                 if element.type is 'supplies'
@@ -82,6 +83,7 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                         return
                 )
             return
+
         @delete = ->
             if element.type is 'supplies'
                 # Attention: @element.item.id is always a string and never
@@ -103,9 +105,11 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                     return
             )
             return
+
         @clearNewCompanyField = ->
             @newCompany = ''
             return
+
         return
 ]
 

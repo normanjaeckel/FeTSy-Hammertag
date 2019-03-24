@@ -74,4 +74,10 @@
             ng-click="updateDescription.delete()">
         Delete
     </button>
+    <button class="btn btn-danger"
+            type="button"
+            ng-show="updateDescription.element.withUnapply"
+            ng-click="updateDescription.delete()">
+        Unapply one item
+    </button>
 </div>
