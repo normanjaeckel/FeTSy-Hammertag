@@ -169,11 +169,22 @@
 </div><!-- / .row Panels -->
 
 
-<!-- Reset button -->
+<!-- Reset and more supplies button -->
 <div class="row" ng-show="scanSingleObject.lastObject || scanSingleObject.lastSupplies || scanSingleObject.lastPerson">
 
-    <div class="col-sm-12">
+    <div class="col-sm-5 hidden-xs">
         <button type="button" class="btn btn-danger" ng-click="scanSingleObject.resetForm()">Reset form</button>
     </div>
 
-</div><!-- / .row Reset button -->
+    <div class="col-sm-5 col-sm-offset-1 scan-input-field" ng-show="scanSingleObject.lastPerson && scanSingleObject.lastSupplies">
+        <button type="button" class="btn btn-default" ng-click="scanSingleObject.moreSupplies()">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> More supplies
+        </button>
+    </div>
+
+    <!-- Reset button only for extra small devices -->
+    <div class="col-xs-12 visible-xs-block">
+        <button type="button" class="btn btn-danger" ng-click="scanSingleObject.resetForm()">Reset form</button>
+    </div>
+
+</div><!-- / .row Reset and more supplies button -->

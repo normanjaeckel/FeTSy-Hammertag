@@ -175,11 +175,15 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             return
 
         @updateSupplies = (supplies, allSupplies) ->
+            # The variable allSupplies is a array of all supplies of this
+            # person. It contains also supplies with different ids. Thats why
+            # we have to get the index of the matching supplies object first.
             index = allSupplies.indexOf supplies
             DialogFactory.updateDescription
                 type: 'supplies'
                 item: supplies
-                withDelete: true
+                withDelete: false
+                withUnapply: true
             .then(
                 (result) ->
                     if result.deleted
