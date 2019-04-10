@@ -44,7 +44,8 @@ router.get '/config', (request, response) ->
     response.json
         header: process.env.FETSY_HEADER or 'FeTSy-Hammertag'
         welcomeText: process.env.FETSY_WELCOMETEXT or welcomeText
-        writePermissionGranted: permission.writePermissionGranted()
+        writePermissionGranted:
+            permission.writePermissionGranted request.get('Auth-User')
     return
 
 # Add fallback so that we do not run into index.html, see below
