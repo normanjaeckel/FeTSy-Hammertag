@@ -33,6 +33,16 @@ angular.module 'FeTSy-Hammertag', [
         # For any unmatched url, redirect to /
         $urlRouterProvider.otherwise '/'
 
+        permissionDeniedCheck = [
+            '$state'
+            '$rootScope'
+            ($state, $rootScope) ->
+                if not $rootScope.config.writePermissionGranted
+                    alert 'Permission denied'
+                    $state.go 'home'
+                return
+        ]
+
         # Set up the states
         $stateProvider
         .state 'home',
@@ -46,6 +56,7 @@ angular.module 'FeTSy-Hammertag', [
             controller: 'ScanSingleObjectCtrl as scanSingleObject'
             params:
                 scanInputValue: ''
+            onEnter: permissionDeniedCheck
 
         .state  'listPersons',
             url: '/list/persons'
@@ -61,11 +72,13 @@ angular.module 'FeTSy-Hammertag', [
             url: '/import'
             templateUrl: 'static/templates/import.html'
             controller: 'ImportCtrl as import'
+            onEnter: permissionDeniedCheck
 
         .state  'database',
             url: '/database'
             templateUrl: 'static/templates/database.html'
             controller: 'DatabaseCtrl as database'
+            onEnter: permissionDeniedCheck
 
         return
 ]
