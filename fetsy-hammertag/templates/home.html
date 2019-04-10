@@ -9,7 +9,7 @@
 <div class="row">
 
     <div class="col-sm-2 col-sm-offset-2">
-        <p>
+        <p ng-show="config.writePermissionGranted">
             <a class="btn btn-primary" ui-sref="scanSingleObject" role="button">
                 <span class="glyphicon glyphicon-barcode"></span>
                 Scan
@@ -36,7 +36,7 @@
     </div>
 
     <div class="col-sm-2">
-        <p>
+        <p ng-show="config.writePermissionGranted">
             <a class="btn btn-primary" ui-sref="import" role="button">
                 <span class="glyphicon glyphicon-export"></span>
                 Import
