@@ -35,6 +35,15 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                         element
             .result
 
+        moreSupplies: (element) ->
+            $uibModal.open
+                controller: 'MoreSuppliesCtrl as moreSupplies'
+                templateUrl: 'static/templates/moreSupplies.html'
+                resolve:
+                    element: () ->
+                        element
+            .result
+
         parseElement: (element) ->
             if element.type is 'object'
                 element.icon = 'glyphicon-wrench'
@@ -94,7 +103,7 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                     headers:
                         'Content-Type': 'application/json;charset=utf-8'
                     data:
-                        uuid: element.item.uuid
+                        uuid: element.item.lastUuid
             else
                 url = "#{serverURL}/#{element.type}/#{element.item.id[0]}"
                 promise = $http.delete url
@@ -170,6 +179,35 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
         @resetInputField = ->
             @newID = ''
             @error = false
+            @focus = true
+            return
+        return
+]
+
+
+.controller 'MoreSuppliesCtrl', [
+    '$http'
+    '$uibModalInstance'
+    'DatabaseFactory'
+    'element'
+    ($http, $uibModalInstance, DatabaseFactory, element) ->
+        @element = element
+        @numberField = 1
+        @focus = true
+        @save = ->
+            DatabaseFactory.saveSupplies(
+                @element.item.id
+                @element.person
+                @numberField
+            ).then(
+                (response) =>
+                    $uibModalInstance.close
+                        supplies: response.data.supplies
+                    return
+            )
+            return
+        @resetNumberField = ->
+            @numberField = 1
             @focus = true
             return
         return

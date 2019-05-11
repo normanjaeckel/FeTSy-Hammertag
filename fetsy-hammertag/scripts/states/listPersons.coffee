@@ -111,6 +111,10 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             @persons = response.data.persons
             return
 
+        @suppliesCount = (supplies, personId) ->
+            numbers = _.countBy supplies.persons, 'id'
+            numbers[personId]
+
         @updatePerson = (person , persons) ->
             index = persons.indexOf person
             withDelete = not person.objects?.length and
@@ -174,11 +178,10 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             )
             return
 
-        @updateSupplies = (supplies, allSupplies) ->
-            # The variable allSupplies is a array of all supplies of this
-            # person. It contains also supplies with different ids. Thats why
-            # we have to get the index of the matching supplies object first.
-            index = allSupplies.indexOf supplies
+        @updateSupplies = (supplies, person) ->
+            index = _.findLastIndex supplies.persons, (personItem) ->
+                personItem.id in person.id
+            supplies.lastUuid = supplies.persons[index].uuid
             DialogFactory.updateDescription
                 type: 'supplies'
                 item: supplies
@@ -187,7 +190,7 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             .then(
                 (result) ->
                     if result.deleted
-                        allSupplies.splice index, 1
+                        supplies.persons.splice index, 1
                     else
                         supplies.description = result.newDescription
                     return
@@ -203,7 +206,6 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                     expression: @searchFilter
                     enabled: @searchFilterObjectsSuppliesEnabled
                 )
-                _.size _.groupBy filteredSupplies, 'id'
             else
                 0
 

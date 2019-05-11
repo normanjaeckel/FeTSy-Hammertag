@@ -193,33 +193,32 @@
             </p>
         </div>
         <div ng-show="listPersons.showSupplies">
-            <p ng-repeat="suppliesArray in person.supplies |
+            <p ng-repeat="supplies in person.supplies |
                           objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled} |
-                          groupBy: 'id' |
                           suppliesLimitTo: (listPersons.limit || 0 )">
                 <span class="label label-primary">
                     <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
                     <span class="sr-only">Supplies</span>
-                    {{ suppliesArray[suppliesArray.length - 1].id }}
+                    {{ supplies.id }}
                 </span>
                 <span class="label label-default" style="margin-left:0.5em;" ng-hide="person.id[0] === listPersons.UnknownPersonId">
-                    {{ suppliesArray.length }} x
+                    {{ listPersons.suppliesCount(supplies, person.id) }} x
                 </span>
-                <span style="padding-left:0.5em;" ng-class="{'text-danger': !suppliesArray[suppliesArray.length - 1].description}">
-                    {{ suppliesArray[suppliesArray.length - 1].description || listPersons.DefaultDescription.supplies }}
+                <span style="padding-left:0.5em;" ng-class="{'text-danger': !supplies.description}">
+                    {{ supplies.description || listPersons.DefaultDescription.supplies }}
                 </span>
                 <span class="pull-right">
                     <button type="button"
                             class="btn btn-xs btn-default"
                             aria-label="Supplies information"
-                            ng-click="listPersons.suppliesInformation(suppliesArray[suppliesArray.length - 1])">
+                            ng-click="listPersons.suppliesInformation(supplies)">
                         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                     </button>
                     <button ng-show="config.writePermissionGranted"
                             type="button"
                             class="btn btn-xs btn-default"
                             aria-label="Update supplies"
-                            ng-click="listPersons.updateSupplies(suppliesArray[suppliesArray.length - 1], person.supplies)">
+                            ng-click="listPersons.updateSupplies(supplies, person)">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     </button>
                 </span>

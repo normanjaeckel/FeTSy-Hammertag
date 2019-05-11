@@ -127,14 +127,15 @@ module.exports = express.Router
 # Handle POST requests.
 # ATTENTION: The permission check from above is also active here.
 .post '/:id/person', (request, response) ->
-    person =
+    personList = _.times request.body.number, ->
         id: String request.body.id
         timestamp: +new Date() / 1000
         uuid: uuid.v4()
     filter = id: request.suppliesId
     update =
         $push:
-            persons: person
+            persons:
+                $each: personList
     options =
         upsert: true
     database.supplies().updateOne filter, update, options, (error, result) ->
