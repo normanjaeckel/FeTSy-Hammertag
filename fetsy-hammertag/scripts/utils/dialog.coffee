@@ -44,6 +44,15 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                         element
             .result
 
+        unapplySupplies: (element) ->
+            $uibModal.open
+                controller: 'UnapplySuppliesCtrl as unapplySupplies'
+                templateUrl: 'static/templates/unapplySupplies.html'
+                resolve:
+                    element: () ->
+                        element
+            .result
+
         parseElement: (element) ->
             if element.type is 'object'
                 element.icon = 'glyphicon-wrench'
@@ -95,15 +104,7 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
 
         @delete = ->
             if element.type is 'supplies'
-                # Attention: @element.item.id is always a string and never
-                # an array at the moment.
-                promise = $http
-                    method: 'DELETE'
-                    url: "#{serverURL}/supplies/#{element.item.id}"
-                    headers:
-                        'Content-Type': 'application/json;charset=utf-8'
-                    data:
-                        uuid: element.item.lastUuid
+                console.error 'Supplies can not be deleted here.'
             else
                 url = "#{serverURL}/#{element.type}/#{element.item.id[0]}"
                 promise = $http.delete url
@@ -200,9 +201,47 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                 @element.person
                 @numberField
             ).then(
-                (response) =>
+                (response) ->
                     $uibModalInstance.close
                         supplies: response.data.supplies
+                    return
+            )
+            return
+        @resetNumberField = ->
+            @numberField = 1
+            @focus = true
+            return
+        return
+]
+
+
+.controller 'UnapplySuppliesCtrl', [
+    '$http'
+    '$uibModalInstance'
+    'serverURL'
+    'element'
+    ($http, $uibModalInstance, serverURL, element) ->
+        @element = element
+        @numberField = 1
+        @focus = true
+        @save = ->
+            filteredPersonItems = _.filter element.item.persons, (personItem) ->
+                personItem.id in element.person.id
+            uuidList = _.map _.takeRight(filteredPersonItems, @numberField),
+                'uuid'
+            # Attention: @element.item.id is always a string and never
+            # an array at the moment.
+            $http
+                method: 'DELETE'
+                url: "#{serverURL}/supplies/#{element.item.id}"
+                headers:
+                    'Content-Type': 'application/json;charset=utf-8'
+                data:
+                    uuidList: uuidList
+            .then(
+                (response) ->
+                    $uibModalInstance.close
+                        uuidList: uuidList
                     return
             )
             return

@@ -68,7 +68,9 @@ module.exports = express.Router
                                 if not documents[index].supplies?
                                     documents[index].supplies = {}
                                 if not documents[index].supplies[supplies.id]?
+                                    # coffeelint: disable=max_line_length
                                     documents[index].supplies[supplies.id] = supplies
+                                    # coffeelint: enable=max_line_length
                         return
                     database.supplies().find().forEach iterator, (error) ->
                         if error?

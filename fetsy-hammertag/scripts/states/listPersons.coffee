@@ -14,6 +14,8 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
     '$filter'
     ($filter) ->
         (value, params) ->
+            if not _.isArray value
+                value = _.map value
             if params.enabled
                 $filter('filter') value, params.expression
             else
@@ -186,13 +188,26 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                 type: 'supplies'
                 item: supplies
                 withDelete: false
-                withUnapply: true
             .then(
                 (result) ->
                     if result.deleted
                         supplies.persons.splice index, 1
                     else
                         supplies.description = result.newDescription
+                    return
+                (error) ->
+                    return
+            )
+            return
+
+        @unapplySupplies = (supplies, person) ->
+            DialogFactory.unapplySupplies
+                item: supplies
+                person: person
+            .then(
+                (result) ->
+                    _.remove supplies.persons, (personItem) ->
+                        personItem.uuid in result.uuidList
                     return
                 (error) ->
                     return
