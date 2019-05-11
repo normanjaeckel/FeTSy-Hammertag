@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        More supplies
+        <span class="label label-primary">
+            <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
+            <span class="sr-only">Supplies</span>
+            {{ moreSupplies.element.item.id | splitIDs }}
+        </span>
+    </h3>
+</div>
+
+<div class="modal-body">
+    <form role="form"
+          name="numberFieldForm"
+          ng-submit="moreSupplies.save()">
+        <div class="form-group">
+            <label for="numberField" class="control-label">
+                Number of supplies
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span id="numberFieldIcon" class="glyphicon glyphicon-tint" aria-hidden="true"></span>
+                    <span class="sr-only">Number of supplies</span>
+                </div>
+                <input id="numberField"
+                       type="number"
+                       min="1"
+                       class="form-control"
+                       aria-describedby="numberFieldIcon"
+                       ng-model="moreSupplies.numberField"
+                       focus-me="moreSupplies.focus">
+                <div class="input-group-btn">
+                    <span type="button"
+                          title="Reset number field"
+                          class="btn btn-default"
+                          ng-click="moreSupplies.resetNumberField()">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="sr-only">Reset number field</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary"
+            type="button"
+            ng-click="moreSupplies.save()">
+        Save
+    </button>
+    <button class="btn btn-warning"
+            type="button"
+            ng-click="$dismiss('cancel click')">
+        Cancel
+    </button>
+</div>

@@ -56,18 +56,21 @@ module.exports = express.Router
                             persons.push
                                 id: unknownPersonId
                         for person in persons
-                            shallow = _.clone supplies
-                            shallow.uuid = person.uuid
                             index = _.findIndex documents,
                                 (doc) -> person.id in doc.id
                             if index is -1
+                                newSuppliesObj = {}
+                                newSuppliesObj[supplies.id] = supplies
                                 documents.push
                                     id: [person.id]
-                                    supplies: [shallow]
+                                    supplies: newSuppliesObj
                             else
                                 if not documents[index].supplies?
-                                    documents[index].supplies = []
-                                documents[index].supplies.push shallow
+                                    documents[index].supplies = {}
+                                if not documents[index].supplies[supplies.id]?
+                                    # coffeelint: disable=max_line_length
+                                    documents[index].supplies[supplies.id] = supplies
+                                    # coffeelint: enable=max_line_length
                         return
                     database.supplies().find().forEach iterator, (error) ->
                         if error?

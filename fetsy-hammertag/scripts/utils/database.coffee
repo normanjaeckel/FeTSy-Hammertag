@@ -14,9 +14,8 @@ angular.module 'FeTSy-Hammertag.utils.database', []
         saveObject: (id, personId) ->
             $http.post "#{serverURL}/object/#{id}/person",
                 id: personId
-        saveSupplies: (id, personId) ->
-            # Hard coded value about how many supplies should be applied
-            number = 1
+        saveSupplies: (id, personId, number) ->
+            number = number or 1
             $http.post "#{serverURL}/supplies/#{id}/person",
                 id: personId
                 number: number

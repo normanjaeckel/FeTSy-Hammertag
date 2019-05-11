@@ -212,18 +212,19 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 (@lastSupplies.inventory or 0) - out <= 0
 
         @moreSupplies = ->
-            DatabaseFactory.saveSupplies(
-                @lastSupplies.id
-                _.last @lastPerson.id
-            ).then(
-                (response) =>
-                    @lastSupplies = response.data.supplies
+            DialogFactory.moreSupplies
+                item: @lastSupplies
+                person: _.last @lastPerson.id
+            .then(
+                (result) =>
+                    @lastSupplies = result.supplies
                     return
-                (errorResponse) =>
-                    if errorResponse.data
-                        @error = errorResponse.data.details
-                    else
-                        @error = 'Connection failed. Please reload the page.'
+                (error) ->
+                    return
+            )
+            .finally(
+                =>
+                    @resetInputField()
                     return
             )
             return

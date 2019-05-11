@@ -105,20 +105,27 @@ module.exports = express.Router
 # Handle DELETE requests.
 .delete '/:id', (request, response) ->
     # TODO: If uuid is undefined then do a real delete instead of an update.
-    filter = id: request.suppliesId
-    update =
-        $pull:
-            persons:
-                uuid: request.body.uuid
-    options = {}
-    database.supplies().updateOne filter, update, options, (error, result) ->
-        if error?
-            response.status(500).json
-                detail: error
-        else
-            response.send
-                details: 'Supplies successfully unapplied.'
-        return
+    if not _.isArray request.body.uuidList
+        response.status(500).json
+            detail: 'The property uuidList must be an array.'
+    else
+        filter = id: request.suppliesId
+        update =
+            $pull:
+                persons:
+                    uuid:
+                        $in: request.body.uuidList
+        options = {}
+        # coffeelint: disable=max_line_length
+        database.supplies().updateOne filter, update, options, (error, result) ->
+        # coffeelint: enable=max_line_length
+            if error?
+                response.status(500).json
+                    detail: error
+            else
+                response.send
+                    details: 'Supplies successfully unapplied.'
+            return
     return
 
 
@@ -127,14 +134,15 @@ module.exports = express.Router
 # Handle POST requests.
 # ATTENTION: The permission check from above is also active here.
 .post '/:id/person', (request, response) ->
-    person =
+    personList = _.times request.body.number, ->
         id: String request.body.id
         timestamp: +new Date() / 1000
         uuid: uuid.v4()
     filter = id: request.suppliesId
     update =
         $push:
-            persons: person
+            persons:
+                $each: personList
     options =
         upsert: true
     database.supplies().updateOne filter, update, options, (error, result) ->
