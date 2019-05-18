@@ -61,13 +61,15 @@
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                 {{ scanSingleObject.lastPerson.id | splitIDs }}
-                <button type="button"
+                <button ng-show="config.fullWritePermissionGranted"
+                        type="button"
                         class="btn btn-xs btn-default pull-right"
                         aria-label="Add person ID"
                         ng-click="scanSingleObject.addPersonID()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
-                <button type="button"
+                <button ng-show="config.fullWritePermissionGranted"
+                        type="button"
                         class="btn btn-xs btn-default pull-right"
                         aria-label="Update person description"
                         ng-click="scanSingleObject.updatePersonDescription()">
@@ -89,13 +91,15 @@
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
                 {{ scanSingleObject.lastObject.id | splitIDs }}
-                <button type="button"
+                <button ng-show="config.fullWritePermissionGranted"
+                        type="button"
                         class="btn btn-xs btn-default pull-right"
                         aria-label="Add object ID"
                         ng-click="scanSingleObject.addObjectID()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
-                <button type="button"
+                <button ng-show="config.fullWritePermissionGranted"
+                        type="button"
                         class="btn btn-xs btn-default pull-right"
                         aria-label="Update object"
                         ng-click="scanSingleObject.updateObjectDescription()">
@@ -141,13 +145,15 @@
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
                 {{ scanSingleObject.lastSupplies.id }}
-                <button type="button"
+                <button ng-show="config.fullWritePermissionGranted"
+                        type="button"
                         class="btn btn-xs btn-default pull-right"
                         aria-label="Update inventory"
                         ng-click="scanSingleObject.updateInventory()">
                     <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
                 </button>
-                <button type="button"
+                <button ng-show="config.fullWritePermissionGranted"
+                        type="button"
                         class="btn btn-xs btn-default pull-right"
                         aria-label="Update supplies"
                         ng-click="scanSingleObject.updateSupplies()">

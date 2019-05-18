@@ -12,7 +12,7 @@ module.exports = express.Router
     strict: app.get 'strict routing'
 
 .post '/', (request, response) ->
-    if not permission.writePermissionGranted request.get('Auth-User')
+    if not permission.fullWritePermissionGranted request.get('Auth-User')
         permission.permissionDenied()
     database.dropDatabase()
     .then(

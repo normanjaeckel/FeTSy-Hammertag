@@ -3,9 +3,9 @@ FeTSyError = require './error'
 
 
 module.exports =
-    writePermissionGranted: (username) ->
+    fullWritePermissionGranted: (username) ->
         result = false
-        if app.enabled 'write permission granted'
+        if app.enabled 'full write permission granted'
             result = true
         else
             admins = app.get 'admins'
