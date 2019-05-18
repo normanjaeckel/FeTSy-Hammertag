@@ -41,11 +41,18 @@ router.use (error, request, response, next) ->
 # Add single configuration endpoint
 router.get '/config', (request, response) ->
     welcomeText = 'Welcome to FeTSy-Hammertag'
+    fullWritePermissionGranted = permission.fullWritePermissionGranted(
+        request.get 'Auth-User'
+    )
+    if fullWritePermissionGranted
+        userName = request.get('Auth-User') or 'Admin'
+    else
+        userName = request.get('Auth-User') or 'Supporter'
     response.json
         header: process.env.FETSY_HEADER or 'FeTSy-Hammertag'
         welcomeText: process.env.FETSY_WELCOMETEXT or welcomeText
-        writePermissionGranted:
-            permission.writePermissionGranted request.get('Auth-User')
+        fullWritePermissionGranted: fullWritePermissionGranted
+        userName: userName
     return
 
 # Add fallback so that we do not run into index.html, see below
@@ -79,7 +86,7 @@ app.get '*', (request, response) ->
 if process.env.FETSY_ADMIN?
     app.set 'admins', process.env.FETSY_ADMIN.split(':')
 else
-    app.enable 'write permission granted'
+    app.enable 'full write permission granted'
 
 
 ## Connect to database and start server

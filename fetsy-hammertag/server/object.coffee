@@ -70,9 +70,47 @@ module.exports = express.Router
         return
     return
 
-# Check permissions for the following write paths
+
+## Route to apply new persons
+
+# Handle POST requests.
+.post '/:id/person', (request, response) ->
+    person =
+        id: String request.body.id
+        timestamp: +new Date() / 1000
+    filter = id: request.objectId
+    update =
+        $push:
+            persons: person
+    options =
+        upsert: true
+    database.object().updateOne filter, update, options, (error, result) ->
+        if error?
+            response.status(500).json
+                detail: error
+        else
+            database.getObject request.objectId, (error, object) ->
+                if error?
+                    response.status(500).json
+                        detail: error
+                else if result.upsertedCount is 1
+                    response.status(201).send
+                        details: 'Object successfully created.'
+                        object: object
+                else
+                    response.send
+                        details: 'Object successfully updated.'
+                        object: object
+                return
+        return
+    return
+
+
+# Detail write routes
+
+# Check permissions for the following write routes
 .use (request, response, next) ->
-    if not permission.writePermissionGranted request.get('Auth-User')
+    if not permission.fullWritePermissionGranted request.get('Auth-User')
         permission.permissionDenied()
     next()
     return
@@ -153,41 +191,5 @@ module.exports = express.Router
         else
             response.send
                 details: 'Object successfully deleted.'
-        return
-    return
-
-
-## Route to apply new persons
-
-# Handle POST requests.
-# ATTENTION: The permission check from above is also active here.
-.post '/:id/person', (request, response) ->
-    person =
-        id: String request.body.id
-        timestamp: +new Date() / 1000
-    filter = id: request.objectId
-    update =
-        $push:
-            persons: person
-    options =
-        upsert: true
-    database.object().updateOne filter, update, options, (error, result) ->
-        if error?
-            response.status(500).json
-                detail: error
-        else
-            database.getObject request.objectId, (error, object) ->
-                if error?
-                    response.status(500).json
-                        detail: error
-                else if result.upsertedCount is 1
-                    response.status(201).send
-                        details: 'Object successfully created.'
-                        object: object
-                else
-                    response.send
-                        details: 'Object successfully updated.'
-                        object: object
-                return
         return
     return

@@ -113,9 +113,9 @@ module.exports = express.Router
     return
 
 
-# Check permissions for the following write paths
+# Check permissions for the following write routes
 .use (request, response, next) ->
-    if not permission.writePermissionGranted request.get('Auth-User')
+    if not permission.fullWritePermissionGranted request.get('Auth-User')
         permission.permissionDenied()
     next()
     return

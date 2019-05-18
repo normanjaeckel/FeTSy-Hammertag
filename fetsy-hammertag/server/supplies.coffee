@@ -69,70 +69,10 @@ module.exports = express.Router
         return
     return
 
-# Check permissions for the following write paths
-.use (request, response, next) ->
-    if not permission.writePermissionGranted request.get('Auth-User')
-        permission.permissionDenied()
-    next()
-    return
-
-# Handle PATCH requests.
-.patch '/:id', (request, response) ->
-    fields = {}
-    fields.description = request.body.description if request.body.description?
-    fields.inventory = request.body.inventory if request.body.inventory?
-
-    filter = id: request.suppliesId
-    update =
-        $set: fields
-    options =
-        upsert: true
-
-    database.supplies().updateOne filter, update, options, (error, result) ->
-        if error?
-            response.status(500).json
-                detail: error
-        else if result.upsertedCount is 1
-            response.status(201).json
-                details: 'Supplies successfully created.'
-        else
-            response.send
-                details: 'Supplies successfully updated.'
-        return
-
-    return
-
-# Handle DELETE requests.
-.delete '/:id', (request, response) ->
-    # TODO: If uuid is undefined then do a real delete instead of an update.
-    if not _.isArray request.body.uuidList
-        response.status(500).json
-            detail: 'The property uuidList must be an array.'
-    else
-        filter = id: request.suppliesId
-        update =
-            $pull:
-                persons:
-                    uuid:
-                        $in: request.body.uuidList
-        options = {}
-        # coffeelint: disable=max_line_length
-        database.supplies().updateOne filter, update, options, (error, result) ->
-        # coffeelint: enable=max_line_length
-            if error?
-                response.status(500).json
-                    detail: error
-            else
-                response.send
-                    details: 'Supplies successfully unapplied.'
-            return
-    return
-
 
 ## Route to apply new persons
 
 # Handle POST requests.
-# ATTENTION: The permission check from above is also active here.
 .post '/:id/person', (request, response) ->
     personList = _.times request.body.number, ->
         id: String request.body.id
@@ -164,4 +104,66 @@ module.exports = express.Router
                         supplies: supplies
                 return
         return
+    return
+
+
+# Detail write routes
+
+# Handle DELETE requests.
+.delete '/:id', (request, response) ->
+    # TODO: If uuid is undefined then do a real delete instead of an update.
+    if not _.isArray request.body.uuidList
+        response.status(500).json
+            detail: 'The property uuidList must be an array.'
+    else
+        filter = id: request.suppliesId
+        update =
+            $pull:
+                persons:
+                    uuid:
+                        $in: request.body.uuidList
+        options = {}
+        # coffeelint: disable=max_line_length
+        database.supplies().updateOne filter, update, options, (error, result) ->
+        # coffeelint: enable=max_line_length
+            if error?
+                response.status(500).json
+                    detail: error
+            else
+                response.send
+                    details: 'Supplies successfully unapplied.'
+            return
+    return
+
+# Check permissions for the following write routes
+.use (request, response, next) ->
+    if not permission.fullWritePermissionGranted request.get('Auth-User')
+        permission.permissionDenied()
+    next()
+    return
+
+# Handle PATCH requests.
+.patch '/:id', (request, response) ->
+    fields = {}
+    fields.description = request.body.description if request.body.description?
+    fields.inventory = request.body.inventory if request.body.inventory?
+
+    filter = id: request.suppliesId
+    update =
+        $set: fields
+    options =
+        upsert: true
+
+    database.supplies().updateOne filter, update, options, (error, result) ->
+        if error?
+            response.status(500).json
+                detail: error
+        else if result.upsertedCount is 1
+            response.status(201).json
+                details: 'Supplies successfully created.'
+        else
+            response.send
+                details: 'Supplies successfully updated.'
+        return
+
     return

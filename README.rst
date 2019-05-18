@@ -90,8 +90,9 @@ To run in production you should do the following:
     Setup the environment variable ``FETSY_ADMIN`` with a colon separated list
     of usernames (e. g. ``FETSY_ADMIN=john-doe:jane-roe:jimmy-foo``). If the
     username given by the webserver is in this list, the user has full access to
-    FeTSy Hammertag, else he has only read access. If the environment variable
-    is empty, all users have full access (i. e. this feature is disabled).
+    FeTSy Hammertag, else he has only read access and can apply/unapply items.
+    If the environment variable is empty, all users have full access (i. e. this
+    feature is disabled).
 
 - Start all the stuff (proxy server, MongoDB, process manager).
 

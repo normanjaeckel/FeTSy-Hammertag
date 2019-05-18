@@ -37,7 +37,7 @@ angular.module 'FeTSy-Hammertag', [
             '$state'
             '$rootScope'
             ($state, $rootScope) ->
-                if not $rootScope.config.writePermissionGranted
+                if not $rootScope.config.fullWritePermissionGranted
                     alert 'Permission denied'
                     $state.go 'home'
                 return
@@ -56,7 +56,6 @@ angular.module 'FeTSy-Hammertag', [
             controller: 'ScanSingleObjectCtrl as scanSingleObject'
             params:
                 scanInputValue: ''
-            onEnter: permissionDeniedCheck
 
         .state  'listPersons',
             url: '/list/persons'
