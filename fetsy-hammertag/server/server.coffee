@@ -91,14 +91,14 @@ else
 
 ## Connect to database and start server
 
-hostname = undefined
+hostname = process.env.FETSY_HOST or 'localhost'
 port = process.env.FETSY_PORT or 8080
 mongoDBPort = process.env.MONGODB_PORT or 27017
 mongoDBDatabase = process.env.MONGODB_DATABASE or 'fetsy-hammertag'
 database.connect(mongoDBPort, mongoDBDatabase)
 .then ->
     app.listen port, hostname, ->
-        url = "http://#{hostname or 'localhost'}:#{port}/"
+        url = "http://#{hostname}:#{port}/"
         debug "FeTSy-Hammertag listening on #{url}"
         if process.env.NOTIFY_SOCKET?
             pythonSkript =
