@@ -52,8 +52,10 @@ To run in production you should do the following:
   - ``DEBUG=''``, see `debugging guide for ExpressJS
     <http://expressjs.com/en/guide/debugging.html>`_.
 
-  - ``FETSY_PORT=8080`` or whatever you like. FeTSy-Hammertag will listen on
-    ``localhost`` on this port.
+  - ``FETSY_HOST=0.0.0.0`` or whatever you like. By default FeTSy-Hammertag will
+    listen only on localhost.
+
+  - ``FETSY_PORT=8080`` or whatever you like.
 
   - ``FETSY_HEADER=FeTSy-Hammertag`` or whatever you like. You will see this
     text in the navigation bar.
