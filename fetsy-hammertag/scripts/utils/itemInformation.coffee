@@ -18,9 +18,10 @@ angular.module 'FeTSy-Hammertag.utils.itemInformation', [
                     .then(
                         (response) ->
                             _.assign element, response.data.object
-                        (response) ->
-                            if response.data
-                                element.error = response.data.details
+                        (error) ->
+                            if error.data
+                                element.error =
+                                    error.data.detail or 'Unknown error'
                             else
                                 element.error = 'Connection failed. Please ' +
                                     'reload the page.'
@@ -34,9 +35,10 @@ angular.module 'FeTSy-Hammertag.utils.itemInformation', [
                     .then(
                         (response) ->
                             _.assign element, response.data.supplies
-                        (response) ->
-                            if response.data
-                                element.error = response.data.details
+                        (error) ->
+                            if error.data
+                                element.error =
+                                    error.data.detail or 'Unknown error'
                             else
                                 element.error = 'Connection failed. Please ' +
                                     'reload the page.'

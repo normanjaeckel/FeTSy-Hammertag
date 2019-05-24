@@ -10,7 +10,8 @@ _database = undefined
 module.exports =
     connect: (mongoDBPort, mongoDBDatabase) ->
         url = "mongodb://localhost:#{mongoDBPort}/#{mongoDBDatabase}"
-        client.connect url
+        client.connect url,
+            useNewUrlParser: true
         .then(
             (client) ->
                 _database = client.db()

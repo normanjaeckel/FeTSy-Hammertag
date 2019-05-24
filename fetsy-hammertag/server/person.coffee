@@ -27,8 +27,7 @@ module.exports = express.Router
                 detail: error
         else
             for doc in documents
-                if not _.isArray doc.id
-                    doc.id = [doc.id]
+                doc.id = [doc.id] if not _.isArray doc.id
             iterator = (object) ->
                 object.id = [object.id] if not _.isArray object.id
                 person = _.last object.persons or []
@@ -51,7 +50,12 @@ module.exports = express.Router
                         detail: error
                 else
                     iterator = (supplies) ->
-                        persons = supplies.persons or []
+                        # Persons here is only an array of pseudo person
+                        # objects. See database structure.
+                        persons = _.concat(
+                            supplies.persons or []
+                            supplies.personMaxCount or []
+                        )
                         if persons.length is 0
                             persons.push
                                 id: unknownPersonId
@@ -104,9 +108,8 @@ module.exports = express.Router
         else
             if not result?
                 result =
-                    id: request.personId
-            if not _.isArray result.id
-                result.id = [result.id]
+                    id: [request.personId]
+            result.id = [result.id] if not _.isArray result.id
             response.send
                 person: result
         return

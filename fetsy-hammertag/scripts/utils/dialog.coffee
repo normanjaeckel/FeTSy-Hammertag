@@ -1,4 +1,5 @@
 angular.module 'FeTSy-Hammertag.utils.dialog', [
+    'FeTSy-Hammertag.utils.contentDefaults'
     'FeTSy-Hammertag.utils.validation'
 ]
 
@@ -39,6 +40,17 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
             $uibModal.open
                 controller: 'MoreSuppliesCtrl as moreSupplies'
                 templateUrl: 'static/templates/moreSupplies.html'
+                resolve:
+                    element: () ->
+                        element
+            .result
+
+        suppliesMaxCountInformation: (element) ->
+            $uibModal.open
+                # coffeelint: disable=max_line_length
+                controller: 'SuppliesMaxCountInformationCtrl as suppliesMaxCountInformation'
+                # coffeelint: enable=max_line_length
+                templateUrl: 'static/templates/suppliesMaxCountInformation.html'
                 resolve:
                     element: () ->
                         element
@@ -99,6 +111,13 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                             newDescription: @newDescription
                             newCompany: @newCompany
                         return
+                    (error) =>
+                        if error.data
+                            @error = error.data.detail or 'Unknown error'
+                        else
+                            @error = 'Connection failed. Please reload the ' +
+                                     'page.'
+                        return
                 )
             return
 
@@ -112,6 +131,12 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                 (response) ->
                     $uibModalInstance.close
                         deleted: true
+                    return
+                (error) =>
+                    if error.data
+                        @error = error.data.detail or 'Unknown error'
+                    else
+                        @error = 'Connection failed. Please reload the page.'
                     return
             )
             return
@@ -134,6 +159,8 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
         @newInventory = element.item.inventory or 0
         @focus = true
         @save = ->
+            if not @newInventory?
+                return
             # Attention: @element.item.id is always a string and never
             # an array at the moment.
             $http.patch "#{serverURL}/supplies/#{@element.item.id}",
@@ -142,6 +169,12 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                 (response) =>
                     $uibModalInstance.close
                         newInventory: @newInventory
+                    return
+                (error) =>
+                    if error.data
+                        @error = error.data.detail or 'Unknown error'
+                    else
+                        @error = 'Connection failed. Please reload the page.'
                     return
             )
             return
@@ -171,11 +204,15 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                             newIDs: element.item.id
                         return
                     (error) =>
-                        @error = true
+                        if error.data
+                            @error = error.data.detail or 'Unknown error'
+                        else
+                            @error = 'Connection failed. Please reload the ' +
+                                     'page.'
                         return
                 )
             else
-                @error = true
+                @error = 'Invalid input. Please try again.'
             return
         @resetInputField = ->
             @newID = ''
@@ -186,16 +223,53 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
 ]
 
 
-.controller 'MoreSuppliesCtrl', [
+.controller 'SuppliesMaxCountInformationCtrl', [
     '$http'
+    '$uibModalInstance'
+    'DefaultDescription'
+    'serverURL'
+    'element'
+    ($http, $uibModalInstance, DefaultDescription, serverURL, element) ->
+        @DefaultDescription = DefaultDescription
+        @element = element
+        # Attention: We assume that there is only one element with matching id
+        # but the code does not check it.
+        @suppliesMaxCountElement = _.find(
+            element.supplies.personMaxCount,
+            (item) ->
+                item.id in element.person.id
+        )
+        @reset = ->
+            url = "#{serverURL}/supplies/#{element.supplies.id}/reset-max-count"
+            $http.post url,
+                personId: @suppliesMaxCountElement.id
+            .then(
+                (response) ->
+                    $uibModalInstance.close
+                        newMaxCount: response.data.maxCount
+                    return
+                (error) =>
+                    if error.data
+                        @error = error.data.detail or 'Unknown error'
+                    else
+                        @error = 'Connection failed. Please reload the page.'
+                    return
+            )
+        return
+]
+
+
+.controller 'MoreSuppliesCtrl', [
     '$uibModalInstance'
     'DatabaseFactory'
     'element'
-    ($http, $uibModalInstance, DatabaseFactory, element) ->
+    ($uibModalInstance, DatabaseFactory, element) ->
         @element = element
         @numberField = 1
         @focus = true
         @save = ->
+            if not @numberField?
+                return
             DatabaseFactory.saveSupplies(
                 @element.item.id
                 @element.person
@@ -204,6 +278,12 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                 (response) ->
                     $uibModalInstance.close
                         supplies: response.data.supplies
+                    return
+                (error) =>
+                    if error.data
+                        @error = error.data.detail or 'Unknown error'
+                    else
+                        @error = 'Connection failed. Please reload the page.'
                     return
             )
             return
@@ -225,6 +305,8 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
         @numberField = 1
         @focus = true
         @save = ->
+            if not @numberField?
+                return
             filteredPersonItems = _.filter element.item.persons, (personItem) ->
                 personItem.id in element.person.id
             uuidList = _.map _.takeRight(filteredPersonItems, @numberField),
@@ -242,6 +324,12 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                 (response) ->
                     $uibModalInstance.close
                         uuidList: uuidList
+                    return
+                (error) =>
+                    if error.data
+                        @error = error.data.detail or 'Unknown error'
+                    else:
+                        @error = 'Connection failed. Please reload the page.'
                     return
             )
             return

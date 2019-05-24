@@ -115,7 +115,15 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
 
         @suppliesCount = (supplies, personId) ->
             numbers = _.countBy supplies.persons, 'id'
-            numbers[personId]
+            _.reduce(
+                numbers
+                (count, number, id) ->
+                  if id in personId
+                      number + count
+                  else
+                      count
+                0
+            )
 
         @updatePerson = (person , persons) ->
             index = persons.indexOf person
@@ -180,10 +188,24 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
             )
             return
 
+        @suppliesMaxCountInformation = (supplies, person) ->
+            index = _.findIndex supplies.personMaxCount, (element) ->
+                element.id in person.id
+            DialogFactory.suppliesMaxCountInformation
+                supplies: supplies
+                person: person
+            .then(
+                (result) ->
+                    supplies.personMaxCount[index].maxCount = result.newMaxCount
+                    return
+                (error) ->
+                    return
+            )
+            return
+
         @updateSupplies = (supplies, person) ->
             index = _.findLastIndex supplies.persons, (personItem) ->
                 personItem.id in person.id
-            supplies.lastUuid = supplies.persons[index].uuid
             DialogFactory.updateDescription
                 type: 'supplies'
                 item: supplies
