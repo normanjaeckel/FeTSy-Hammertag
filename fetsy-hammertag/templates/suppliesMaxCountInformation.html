@@ -26,7 +26,7 @@
 
 <div class="modal-footer">
     <button class="btn btn-danger"
-            ng-show="suppliesMaxCountInformation.suppliesMaxCountElement.maxCount"
+            ng-show="suppliesMaxCountInformation.suppliesMaxCountElement.maxCount && config.fullWritePermissionGranted"
             type="button"
             ng-click="suppliesMaxCountInformation.reset()">
         Reset amount
