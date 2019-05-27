@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        Maximum amount in the past
+        <span class="label label-primary">
+            <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
+            <span class="sr-only">Supplies</span>
+            {{ suppliesMaxCountInformation.element.supplies.id | splitIDs }}
+        </span>
+    </h3>
+</div>
+
+<div class="modal-body" ng-hide="suppliesMaxCountInformation.error">
+    <span ng-class="{'text-danger': !suppliesMaxCountInformation.element.supplies.description}">
+        {{ suppliesMaxCountInformation.element.supplies.description || suppliesMaxCountInformation.DefaultDescription.supplies }}
+    </span>
+    <div style="margin-top:1em">
+        Maximum amount in the past: {{ suppliesMaxCountInformation.suppliesMaxCountElement.maxCount }}
+    </div>
+</div>
+
+<div class="modal-body" ng-show="suppliesMaxCountInformation.error">
+    <span class="text-danger">
+        Error: {{ suppliesMaxCountInformation.error }}
+    </span>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-danger"
+            ng-show="suppliesMaxCountInformation.suppliesMaxCountElement.maxCount"
+            type="button"
+            ng-click="suppliesMaxCountInformation.reset()">
+        Reset amount
+    </button>
+    <button class="btn btn-warning"
+            type="button"
+            ng-click="$dismiss('cancel click')">
+        Close
+    </button>
+</div>

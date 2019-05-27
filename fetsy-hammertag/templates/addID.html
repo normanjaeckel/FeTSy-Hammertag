@@ -42,6 +42,12 @@
     </form>
 </div>
 
+<div class="modal-body" ng-show="addID.error">
+    <span class="text-danger">
+        Error: {{ addID.error }}
+    </span>
+</div>
+
 <div class="modal-footer">
     <button class="btn btn-primary"
             type="button"
