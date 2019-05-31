@@ -171,7 +171,29 @@ module.exports = express.Router
         if error?
             response.status(500).json
                 detail: error
+        else if result.upsertedCount is 1 and request.body.firstPersonId
+            # Object creation with firstPersonId: Add this person.
+            person =
+                id: String request.body.firstPersonId
+                timestamp: +new Date() / 1000
+            update =
+                $push:
+                    persons: person
+            database.object().updateOne(
+                filter,
+                update,
+                options,
+                (error, result) ->
+                    if error?
+                        response.status(500).json
+                            detail: error
+                    else
+                        response.status(201).json
+                            details: 'Object successfully created.'
+                    return
+            )
         else if result.upsertedCount is 1
+            # Object creation without firstPersonId
             response.status(201).json
                 details: 'Object successfully created.'
         else
