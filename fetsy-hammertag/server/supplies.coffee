@@ -76,7 +76,7 @@ module.exports = express.Router
 
 # Handle POST requests.
 .post '/:id/person', (request, response) ->
-    # First we fetch all Persons and the requested supplies from database. Then
+    # First we fetch all persons and the requested supplies from database. Then
     # we build the list of pseudo person elements that should be pushed into
     # supplies.persons array (primary update operation). Then we go through a
     # complex logic to determine whether to update the max counter or not

@@ -77,33 +77,62 @@ module.exports = express.Router
 
 # Handle POST requests.
 .post '/:id/person', (request, response) ->
-    person =
-        id: String request.body.id
-        timestamp: +new Date() / 1000
-    filter = id: request.objectId
-    update =
-        $push:
-            persons: person
-    options =
-        upsert: true
-    database.object().updateOne filter, update, options, (error, result) ->
-        if error?
-            response.status(500).json
-                detail: error
-        else
+    upsertedCount = undefined
+    # First fetch object from database and check instruction required field.
+    # If applicable fetch person from database an check instruction field.
+    query = id: request.objectId
+    options = {}
+    database.object().findOne query, options
+    .then (result) ->
+        if result? and result.instructionRequired
+            query = id: String request.body.id
+            options = {}
+            database.person().findOne query, options
+            .then (result) ->
+                if result? and not result.instruction
+                    throw new FeTSyError 'Person is not instructed', 400
+    # Then run database update.
+    .then (result) ->
+        person =
+            id: String request.body.id
+            timestamp: +new Date() / 1000
+        filter = id: request.objectId
+        update =
+            $push:
+                persons: person
+        options =
+            upsert: true
+        database.object().updateOne filter, update, options
+
+    # Then get new object from database and send response.
+    .then (result) ->
+        upsertedCount = result.upsertedCount
+        new Promise (resolve, reject) ->
             database.getObject request.objectId, (error, object) ->
                 if error?
-                    response.status(500).json
-                        detail: error
-                else if result.upsertedCount is 1
-                    response.status(201).send
-                        details: 'Object successfully created.'
-                        object: object
+                    reject error
                 else
-                    response.send
-                        details: 'Object successfully updated.'
-                        object: object
+                    resolve object
                 return
+    .then (result) ->
+        if upsertedCount is 1
+            response.status(201).send
+                details: 'Object successfully created.'
+                object: result
+        else
+            response.send
+                details: 'Object successfully updated.'
+                object: result
+        return
+    .catch (error) ->
+        if error instanceof FeTSyError
+            response.status error.status
+            .json
+                detail: error
+        else
+            response.status 500
+            .json
+                detail: error
         return
     return
 

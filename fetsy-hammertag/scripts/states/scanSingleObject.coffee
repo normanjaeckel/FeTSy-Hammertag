@@ -22,7 +22,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 @scanInputValue = ''
                 @focusScanInput = true
                 if response.data
-                    @error = response.data.details
+                    @error = response.data.detail.message
                 else
                     @error = 'Connection failed. Please reload the page.'
                 return
