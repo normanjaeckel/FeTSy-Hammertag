@@ -22,7 +22,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 @scanInputValue = ''
                 @focusScanInput = true
                 if response.data
-                    @error = response.data.details
+                    @error = response.data.detail.message
                 else
                     @error = 'Connection failed. Please reload the page.'
                 return
@@ -106,6 +106,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 (result) =>
                     @lastPerson.description = result.newDescription
                     @lastPerson.company = result.newCompany
+                    @lastPerson.instruction = result.newInstruction
                     return
                 (error) ->
                     return
@@ -142,6 +143,9 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             .then(
                 (result) =>
                     @lastObject.description = result.newDescription
+                    # coffeelint: disable=max_line_length
+                    @lastObject.instructionRequired = result.newInstructionRequired
+                    # coffeelint: enable=max_line_length
                     return
                 (error) ->
                     return

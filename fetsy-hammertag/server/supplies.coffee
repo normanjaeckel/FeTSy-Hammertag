@@ -37,6 +37,8 @@ module.exports = express.Router
                             person.description = personsObj[person.id]
                                 .description
                             person.company = personsObj[person.id].company
+                            person.instruction = personsObj[person.id]
+                                .instruction
                             person.id = personsObj[person.id].id
             response.send
                 supplies: suppliesArray
@@ -74,7 +76,7 @@ module.exports = express.Router
 
 # Handle POST requests.
 .post '/:id/person', (request, response) ->
-    # First we fetch all Persons and the requested supplies from database. Then
+    # First we fetch all persons and the requested supplies from database. Then
     # we build the list of pseudo person elements that should be pushed into
     # supplies.persons array (primary update operation). Then we go through a
     # complex logic to determine whether to update the max counter or not

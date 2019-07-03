@@ -47,8 +47,10 @@ angular.module 'FeTSy-Hammertag.states.import', [
                 data = description: item.description
                 if @type is 'person'
                     data.company = item.company
+                    data.instruction = item.instruction
                 if @type is 'object'
                     data.firstPersonId = item.first_person_id
+                    data.instructionRequired = item.instruction_required
                 if @type is 'supplies' and parseInt item.inventory
                     data.inventory = parseInt item.inventory
                 $http.patch "#{serverURL}/#{@type}/#{item.id}", data

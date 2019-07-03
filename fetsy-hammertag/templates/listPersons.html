@@ -135,6 +135,12 @@
             <span style="padding-left:0.5em" ng-class="{'text-danger': !person.description}">
                 {{ person.description || listPersons.DefaultDescription.person }}
                 <span ng-show="person.company">({{ person.company }})</span>
+                <span ng-show="person.instruction"
+                      class="glyphicon glyphicon-education"
+                      aria-hidden="true"
+                      title="Is instructed">
+                </span>
+                <span class="sr-only">Is instructed</span>
             </span>
             <span class="pull-right" ng-show="config.fullWritePermissionGranted">
                 <button type="button"
@@ -165,6 +171,12 @@
                     <span ng-class="{'text-danger': !object.description}">
                         {{ object.description || listPersons.DefaultDescription.object }}
                     </span>
+                    <span ng-show="object.instructionRequired"
+                          class="glyphicon glyphicon-education"
+                          aria-hidden="true"
+                          title="Instruction required">
+                    </span>
+                    <span class="sr-only">Instruction required</span>
                     &middot;
                     {{ object.persons[object.persons.length-1].timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}
                 </span>

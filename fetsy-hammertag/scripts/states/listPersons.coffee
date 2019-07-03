@@ -140,6 +140,7 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                     else
                         person.description = result.newDescription
                         person.company = result.newCompany
+                        person.instruction = result.newInstruction
                     return
                 (error) ->
                     return
@@ -170,6 +171,9 @@ angular.module 'FeTSy-Hammertag.states.listPersons', [
                         objects.splice index, 1
                     else
                         object.description = result.newDescription
+                        # coffeelint: disable=max_line_length
+                        object.instructionRequired = result.newInstructionRequired
+                        # coffeelint: enable=max_line_length
                     return
                 (error) ->
                     return
