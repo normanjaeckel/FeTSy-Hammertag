@@ -9,9 +9,13 @@
 </div>
 
 <div class="modal-body" ng-hide="itemInformation.element.error">
-    <span ng-class="{'text-danger': !itemInformation.element.description}">
+    <p ng-class="{'text-danger': !itemInformation.element.description}">
         {{ itemInformation.element.description || itemInformation.DefaultDescription[itemInformation.element.type] }}
-    </span>
+    </p>
+    <p ng-show="itemInformation.element.type === 'object' && itemInformation.element.instructionRequired">
+        <span class="glyphicon glyphicon-education" aria-hidden="true"></span>
+        <em>Instruction Required</em>
+    </p>
     <div style="margin-top:1em" ng-show="itemInformation.element.type === 'object' && itemInformation.element.persons.length > 0">
         <span class="sr-only">Persons</span>
         <ul class="list-unstyled">
@@ -27,7 +31,12 @@
                     <span ng-class="{'text-danger': !person.description}">
                         {{ person.description || itemInformation.DefaultDescription.person }}
                         <span ng-show="person.company">({{ person.company }})</span>
-                        <span ng-show="person.instruction">(instructed)</span>
+                        <span ng-show="person.instruction"
+                              class="glyphicon glyphicon-education"
+                              aria-hidden="true"
+                              title="Is instructed">
+                        </span>
+                        <span class="sr-only">Is instructed</span>
                     </span>
                     &middot;
                     {{ person.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}

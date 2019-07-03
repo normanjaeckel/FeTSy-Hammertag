@@ -66,17 +66,21 @@ angular.module 'FeTSy-Hammertag.states.export', [
         # Helper to parse objects
         @parseObjectResponseData = (objects, config) =>
             result =
-                fields: ['description']
+                fields: ['description', 'instruction_required']
                 data: []
             maxIDs = @calcMaxIDs objects
             result.fields.push "id_#{num}" for num in [1..maxIDs]
             # Rename 'id_1' to 'id' for easier re-import of the result of
             # this export.
-            result.fields[1] = 'id'
+            result.fields[2] = 'id'
 
             maxPersons = 1
             for object in objects
-                item = _.concat object.description, object.id
+                item = _.concat(
+                    object.description
+                    'x' if object.instructionRequired
+                    object.id
+                )
                 if maxIDs-object.id.length
                     item.push '' for num in [1..maxIDs-object.id.length]
                 if object.persons?

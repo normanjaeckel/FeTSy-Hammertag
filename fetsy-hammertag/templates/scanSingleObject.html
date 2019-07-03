@@ -79,7 +79,12 @@
             <div class="panel-body" ng-class="{'text-danger': !scanSingleObject.lastPerson.description}">
                 {{ scanSingleObject.lastPerson.description || scanSingleObject.DefaultDescription.person }}
                 <span ng-show="scanSingleObject.lastPerson.company">({{ scanSingleObject.lastPerson.company }})</span>
-                <span ng-show="scanSingleObject.lastPerson.instruction">(instructed)</span>
+                <span ng-show="scanSingleObject.lastPerson.instruction"
+                      class="glyphicon glyphicon-education"
+                      aria-hidden="true"
+                      title="Is instructed">
+                </span>
+                <span class="sr-only">Is instructed</span>
             </div>
         </div>
     </div><!-- / .col-sm-5 Panel for last person -->
@@ -109,6 +114,12 @@
             </div>
             <div class="panel-body" ng-class="{'text-danger': !scanSingleObject.lastObject.description}">
                 {{ scanSingleObject.lastObject.description || scanSingleObject.DefaultDescription.object }}
+                <span ng-show="scanSingleObject.lastObject.instructionRequired"
+                      class="glyphicon glyphicon-education"
+                      aria-hidden="true"
+                      title="Instruction required">
+                </span>
+                <span class="sr-only">Instruction required</span>
             </div>
             <div class="panel-body" ng-show="scanSingleObject.lastObject.persons.length > 0">
                 <span class="sr-only">Persons</span>
@@ -125,8 +136,12 @@
                             <span ng-class="{'text-danger': !person.description}">
                                 {{ person.description || scanSingleObject.DefaultDescription.person }}
                                 <span ng-show="person.company">({{ person.company }})</span>
-                                <span ng-show="person.instruction">(instructed)</span>
-
+                                <span ng-show="person.instruction"
+                                      class="glyphicon glyphicon-education"
+                                      aria-hidden="true"
+                                      title="Is instructed">
+                                </span>
+                                <span class="sr-only">Is instructed</span>
                             </span>
                             &middot;
                             {{ person.timestamp | amFromUnix | amDateFormat : 'YYYY-MM-DD HH:mm' }}

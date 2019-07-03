@@ -45,9 +45,10 @@ describe 'ExportCtrl', ->
         it 'should return proper CSV data', ->
             parsedData = ExportCtrl.parseObjectResponseData testData
             expect parsedData
-            .toContain 'data:text/csv;charset=utf-8,description,id'
+            .toContain 'data:text/csv;charset=utf-8,description,' +
+                'instruction_required,id'
             expect parsedData
-            .toContain 'description_Wae6Ooz6fi,42'
+            .toContain 'description_Wae6Ooz6fi,,42'
             expect parsedData
             .not.toContain 'inventory'
 
@@ -85,7 +86,8 @@ describe 'ExportCtrl', ->
             person_1 = 'person_1_id,person_1_description,person_1_timestamp'
             person_2 = 'person_2_id,person_2_description,person_2_timestamp'
             expect parsedData
-            .toContain "description,id,#{person_1},#{person_2}"
+            .toContain "description,instruction_required,id," +
+                "#{person_1},#{person_2}"
             expect parsedData
             .not.toContain 'person_3'
             expect parsedData
@@ -133,6 +135,7 @@ describe 'ExportCtrl', ->
             .toContain 'data:text/csv;charset=utf-8,description,company,' +
                 'instruction,id,id_2'
             expect ExportCtrl.objects.URI
-            .toContain 'data:text/csv;charset=utf-8,description,id,id_2'
+            .toContain 'data:text/csv;charset=utf-8,description,' +
+                'instruction_required,id,id_2'
             expect ExportCtrl.supplies.URI
             .toContain 'data:text/csv;charset=utf-8,id,description,inventory'

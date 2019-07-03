@@ -143,6 +143,9 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
             .then(
                 (result) =>
                     @lastObject.description = result.newDescription
+                    # coffeelint: disable=max_line_length
+                    @lastObject.instructionRequired = result.newInstructionRequired
+                    # coffeelint: enable=max_line_length
                     return
                 (error) ->
                     return

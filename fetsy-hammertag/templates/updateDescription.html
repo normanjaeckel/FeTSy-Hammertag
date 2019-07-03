@@ -61,6 +61,13 @@
                 </label>
             </div>
         </div>
+        <div class="form-group" ng-show="updateDescription.element.type === 'object'">
+            <div class="checkbock">
+                <label>
+                    <input type="checkbox" ng-model="updateDescription.newInstructionRequired"> Instruction is required
+                </label>
+            </div>
+        </div>
     </form>
 </div>
 

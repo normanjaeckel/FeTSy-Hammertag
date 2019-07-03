@@ -93,6 +93,8 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
         # The company field and the instruction field are only for persons.
         @newCompany = element.item.company
         @newInstruction = element.item.instruction
+        # The instructionRequired field is only for objects.
+        @newInstructionRequired = element.item.instructionRequired
         @focus = true
 
         @save = ->
@@ -107,12 +109,14 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                     description: @newDescription
                     company: @newCompany
                     instruction: @newInstruction
+                    instructionRequired: @newInstructionRequired
                 .then(
                     (response) =>
                         $uibModalInstance.close
                             newDescription: @newDescription
                             newCompany: @newCompany
                             newInstruction: @newInstruction
+                            newInstructionRequired: @newInstructionRequired
                         return
                     (error) =>
                         if error.data
