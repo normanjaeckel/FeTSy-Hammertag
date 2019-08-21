@@ -132,12 +132,18 @@ angular.module 'FeTSy-Hammertag.states.export', [
                 ]
                 if supplies.persons?
                     for person in supplies.persons
+                        id = _.join(person.id, ' / ')
                         # coffeelint: disable=max_line_length
                         description = person.description || DefaultDescription.person
                         description += " (#{person.company})" if person.company
                         description += ' (instructed)' if person.instruction
+                        maxCount = _.find(
+                            supplies.personMaxCount
+                            (personMaxCount) ->
+                                personMaxCount.id in person.id
+                        ).maxCount
                         timestamp = moment.unix(person.timestamp).format 'YYYY-MM-DD HH:mm'
-                        item.push person.id, description, timestamp
+                        item.push id, description, maxCount, timestamp
                         # coffeelint: enable=max_line_length
                 result.data.push item
                 if supplies.persons? and maxPersons < supplies.persons.length
@@ -146,6 +152,7 @@ angular.module 'FeTSy-Hammertag.states.export', [
                 result.fields.push(
                     "person_#{num}_id"
                     "person_#{num}_description"
+                    "person_#{num}_max_count"
                     "person_#{num}_timestamp"
                 )
 
