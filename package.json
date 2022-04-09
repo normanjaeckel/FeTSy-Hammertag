@@ -40,7 +40,7 @@
     "karma-jasmine": "2.0.1",
     "main-bower-files": "2.13.1",
     "merge-stream": "1.0.1",
-    "moment": "2.24.0",
+    "moment": "2.29.2",
     "yargs": "13.2.2"
   }
 }
