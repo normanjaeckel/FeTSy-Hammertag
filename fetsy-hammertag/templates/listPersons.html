@@ -158,6 +158,7 @@
     <div class="col-sm-6">
         <div ng-show="listPersons.showObjects">
             <p ng-repeat="object in person.objects |
+                          orderBy : 'description' |
                           objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled} |
                           limitTo: (listPersons.limit || 0 )">
                 <a class="id-label-link" ui-sref="scanSingleObject({scanInputValue: object.id[0]})">
@@ -210,6 +211,7 @@
         <div ng-show="listPersons.showSupplies">
             <p ng-repeat="supplies in person.supplies |
                           objectsSuppliesFilter : {expression: listPersons.searchFilter, enabled: listPersons.searchFilterObjectsSuppliesEnabled} |
+                          orderBy : 'description' |
                           suppliesLimitTo: (listPersons.limit || 0 )">
                 <span class="label label-primary">
                     <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>

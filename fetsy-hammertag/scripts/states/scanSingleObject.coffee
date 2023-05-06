@@ -9,11 +9,12 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
 
 .controller 'ScanSingleObjectCtrl', [
     '$stateParams'
+    '$scope'
     'DatabaseFactory'
     'DefaultDescription'
     'DialogFactory'
     'ValidationFactory'
-    ($stateParams, DatabaseFactory, DefaultDescription, DialogFactory,
+    ($stateParams, $scope, DatabaseFactory, DefaultDescription, DialogFactory,
      ValidationFactory) ->
         @DefaultDescription = DefaultDescription
 
@@ -36,6 +37,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         (response) =>
                             @lastPerson = response.data.person
                             @resetInputField()
+                            if not @lastPerson.description?
+                                @updatePersonDescription()
                             return
                         errorHandling
                     )
@@ -50,18 +53,24 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                             (response) =>
                                 @lastObject = response.data.object
                                 @resetInputField()
+                                if not @lastObject.description?
+                                    @updateObjectDescription()
                                 return
                             errorHandling
                         )
                     else
                         @scanInputValue = ''
-                        @error = 'Unknown person. Description is missing.'
+                        # coffeelint: disable=max_line_length
+                        @error = 'Unknown person. Description and company missing.'
+                        # coffeelint: enable=max_line_length
                 else
                     DatabaseFactory.fetchObject(@scanInputValue)
                     .then(
                         (response) =>
                             @lastObject = response.data.object
                             @resetInputField()
+                            if not @lastObject.description?
+                                @updateObjectDescription()
                             return
                         errorHandling
                     )
@@ -76,12 +85,17 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                             (response) =>
                                 @lastSupplies = response.data.supplies
                                 @resetInputField()
+                                if not @lastSupplies.description?
+                                    @updateSupplies()
                                 return
                             errorHandling
                         )
                     else
                         @scanInputValue = ''
-                        @error = 'Unknown person. Description is missing.'
+                        # coffeelint: disable=max_line_length
+                        @error = 'Unknown person. Description and company missing.'
+                        # coffeelint: enable=max_line_length
+
                 else
                     DatabaseFactory.fetchSupplies(@scanInputValue)
                     .then(
@@ -90,6 +104,8 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                                 response.data.supplies.persons = []
                             @lastSupplies = response.data.supplies
                             @resetInputField()
+                            if not @lastSupplies.description?
+                                @updateSupplies()
                             return
                         errorHandling
                     )
@@ -250,6 +266,10 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
         if $stateParams.scanInputValue
           @scanInputValue = $stateParams.scanInputValue
           @scan()
+
+        $scope.$on 'IdleStart', ->
+            @resetForm()
+            return
 
         return
 ]
