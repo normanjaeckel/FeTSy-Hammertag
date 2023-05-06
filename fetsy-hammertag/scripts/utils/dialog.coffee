@@ -98,7 +98,8 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
         @focus = true
 
         @save = ->
-            if @newDescription
+            # For persons also the company field is required.
+            if @newDescription and (@newCompany or element.type isnt 'person')
                 if element.type is 'supplies'
                     # Attention: @element.item.id is always a string and never
                     # an array at the moment.

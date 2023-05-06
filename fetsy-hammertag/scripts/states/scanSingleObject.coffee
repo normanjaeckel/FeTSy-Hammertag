@@ -55,7 +55,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         )
                     else
                         @scanInputValue = ''
-                        @error = 'Unknown person. Description is missing.'
+                        @error = 'Unknown person. Description and company missing.'
                 else
                     DatabaseFactory.fetchObject(@scanInputValue)
                     .then(
@@ -81,7 +81,7 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                         )
                     else
                         @scanInputValue = ''
-                        @error = 'Unknown person. Description is missing.'
+                        @error = 'Unknown person. Description and company missing.'
                 else
                     DatabaseFactory.fetchSupplies(@scanInputValue)
                     .then(
