@@ -1,6 +1,7 @@
 angular.module 'FeTSy-Hammertag', [
     'ui.bootstrap'
     'ui.router'
+    'ngIdle'
     'FeTSy-Hammertag.config'
     'FeTSy-Hammertag.states'
 ]
@@ -82,6 +83,14 @@ angular.module 'FeTSy-Hammertag', [
         return
 ]
 
+.config [
+    'IdleProvider'
+    (IdleProvider) ->
+        # https://github.com/moribvndvs/ng-idle/wiki/Idle-and-Idleprovider
+        IdleProvider.idle 600
+        IdleProvider.timeout 0
+        return
+]
 
 .run [
     '$http'
@@ -93,6 +102,15 @@ angular.module 'FeTSy-Hammertag', [
             $rootScope.config = response.data
             return
         return
+]
+
+.run [
+    '$rootScope'
+    'Idle'
+    ($rootScope, Idle) ->
+        Idle.watch()
+        return
+
 ]
 
 
