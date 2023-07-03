@@ -65,6 +65,15 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                         element
             .result
 
+        askForAmount: (element) ->
+            $uibModal.open
+                controller: 'AskForAmountCtrl as askForAmount'
+                templateUrl: 'static/templates/askForAmount.html'
+                resolve:
+                    element: () ->
+                        element
+            .result
+
         parseElement: (element) ->
             if element.type is 'object'
                 element.icon = 'glyphicon-wrench'
@@ -340,6 +349,27 @@ angular.module 'FeTSy-Hammertag.utils.dialog', [
                         @error = 'Connection failed. Please reload the page.'
                     return
             )
+            return
+        @resetNumberField = ->
+            @numberField = 1
+            @focus = true
+            return
+        return
+]
+
+
+.controller 'AskForAmountCtrl', [
+    '$uibModalInstance'
+    'element'
+    ($uibModalInstance, element) ->
+        @element = element
+        @numberField = 1
+        @focus = true
+        @save = ->
+            if not @numberField?
+                return
+            $uibModalInstance.close
+                amount: @numberField
             return
         @resetNumberField = ->
             @numberField = 1
