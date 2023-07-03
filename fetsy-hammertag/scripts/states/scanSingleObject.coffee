@@ -78,17 +78,25 @@ angular.module 'FeTSy-Hammertag.states.scanSingleObject', [
                 @lastObject = null
                 if @lastPerson
                     if @lastPerson.description?
-                        DatabaseFactory.saveSupplies(
-                            @scanInputValue
-                            _.last @lastPerson.id
-                        ).then(
-                            (response) =>
-                                @lastSupplies = response.data.supplies
-                                @resetInputField()
-                                if not @lastSupplies.description?
-                                    @updateSupplies()
+                        DialogFactory.askForAmount
+                            scanInputValue: @scanInputValue
+                        .then(
+                            (result) =>
+                                DatabaseFactory.saveSupplies(
+                                    @scanInputValue
+                                    _.last @lastPerson.id
+                                    result.amount
+                                ).then(
+                                    (response) =>
+                                        @lastSupplies = response.data.supplies
+                                        @resetInputField()
+                                        if not @lastSupplies.description?
+                                            @updateSupplies()
+                                        return
+                                    errorHandling
+                                )
+                            (error) ->
                                 return
-                            errorHandling
                         )
                     else
                         @scanInputValue = ''
